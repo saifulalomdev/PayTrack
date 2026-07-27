@@ -1,0 +1,48 @@
+---
+import MainLayout from "@/layouts/main.astro";
+import { getDb } from "@/lib/get-db";
+import { DashboardLayout, DashboardPage } from "@/modules/dashboard";
+import { dashboardService } from "@/modules/dashboard/dashboard.service";
+import type { DashboardPageProps } from "@/modules/dashboard/dashboard.types";
+const { env } = Astro.locals.runtime;
+
+const db = getDb(env);
+
+// 1. Maintain a single type-safe tracking state matching the contract
+let dashboardProps: DashboardPageProps = {
+    stats: undefined,
+    pageviews: [],
+    devices: [],
+    trafficTrends: [],
+    countries: [],
+    sites: [],
+    activeSiteId: undefined,
+    dateRange: { from: new Date(), to: new Date() },
+    errorMsg: undefined,
+    referrers: []
+};
+
+try {
+    const data = await dashboardService.getOverviewData({ db });
+    if (data) {
+        dashboardProps = {
+            ...data,
+            errorMsg: undefined,
+        };
+    } else {
+        dashboardProps.errorMsg = "No dashboard analytics metrics found.";
+    }
+} catch (error) {
+    console.error("Dashboard overview fetch error:", error);
+    dashboardProps.errorMsg =
+        error instanceof Error
+            ? error.message
+            : "Failed to load dashboard overview analytics data.";
+}
+---
+
+<MainLayout>
+    <DashboardLayout client:load>
+        <DashboardPage {...dashboardProps} client:load />
+    </DashboardLayout>
+</MainLayout>

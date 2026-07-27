@@ -1,0 +1,25 @@
+---
+import "@/styles/global.css";
+import { Toaster } from "@/components/ui/sonner";
+import { BottomNav } from "@/modules/dashboard/components/bottom-nav";
+---
+
+<!doctype html>
+<html lang="en" class="">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>TrackFlow | Fast, Private Web Analytics</title>
+		<meta
+			name="description"
+			content=""
+		/>
+	</head>
+	<body class="p-4 md:p-6 lg:p-10">
+		<slot />
+		<BottomNav client:load />
+		<Toaster richColors client:load />
+	</body>
+</html>

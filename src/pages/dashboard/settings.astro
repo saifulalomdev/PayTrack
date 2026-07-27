@@ -1,0 +1,10 @@
+---
+import { DashboardLayout } from "@/modules/dashboard";
+import MainLayout from "@/layouts/main.astro";
+---
+
+<MainLayout>
+    <DashboardLayout client:visible>
+        <div>Settings</div>
+    </DashboardLayout>
+</MainLayout>
