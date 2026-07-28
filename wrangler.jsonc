@@ -1,6 +1,6 @@
 {
-	"main": "@astrojs/cloudflare/entrypoints/server",
 	"name": "trackflow",
+	"main": "@astrojs/cloudflare/entrypoints/server",
 	"compatibility_date": "2024-09-23",
 	"compatibility_flags": [
 		"nodejs_compat_v2",
@@ -13,9 +13,15 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "trackflow-db",
-			"database_id": "893a3b21-f6bf-4881-8337-ac11b0a23214",
+			"database_name": "paytrack",
+			"database_id": "80c4fd64-37e2-4c72-8141-b28bc1f1ec89",
 			"migrations_dir": "./drizzle"
+		}
+	],
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "82ef8b0eb93945d683b2bd2375acd318"
 		}
 	],
 	"observability": {
