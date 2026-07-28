@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { Eye, EyeClosed, KeyRound, Mail } from "lucide-react";
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(({
