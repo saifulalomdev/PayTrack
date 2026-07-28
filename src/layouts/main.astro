@@ -1,7 +1,6 @@
 ---
 import "@/styles/global.css";
 import { Toaster } from "@/components/ui/sonner";
-import { BottomNav } from "@/modules/dashboard/components/bottom-nav";
 ---
 
 <!doctype html>
@@ -19,7 +18,6 @@ import { BottomNav } from "@/modules/dashboard/components/bottom-nav";
 	</head>
 	<body class="p-4 md:p-6 lg:p-10">
 		<slot />
-		<BottomNav client:load />
 		<Toaster richColors client:load />
 	</body>
 </html>

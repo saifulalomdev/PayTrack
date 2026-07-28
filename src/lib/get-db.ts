@@ -1,5 +1,5 @@
 // src/lib/get-db.ts
-import * as schema from "@/db/schema/index";
+import * as schema from "@/db/index";
 import { drizzle } from 'drizzle-orm/d1';
 
 /**

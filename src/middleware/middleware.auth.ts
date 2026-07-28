@@ -1,9 +1,9 @@
 import type { MiddlewareHandler } from "astro";
+import { env } from "cloudflare:workers";
 import { jwtVerify } from "jose";
 
 export const authMiddleware: MiddlewareHandler = async (context, next) => {
   const { url, cookies, locals, redirect } = context;
-  const { env } = context.locals.runtime;
 
   const isDashboard = url.pathname.startsWith("/dashboard");
   const isLogin = url.pathname.startsWith("/login");
