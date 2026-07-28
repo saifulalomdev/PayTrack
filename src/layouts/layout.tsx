@@ -1,10 +1,10 @@
+import { Card, CardContent } from '@/components/ui/card';
+import { Globe, User, Menu, X, XIcon } from "lucide-react";
+import { adminNavItems } from '@/data/nav-nav-item';
+import { AppBranding } from '@/components/brand';
+import { Button } from "@/components/ui/button";
 import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
-import { Card, CardContent } from '@/components/ui/card';
-import { AppBranding } from '@/components/brand';
-import { adminNavItems } from '@/data/nav-nav-item';
-import { Globe, User, Menu, X, XIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
