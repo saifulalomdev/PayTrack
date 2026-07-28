@@ -11,7 +11,7 @@ export function PageHeader({ title, description, children }: PageHeaderProps) {
   return (
     <div className="flex flex-col md:flex-row gap-3 justify-between md:items-end">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+        <h1 className="text-xl uppercase tracking-tight">{title}</h1>
         {description && (
           <p className="text-muted-foreground">{description}</p>
         )}

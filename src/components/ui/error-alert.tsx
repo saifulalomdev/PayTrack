@@ -19,7 +19,7 @@ export default function ErrorAlert({ errorMsg }: { errorMsg: string | null | und
             onClick={handleRetry}
             variant="destructive"
             size="sm"
-            className="flex items-center gap-2 self-end sm:self-auto" // Added flex layout for icon & alignment
+            className="flex items-center gap-2 self-end sm:self-auto"
           >
             <RotateCw size={14} />
             <span>Retry</span>

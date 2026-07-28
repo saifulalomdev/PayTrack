@@ -15,6 +15,7 @@ interface UseFormActionOptions<TFieldValues extends FieldValues, TData> {
 interface UseFormActionReturn<TFieldValues extends FieldValues> {
     form: UseFormReturn<TFieldValues, any>;
     onSubmit: (data: TFieldValues) => void;
+    isLoading: boolean
 }
 
 export function useFormAction<TFieldValues extends FieldValues, TData = any>({
@@ -31,7 +32,7 @@ export function useFormAction<TFieldValues extends FieldValues, TData = any>({
         defaultValues,
     });
 
-    const { execute } = useAction(actionFn, {
+    const { execute , isLoading} = useAction(actionFn, {
         loadingMessage,
         successMessage,
         onSuccess: (data) => {
@@ -44,5 +45,5 @@ export function useFormAction<TFieldValues extends FieldValues, TData = any>({
         execute(data);
     };
 
-    return { form, onSubmit };
+    return { form, onSubmit,isLoading };
 }

@@ -63,6 +63,7 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                             <a
                                 key={href}
                                 href={href}
+                                onClick={onClick}
                                 className={cn(
                                     "flex items-center justify-between gap-3 py-4 border-b transition-colors",
                                     "hover:bg-accent hover:text-accent-foreground",
@@ -70,10 +71,9 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                             >
                                 <div className='flex gap-3 items-center'>
                                     <Icon className="h-5 w-5 shrink-0" />
-                                {/* 2. Render dynamic language text using item key */}
-                                <span className="text-lg">{t.common[key]}</span>
+                                    <span className="text-lg">{t.common[key]}</span>
                                 </div>
-                                <ChevronRight/>
+                                <ChevronRight />
                             </a>
                         ))}
                     </nav>
