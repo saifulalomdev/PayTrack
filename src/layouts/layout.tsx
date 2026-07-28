@@ -57,13 +57,13 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                         </Button>
                     </div>
                     {/* sidebar navigations */}
-                    <nav className='mt-4 space-y-4'>
+                    <nav className='mt-8 space-y-4'>
                         {adminNavItems.map(({ href, key, Icon }) => (
                             <a
                                 key={href}
                                 href={href}
                                 className={cn(
-                                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                                    "flex items-center gap-3 px-3 py-2 border-b transition-colors",
                                     "hover:bg-accent hover:text-accent-foreground",
                                 )}
                             >
