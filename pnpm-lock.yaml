@@ -44,6 +44,9 @@ importers:
       astro:
         specifier: 7.1.4
         version: 7.1.4(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(@types/node@25.6.0)(jiti@2.6.1)(rollup@4.60.1)(tsx@4.21.0)
+      bcryptjs:
+        specifier: ^3.0.3
+        version: 3.0.3
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -3457,6 +3460,10 @@ packages:
   baseline-browser-mapping@2.10.14:
     resolution: {integrity: sha512-fOVLPAsFTsQfuCkvahZkzq6nf8KvGWanlYoTh0SVA0A/PIUxQGU2AOZAoD95n2gFLVDW/jP6sbGLny95nmEuHA==}
     engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  bcryptjs@3.0.3:
+    resolution: {integrity: sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==}
     hasBin: true
 
   better-auth@1.4.21:
@@ -9434,6 +9441,8 @@ snapshots:
   base64-js@1.5.1: {}
 
   baseline-browser-mapping@2.10.14: {}
+
+  bcryptjs@3.0.3: {}
 
   better-auth@1.4.21(@prisma/client@5.22.0)(better-sqlite3@12.9.0)(drizzle-kit@0.31.10)(drizzle-orm@0.41.0(@prisma/client@5.22.0)(@types/better-sqlite3@7.6.13)(@types/pg@8.20.0)(better-sqlite3@12.9.0)(kysely@0.28.16)(pg@8.20.0))(pg@8.20.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@4.1.7(@types/node@25.6.0)(jsdom@29.1.1(@noble/hashes@2.2.0))(msw@2.14.2(@types/node@25.6.0)(typescript@5.9.3))(vite@8.1.5(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(tsx@4.21.0))):
     dependencies:
