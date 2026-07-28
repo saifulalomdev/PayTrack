@@ -1,8 +1,11 @@
 ---
+// src/pages/index.astro
 import MainLayout from "@/layouts/main.astro";
-import { StaffManager } from "@/modules/staff/components/staff-manager";
+import { DashboardLayout } from "@/layouts/layout";
 ---
 
 <MainLayout>
-    <StaffManager />
+    <DashboardLayout client:load>
+        stuff mangement
+    </DashboardLayout>
 </MainLayout>

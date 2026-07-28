@@ -1,8 +1,11 @@
 ---
 // src/pages/index.astro
 import MainLayout from "@/layouts/main.astro";
+import { DashboardLayout } from "@/layouts/layout";
 ---
 
 <MainLayout>
-    dahsboard
+    <DashboardLayout client:load>
+        dashboard
+    </DashboardLayout>
 </MainLayout>

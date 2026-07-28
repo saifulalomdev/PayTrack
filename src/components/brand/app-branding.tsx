@@ -3,13 +3,13 @@ import { cn } from "@/utils/utils";
 
 export  function AppBranding({ border}: { border?: boolean }) {
     return (
-        <div className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg", border ? "border-2" : "")}>
+        <div className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg w-full", border ? "border-2" : "")}>
             <div className="flex-1 overflow-hidden">
                 <div className="flex items-center justify-between">
-                    <span className="text-sm font-black text-white tracking-wider uppercase">
-                        TRACKFLOW
+                    <span className="text-sm font-black  tracking-wider uppercase">
+                        Pay track
                     </span>
-                    <span className="text-[9px] bg-white text-black px-1 font-bold uppercase ml-2">
+                    <span className="text-[9px] text-black px-1 font-bold uppercase ml-2">
                         v1.0
                     </span>
                 </div>
