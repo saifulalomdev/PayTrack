@@ -11,8 +11,8 @@
     "preview": "astro preview",
     "cf-types": "wrangler types",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply trackflow-db",
-    "deploy": ""
+    "db:migrate": "wrangler d1 migrations apply paytrack",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.5",

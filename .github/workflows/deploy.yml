@@ -40,7 +40,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: d1 migrations apply trackflow-db --remote
+          command: d1 migrations apply paytrack --remote
 
       - name: Deploy Build to Cloudflare Pages
         if: github.ref == 'refs/heads/main'
