@@ -1,6 +1,7 @@
 ---
 import "@/styles/global.css";
 import { Toaster } from "@/components/ui/sonner";
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -10,11 +11,9 @@ import { Toaster } from "@/components/ui/sonner";
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>TrackFlow | Fast, Private Web Analytics</title>
-		<meta
-			name="description"
-			content=""
-		/>
+		<title>PayTrack</title>
+		<ClientRouter />
+		<meta name="description" content="" />
 	</head>
 	<body>
 		<slot />

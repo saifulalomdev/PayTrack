@@ -1,11 +1,12 @@
+import React, { useState } from 'react';
+import { useStore } from '@nanostores/react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Globe, User, Menu, X, XIcon } from "lucide-react";
 import { adminNavItems } from '@/data/nav-nav-item';
 import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
-import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
-
+import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,14 +36,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     );
 }
 
-
 interface DashboardSidebarProps {
     className?: string,
     onClick?: () => void
 }
 
-
 function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
+    // 1. Read translated strings from $t store
+    const t = useStore($t);
 
     return (
         <Card className={cn('w-full overflow-y-auto md:w-60 lg:w-75 border-r h-dvh flex flex-col justify-between z-30', className)}>
@@ -57,7 +58,7 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                     </div>
                     {/* sidebar navigations */}
                     <nav className='mt-4 space-y-4'>
-                        {adminNavItems.map(({ href, name, Icon }) => (
+                        {adminNavItems.map(({ href, key, Icon }) => (
                             <a
                                 key={href}
                                 href={href}
@@ -66,19 +67,17 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                                     "hover:bg-accent hover:text-accent-foreground",
                                 )}
                             >
-                                {/* Render Icon with consistent sizing */}
                                 <Icon className="h-5 w-5 shrink-0" />
-                                <span className="text-sm">{name}</span>
+                                {/* 2. Render dynamic language text using item key */}
+                                <span className="text-sm">{t.common[key]}</span>
                             </a>
                         ))}
                     </nav>
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }
-
-
 
 interface DashboardHeaderProps {
     isSidebarOpen: boolean;
@@ -86,15 +85,11 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
-    const [language, setLanguage] = useState<"EN" | "BN">("EN");
-
-    const toggleLanguage = () => {
-        setLanguage((prev) => (prev === "EN" ? "BN" : "EN"));
-    };
+    // 3. Read current language from store
+    const language = useStore($language);
 
     return (
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-4 lg:px-6">
-            {/* Left side: Toggle button for mobile */}
             <div className="flex items-center gap-3">
                 <Button
                     variant="ghost"
@@ -111,9 +106,8 @@ export function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps
                 </Button>
             </div>
 
-            {/* Right side actions */}
             <div className="flex items-center gap-4">
-                {/* Language Switcher */}
+                {/* 4. Trigger global language change */}
                 <Button
                     onClick={toggleLanguage}
                     aria-label="Switch Language"
@@ -123,7 +117,6 @@ export function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps
                     <span>{language === "EN" ? "English" : "বাংলা"}</span>
                 </Button>
 
-                {/* User Profile */}
                 <div className="flex items-center gap-2 border-l pl-4">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                         <User className="h-5 w-5 text-muted-foreground" />

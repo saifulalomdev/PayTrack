@@ -5,7 +5,7 @@ import { DashboardLayout } from "@/layouts/layout";
 ---
 
 <MainLayout>
-    <DashboardLayout client:load>
-        dashboard
+    <DashboardLayout client:load transition:persist>
+        <h1>Dashboard Content</h1>
     </DashboardLayout>
 </MainLayout>

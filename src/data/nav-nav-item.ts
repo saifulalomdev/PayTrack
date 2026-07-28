@@ -3,21 +3,28 @@ import {
   ShieldUser,
   Users,
 } from "lucide-react";
+import type { en } from "@/i18n/en";
 
-export const adminNavItems = [
+export interface NavItem {
+  href: string;
+  key: keyof typeof en.common;
+  Icon: typeof LayoutDashboard;
+}
+
+export const adminNavItems: NavItem[] = [
   {
     href: "/",
-    name: "Dashboard",
+    key: "dashboard",
     Icon: LayoutDashboard,
   },
   {
     href: "/customers",
-    name: "Customers",
+    key: "customers",
     Icon: Users,
   },
   {
     href: "/staff",
-    name: "Staff",
+    key: "staff",
     Icon: ShieldUser,
   },
 ];
