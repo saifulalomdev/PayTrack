@@ -2,6 +2,7 @@ name: Deploy PayTrack
 on:
   push:
     branches: [main,features]
+  workflow_dispatch:
 
 jobs:
   deploy:
