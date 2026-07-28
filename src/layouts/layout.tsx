@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Globe, User, Menu, X, XIcon } from "lucide-react";
+import { Globe, User, Menu, X, XIcon, ChevronRight } from "lucide-react";
 import { adminNavItems } from '@/data/nav-nav-item';
 import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
 import { cn } from '@/utils/utils';
 import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
+
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -57,19 +58,22 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                         </Button>
                     </div>
                     {/* sidebar navigations */}
-                    <nav className='mt-8 space-y-4'>
+                    <nav className='mt-8'>
                         {adminNavItems.map(({ href, key, Icon }) => (
                             <a
                                 key={href}
                                 href={href}
                                 className={cn(
-                                    "flex items-center gap-3 px-3 py-2 border-b transition-colors",
+                                    "flex items-center justify-between gap-3 py-4 border-b transition-colors",
                                     "hover:bg-accent hover:text-accent-foreground",
                                 )}
                             >
-                                <Icon className="h-5 w-5 shrink-0" />
+                                <div className='flex gap-3 items-center'>
+                                    <Icon className="h-5 w-5 shrink-0" />
                                 {/* 2. Render dynamic language text using item key */}
                                 <span className="text-lg">{t.common[key]}</span>
+                                </div>
+                                <ChevronRight/>
                             </a>
                         ))}
                     </nav>

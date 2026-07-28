@@ -2,10 +2,11 @@
 // src/pages/index.astro
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
+import { StaffManager } from "@/modules/staff/components/staff-manager";
 ---
 
 <MainLayout>
     <DashboardLayout client:load transition:persist>
-        stuff mangement
+        <StaffManager client:load/>
     </DashboardLayout>
 </MainLayout>
