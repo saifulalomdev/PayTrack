@@ -69,7 +69,7 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                             >
                                 <Icon className="h-5 w-5 shrink-0" />
                                 {/* 2. Render dynamic language text using item key */}
-                                <span className="text-sm">{t.common[key]}</span>
+                                <span className="text-lg">{t.common[key]}</span>
                             </a>
                         ))}
                     </nav>
@@ -84,7 +84,7 @@ interface DashboardHeaderProps {
     onClick: () => void;
 }
 
-export function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
+function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
     // 3. Read current language from store
     const language = useStore($language);
 
