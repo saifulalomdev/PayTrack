@@ -7,8 +7,9 @@ export const authMiddleware: MiddlewareHandler = async (context, next) => {
   // 1. Allow public pages and Astro Action API calls
   const isPublicPage = pathname === "/login";
   const isActionCall = pathname.startsWith("/_actions");
+  const isPublicApi = pathname.startsWith("/api/register-admin");
 
-  if (isPublicPage || isActionCall) {
+  if (isPublicPage || isActionCall || isPublicApi) {
     return next();
   }
 
