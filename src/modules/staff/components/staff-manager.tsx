@@ -13,7 +13,7 @@ interface StaffManagerProps {
   staff?: SelectStaff[] | null;
 }
 
-export function StaffManager({ errorMsg, staff = []}: StaffManagerProps) {
+export function StaffManager({ errorMsg, staff = [] }: StaffManagerProps) {
   const isEmpty = !staff || staff.length === 0;
 
   const { isLoading, execute } = useAction(actions.staff.deleteStaff, {
@@ -42,6 +42,7 @@ export function StaffManager({ errorMsg, staff = []}: StaffManagerProps) {
             key={staff.id}
             {...staff}
             isDeleting={isLoading}
+            onUpdate={() => window.location.href = `/staff/${staff.id}/edit`}
             onDelete={() => execute({ id: staff.id })}
           />
         )}
