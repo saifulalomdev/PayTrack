@@ -47,7 +47,6 @@ export function StaffManager({ errorMsg, staff = [] }: StaffManagerProps) {
           />
         )}
       </div>
-
     </div>
   );
 }

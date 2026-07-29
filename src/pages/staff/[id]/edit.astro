@@ -2,20 +2,27 @@
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
 import { EditStaff } from "@/modules/staff/components/edit-staff";
-import type { UpdateStaff } from "@/modules/staff/staff.types";
+import { safeFetch } from "@/utils/safe-fetch";
+import { staffRepository } from "@/modules/staff/staff.repository";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
 
 const { id } = Astro.params;
 
-const staffData: UpdateStaff = {
-  id: id ?? "",
-  name: "John",
-  phoneNumber: "01700000000",
-  role: "staff",
-};
+// Redirect or return 404 if no ID is in URL
+if (!id) {
+    return Astro.redirect("/staff");
+}
+
+// Pass a function to safeFetch
+const {
+    data: { password, ...staffData },
+    error: errMsg,
+} = await safeFetch(() => staffRepository.findById(getDb(env), id));
 ---
 
 <MainLayout>
     <DashboardLayout client:load transition:persist>
-        <EditStaff client:load staffData={staffData} />
+        <EditStaff client:load staffData={staffData} errorMsg={errMsg} />
     </DashboardLayout>
 </MainLayout>

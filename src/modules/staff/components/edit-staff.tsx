@@ -4,8 +4,9 @@ import { updateStaffSchema } from '../staff.schema';
 import { UpdateStaff } from '../staff.types';
 import { actions } from 'astro:actions';
 import { StaffForm } from './form';
+import ErrorAlert from '@/components/ui/error-alert';
 
-export function EditStaff({ staffData }: { staffData: UpdateStaff }) {
+export function EditStaff({ staffData , errorMsg}: { staffData: UpdateStaff , errorMsg?: string}) {
 
     const { form, onSubmit, isLoading } = useFormAction<UpdateStaff, any>({
         actionFn: actions.staff.updateStaff,
@@ -17,6 +18,7 @@ export function EditStaff({ staffData }: { staffData: UpdateStaff }) {
 
     return (
         <div className='space-y-4'>
+            <ErrorAlert errorMsg={errorMsg}/>
             <PageHeader title='Update Staff Information' />
             <StaffForm
                 form={form}
