@@ -62,6 +62,13 @@ export const updateStaff = defineAction({
       });
     }
 
+
+    if (existingStaff.phoneNumber === env.SUPER_ADMIN_PHONE) {
+      throw new ActionError({
+        code: "FORBIDDEN",
+        message: "Super admin can not be updated"
+      })
+    }
     const updatePayload: Record<string, any> = { ...otherData };
     let credentialsChanged = false;
 
@@ -123,10 +130,10 @@ export const loginStaff = defineAction({
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    return { 
-      success: true, 
-      message: "সফলভাবে লগইন করা হয়েছে!", 
-      data: { id: staff.id, name: staff.name, role: staff.role } 
+    return {
+      success: true,
+      message: "সফলভাবে লগইন করা হয়েছে!",
+      data: { id: staff.id, name: staff.name, role: staff.role }
     };
   },
 });
@@ -156,6 +163,13 @@ export const deleteStaff = defineAction({
         code: "NOT_FOUND",
         message: "স্টাফ পাওয়া যায়নি।",
       });
+    }
+
+    if (existingStaff.phoneNumber === env.SUPER_ADMIN_PHONE) {
+      throw new ActionError({
+        code: "FORBIDDEN",
+        message: "Super admin can not be deleted"
+      })
     }
 
     const deletedStaff = await staffRepository.delete(db, input.id);

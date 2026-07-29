@@ -17,6 +17,9 @@ export function AddNewStaff() {
         schema: insertStaffSchema,
         loadingMessage: "Saving staff...",
         successMessage: "Staff created successfully!",
+        onSuccess: ()=> {
+            window.location.href = "/staff"
+        }
     });
 
     return (

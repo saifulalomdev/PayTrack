@@ -2,32 +2,51 @@ import { PageHeader } from '@/components/ui/page-header';
 import ErrorAlert from '@/components/ui/error-alert';
 import StaffEmptyState from './staff-empty-state';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Plus } from 'lucide-react';
+import { SelectStaff } from '../staff.types';
+import StaffCard from './card';
+import { useAction } from '@/hooks/use-action';
+import { actions } from 'astro:actions';
 
 interface StaffManagerProps {
-  errorMsg?: string
+  errorMsg?: string;
+  staff?: SelectStaff[] | null;
 }
 
-export function StaffManager({ errorMsg }: StaffManagerProps) {
-  
+export function StaffManager({ errorMsg, staff = []}: StaffManagerProps) {
+  const isEmpty = !staff || staff.length === 0;
+
+  const { isLoading, execute } = useAction(actions.staff.deleteStaff, {
+    onSuccess: () => {
+      window.location.reload()
+    }
+  })
+
   return (
     <div className='space-y-8'>
       <ErrorAlert errorMsg={errorMsg} />
 
       <PageHeader title='Staff Management'>
-        <a href="/staff/new" className='w-full md:w-auto'>
-          <Button
-            className='uppercase w-full'
-            variant="default"
-          >
-            <Plus className="w-4 h-4" /> Add a new staff
-          </Button></a>
+        <Button asChild className='uppercase w-full md:w-auto'>
+          <a href="/staff/new">
+            <Plus className="w-4 h-4 mr-2" /> Add a new staff
+          </a>
+        </Button>
       </PageHeader>
 
-      <Input placeholder='Find staff...' />
+      {!errorMsg && isEmpty && <StaffEmptyState />}
 
-      <StaffEmptyState/>
+      <div className='space-y-4'>
+        {!errorMsg && !isEmpty && staff.map(staff =>
+          <StaffCard
+            key={staff.id}
+            {...staff}
+            isDeleting={isLoading}
+            onDelete={() => execute({ id: staff.id })}
+          />
+        )}
+      </div>
+
     </div>
   );
 }

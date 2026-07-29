@@ -3,10 +3,19 @@
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
 import { StaffManager } from "@/modules/staff/components/staff-manager";
+import { staffRepository } from "@/modules/staff/staff.repository";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+import { SelectStaff } from "@/modules/staff/staff.types";
+
+const { data: staff, error: errMsg } = await safeFetch(() => 
+  staffRepository.findAll(getDb(env))
+);
 ---
 
 <MainLayout>
     <DashboardLayout client:load transition:persist>
-        <StaffManager client:load/>
+        <StaffManager client:load ={errMsg} staff={staff}/>
     </DashboardLayout>
 </MainLayout>
