@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/button';
-import ErrorAlert from '@/components/ui/error-alert';
-import { Input } from '@/components/ui/input';
 import { PageHeader } from '@/components/ui/page-header';
-import { Plus } from 'lucide-react';
+import ErrorAlert from '@/components/ui/error-alert';
 import StaffEmptyState from './staff-empty-state';
-
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Plus } from 'lucide-react';
 
 interface StaffManagerProps {
   errorMsg?: string
@@ -12,13 +11,12 @@ interface StaffManagerProps {
 
 export function StaffManager({ errorMsg }: StaffManagerProps) {
   
-
   return (
     <div className='space-y-8'>
       <ErrorAlert errorMsg={errorMsg} />
 
       <PageHeader title='Staff Management'>
-        <a href="/staff/new">
+        <a href="/staff/new" className='w-full md:w-auto'>
           <Button
             className='uppercase w-full'
             variant="default"
