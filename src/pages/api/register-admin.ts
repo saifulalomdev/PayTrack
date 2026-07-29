@@ -1,20 +1,14 @@
+import { jsonResponse, errorResponse } from '@/utils/respose';
+import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';
+import { registerAdmin } from '@/utils/register-admin';
 
-export const GET: APIRoute = async ({ request }) => {
-  // 1. You can fetch data here (for example, from a database or static data)
-  const data = [
-    { id: '1', name: 'John Doe', role: 'admin' },
-    { id: '2', name: 'Jane Smith', role: 'staff' },
-  ];
-
-  // 2. Return a JSON Response
-  return new Response(JSON.stringify({
-    success: true,
-    data: data,
-  }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
+export const GET: APIRoute = async () => {
+  
+  try {
+    await registerAdmin(env);
+    return jsonResponse("Admin register succesfully", 200)
+  } catch (error) {
+    return errorResponse("Something went wrong!")
+  }
+}

@@ -80,4 +80,17 @@ export const staffRepository = {
 
     return records || [];
   },
+
+  async findByRole(
+    db: D1Instance,
+    role: typeof staffTable.$inferSelect.role
+  ): Promise<SelectStaff | null> {
+    const result = await db
+      .select()
+      .from(staffTable)
+      .where(eq(staffTable.role, role))
+      .get();
+
+    return result ?? null;
+  },
 };
