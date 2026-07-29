@@ -3,16 +3,22 @@ import { staffTable } from "./staff.table";
 
 const RULES = {
     password: { min: 8, max: 30 },
-    phoneNumber: 11
+    phoneNumber: 11,
+    name: 1
 }
 
 export const insertStaffSchema = createInsertSchema(staffTable, {
-    id: (s)=> s.optional(),
+    name: (s) =>
+        s.min(RULES.name, `নাম কমপক্ষে ১ অক্ষরের হতে হবে`),
+
+    id: (s) => s.optional(),
+    
     phoneNumber: (s) =>
-        s.length(RULES.phoneNumber, `Phone number must be ${RULES.phoneNumber} digits`),
+        s.length(RULES.phoneNumber, `মোবাইল নম্বরটি অবশ্যই ১১ ডিজিটের হতে হবে`),
+        
     password: (s) => s
-        .min(RULES.password.min, `Password must be at least ${RULES.password.min} characters`)
-        .max(RULES.password.max, `Password cannot exceed ${RULES.password.max} characters`),
+        .min(RULES.password.min, `পাসওয়ার্ড কমপক্ষে ৮  অক্ষরের হতে হবে`)
+        .max(RULES.password.max, `পাসওয়ার্ড সর্বোচ্চ  অক্ষরের হতে পারে`),
 }).omit({
     createdAt: true,
 });

@@ -10,7 +10,7 @@ import { env } from "cloudflare:workers";
 export const createStaff = defineAction({
   accept: "json",
   input: insertStaffSchema,
-  handler: async (input, context) => {
+  handler: async (input) => {
     
     const db = getDb(env);
 
@@ -35,7 +35,7 @@ export const updateStaff = defineAction({
     id: z.string(),
     data: insertStaffSchema.partial(),
   }),
-  handler: async (input, context) => {
+  handler: async (input) => {
     
     const db = getDb(env);
 
@@ -57,7 +57,7 @@ export const updateStaff = defineAction({
 export const deleteStaff = defineAction({
   accept: "json",
   input: z.object({ id: z.string() }),
-  handler: async (input, context) => {
+  handler: async (input) => {
     
     const db = getDb(env);
 
