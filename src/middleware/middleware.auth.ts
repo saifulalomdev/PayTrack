@@ -1,39 +1,22 @@
+import { getAuthenticatedStaff } from "@/utils/auth";
 import type { MiddlewareHandler } from "astro";
-import { env } from "cloudflare:workers";
-import { jwtVerify } from "jose";
 
 export const authMiddleware: MiddlewareHandler = async (context, next) => {
-  const { url, cookies, locals, redirect } = context;
+  const { pathname } = context.url;
 
-  const isDashboard = url.pathname.startsWith("/dashboard");
-  const isLogin = url.pathname.startsWith("/login");
-  
-  // Get the token if it exists
-  const token = cookies.get("auth_token")?.value;
+  // 1. Allow public pages and Astro Action API calls
+  const isPublicPage = pathname === "/login";
+  const isActionCall = pathname.startsWith("/_actions");
 
-  // 1. Check if token is valid
-  let isLoggedIn = false;
-  if (token) {
-    try {
-      const secret = new TextEncoder().encode(env.JWT_SECRET);
-      await jwtVerify(token, secret);
-      isLoggedIn = true;
-    } catch (error) {
-      // Token is bad/expired, clear it
-      cookies.delete("auth_token", { path: "/" });
-    }
+  if (isPublicPage || isActionCall) {
+    return next();
   }
 
-  // 2. Enforce Access Rules
-  
-  // If trying to access dashboard but NOT logged in -> Go to Login
-  if (isDashboard && !isLoggedIn) {
-    return redirect("/login");
-  }
+  // 2. Protect all other private routes
+  const staff = await getAuthenticatedStaff(context.cookies);
 
-  // If trying to access login but ALREADY logged in -> Go to Dashboard
-  if (isLogin && isLoggedIn) {
-    return redirect("/dashboard");
+  if (!staff) {
+    return context.redirect("/login");
   }
 
   return next();

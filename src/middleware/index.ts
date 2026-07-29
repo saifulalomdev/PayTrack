@@ -1,7 +1,7 @@
 import { sequence } from "astro:middleware";
-// import { authMiddleware } from "./middleware.auth";
+import { authMiddleware } from "./middleware.auth";
 
 
 export const onRequest = sequence(
-//   authMiddleware
+  authMiddleware
 );

@@ -1,4 +1,4 @@
-// src/db/services/staff.ts
+// src/modules/staff/staff.repository.ts
 import { D1Instance } from "@/utils";
 import { desc, eq } from "drizzle-orm";
 import { InsertStaff, SelectStaff } from "./staff.types";

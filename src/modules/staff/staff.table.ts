@@ -1,3 +1,5 @@
+// src/modules/staff/staff.table.ts
+
 import { generateUUID } from "@/utils";
 import { generateUnixTimestamp } from "@/utils/generate-timestamp";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";

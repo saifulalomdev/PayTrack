@@ -32,7 +32,7 @@ export function useFormAction<TFieldValues extends FieldValues, TData = any>({
         defaultValues,
     });
 
-    const { execute , isLoading} = useAction(actionFn, {
+    const { execute, isLoading } = useAction(actionFn, {
         loadingMessage,
         successMessage,
         onSuccess: (data) => {
@@ -45,5 +45,5 @@ export function useFormAction<TFieldValues extends FieldValues, TData = any>({
         execute(data);
     };
 
-    return { form, onSubmit,isLoading };
+    return { form, onSubmit, isLoading };
 }

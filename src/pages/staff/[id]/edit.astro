@@ -1,0 +1,21 @@
+---
+import MainLayout from "@/layouts/main.astro";
+import { DashboardLayout } from "@/layouts/layout";
+import { EditStaff } from "@/modules/staff/components/edit-staff";
+import type { UpdateStaff } from "@/modules/staff/staff.types";
+
+const { id } = Astro.params;
+
+const staffData: UpdateStaff = {
+  id: id ?? "",
+  name: "John",
+  phoneNumber: "01700000000",
+  role: "staff",
+};
+---
+
+<MainLayout>
+    <DashboardLayout client:load transition:persist>
+        <EditStaff client:load staffData={staffData} />
+    </DashboardLayout>
+</MainLayout>

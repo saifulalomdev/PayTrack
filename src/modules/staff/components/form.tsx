@@ -1,22 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UseFormReturn } from "react-hook-form";
-import { InsertStaff } from "../staff.types";
+import { Controller, UseFormReturn, FieldValues, Path } from "react-hook-form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface StaffFormDialogProps {
-    form: UseFormReturn<InsertStaff>;
-    onSubmit: (data: InsertStaff) => void;
+interface StaffFormProps<T extends FieldValues> {
+    form: UseFormReturn<T>;
+    onSubmit: (data: T) => void;
     isLoading?: boolean;
 }
 
-export function StaffForm({
+export function StaffForm<T extends FieldValues>({
     form,
     onSubmit,
     isLoading,
-}: StaffFormDialogProps) {
-    const { register, handleSubmit, formState: { errors } } = form;
+}: StaffFormProps<T>) {
+    const { register, handleSubmit, control, formState: { errors } } = form;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -28,7 +27,7 @@ export function StaffForm({
                     id="name"
                     disabled={isLoading}
                     placeholder="John Doe"
-                    {...register("name")}
+                    {...register("name" as Path<T>)}
                 />
                 {errors.name && (
                     <p className="text-red-500 text-sm">{errors.name.message as string}</p>
@@ -42,7 +41,7 @@ export function StaffForm({
                     id="phoneNumber"
                     disabled={isLoading}
                     placeholder="+123456789"
-                    {...register("phoneNumber")}
+                    {...register("phoneNumber" as Path<T>)}
                 />
                 {errors.phoneNumber && (
                     <p className="text-red-500 text-sm">{errors.phoneNumber.message as string}</p>
@@ -57,7 +56,7 @@ export function StaffForm({
                     type="password"
                     disabled={isLoading}
                     placeholder="••••••••"
-                    {...register("password")}
+                    {...register("password" as Path<T>)}
                 />
                 {errors.password && (
                     <p className="text-red-500 text-sm">{errors.password.message as string}</p>
@@ -67,33 +66,40 @@ export function StaffForm({
             {/* Role Selection */}
             <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
-                <Select
-                    disabled={isLoading}
-                    {...register("role")}
-                >
-                    <SelectTrigger className="w-full rounded-full p-4">
-                        <SelectValue defaultValue="staff" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="staff">
-                            Staff
-                        </SelectItem>
-                        <SelectItem value="admin">
-                            Admin
-                        </SelectItem>
-                    </SelectContent>
-                </Select>
+                <Controller
+                    control={control}
+                    name={"role" as Path<T>}
+                    render={({ field }) => (
+                        <Select
+                            disabled={isLoading}
+                            onValueChange={field.onChange}
+                            value={field.value ?? ""}
+                        >
+                            <SelectTrigger className="w-full rounded-full p-4">
+                                <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="staff">Staff</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    )}
+                />
                 {errors.role && (
                     <p className="text-red-500 text-sm">{errors.role.message as string}</p>
                 )}
             </div>
 
-            <Button type="button" variant="outline" className="flex-1">
-                Cancel
-            </Button>
-            <Button type="submit" disabled={isLoading} className="flex-1">
-                {isLoading ? "Saving..." : "Create Staff"}
-            </Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="/staff" className="w-full">
+                    <Button type="button" variant="outline" className="w-full">
+                        Cancel
+                    </Button>
+                </a>
+                <Button type="submit" disabled={isLoading} className="flex-1">
+                    {isLoading ? "Saving..." : "Save"}
+                </Button>
+            </div>
         </form>
     );
 }

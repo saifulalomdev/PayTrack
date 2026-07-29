@@ -1,3 +1,5 @@
+// src/modules/staff/staff.schema.ts
+
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { staffTable } from "./staff.table";
 
@@ -25,3 +27,5 @@ export const insertStaffSchema = createInsertSchema(staffTable, {
 
 // Schema for reading staff (selecting data)
 export const selectStaffSchema = createSelectSchema(staffTable);
+
+export const updateStaffSchema = insertStaffSchema.partial();
