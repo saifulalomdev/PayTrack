@@ -6,7 +6,7 @@ import { actions } from 'astro:actions';
 import { StaffForm } from './form';
 import ErrorAlert from '@/components/ui/error-alert';
 
-export function EditStaff({ staffData , errorMsg}: { staffData: UpdateStaff , errorMsg?: string}) {
+export function EditStaff({ staffData , errorMsg}: { staffData: UpdateStaff, errorMsg?: string}) {
 
     const { form, onSubmit, isLoading } = useFormAction<UpdateStaff, any>({
         actionFn: actions.staff.updateStaff,

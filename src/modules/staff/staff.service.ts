@@ -135,4 +135,8 @@ export const staffService = {
         const staff = await staffRepository.findAll(db);
         return staff.map(toSafeStaff);
     },
+    async getById(db: D1Instance, id: string): Promise<PublicStaff | null> {
+        const staff = await staffRepository.findById(db, id);
+        return staff ? toSafeStaff(staff) : null;
+    },
 };

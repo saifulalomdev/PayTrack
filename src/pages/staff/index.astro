@@ -8,13 +8,21 @@ import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 import { safeFetch } from "@/utils/safe-fetch";
 
-const { data: staff, error: errMsg } = await safeFetch(() =>
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard.
+const currentStaff = Astro.locals.staff!;
+
+const { data: staffList, error: errMsg } = await safeFetch(() =>
   staffService.listAll(getDb(env))
 );
 ---
 
 <MainLayout>
-    <DashboardLayout client:load transition:persist>
-        <StaffManager client:load errorMsg={errMsg} staff={staff} />
+    <DashboardLayout
+        client:load
+        transition:persist
+        staff={{ name: currentStaff.name, role: currentStaff.role }}
+    >
+        <StaffManager client:load errorMsg={errMsg} staff={staffList} />
     </DashboardLayout>
 </MainLayout>

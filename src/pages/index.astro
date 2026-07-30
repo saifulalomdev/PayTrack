@@ -1,11 +1,15 @@
 ---
-// src/pages/index.astro
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
+const staff = Astro.locals.staff!;
 ---
 
 <MainLayout>
-    <DashboardLayout client:load transition:persist>
-        <h1>Dashboard Content</h1>
+    <DashboardLayout
+        client:load
+        transition:persist
+        staff={{ name: staff.name, role: staff.role }}
+    >
+        Dashboard content
     </DashboardLayout>
 </MainLayout>

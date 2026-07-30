@@ -8,8 +8,17 @@ import { Button } from "@/components/ui/button";
 import { cn } from '@/utils/utils';
 import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
 
+interface CurrentStaff {
+    name: string;
+    role: "admin" | "staff";
+}
 
-export function DashboardLayout({ children }: { children: React.ReactNode }) {
+interface DashboardLayoutProps {
+    children: React.ReactNode;
+    staff: CurrentStaff; // passed from the .astro page via context.locals.staff
+}
+
+export function DashboardLayout({ children, staff }: DashboardLayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
@@ -28,6 +37,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <DashboardHeader
                     isSidebarOpen={isSidebarOpen}
                     onClick={() => setIsSidebarOpen(p => !p)}
+                    staff={staff}
                 />
                 <main className="p-4">
                     {children}
@@ -86,11 +96,16 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
 interface DashboardHeaderProps {
     isSidebarOpen: boolean;
     onClick: () => void;
+    staff: CurrentStaff;
 }
 
-function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
-    // 3. Read current language from store
+function DashboardHeader({ isSidebarOpen, onClick, staff }: DashboardHeaderProps) {
     const language = useStore($language);
+    const t = useStore($t);
+
+    // Localized role label — falls back to the raw role if translations
+    // for it aren't defined yet in your i18n store.
+    const roleLabel = t.common[staff.role] ?? (staff.role === "admin" ? "Admin" : "Staff");
 
     return (
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-4 lg:px-6">
@@ -111,7 +126,6 @@ function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
             </div>
 
             <div className="flex items-center gap-4">
-                {/* 4. Trigger global language change */}
                 <Button
                     onClick={toggleLanguage}
                     aria-label="Switch Language"
@@ -125,7 +139,10 @@ function DashboardHeader({ isSidebarOpen, onClick }: DashboardHeaderProps) {
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                         <User className="h-5 w-5 text-muted-foreground" />
                     </div>
-                    <span className="text-sm font-medium">Admin</span>
+                    <div className="flex flex-col leading-tight">
+                        <span className="text-sm font-medium">{staff.name}</span>
+                        <span className="text-xs text-muted-foreground">{roleLabel}</span>
+                    </div>
                 </div>
             </div>
         </header>
