@@ -17,6 +17,6 @@ import { ClientRouter } from "astro:transitions";
 	</head>
 	<body>
 		<slot />
-		<Toaster richColors client:load />
+		<Toaster richColors client:load transition:persist />
 	</body>
 </html>
