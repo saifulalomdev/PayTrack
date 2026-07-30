@@ -4,6 +4,7 @@
 declare global {
   namespace App {
     interface Locals {
+      staff: import("@/modules/staff/staff.types").SelectStaff | null;
       runtime: {
         env: Env;
       };

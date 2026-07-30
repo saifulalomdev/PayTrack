@@ -9,7 +9,6 @@ import { env } from "cloudflare:workers";
 
 const { id } = Astro.params;
 
-// Redirect or return 404 if no ID is in URL
 if (!id) {
     return Astro.redirect("/staff");
 }

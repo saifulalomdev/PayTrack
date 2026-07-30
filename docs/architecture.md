@@ -8,7 +8,7 @@ This application is designed to manage product installment payments and customer
 ## 2. User Roles and Authorization
 
 ### 2.1 Staff Role
-- Account Creation: The Admin creates Staff accounts with a Name, Phone Number, Password, and an optional auto-generated ID Card Number.
+- Account Creation: The Admin creates Staff accounts with a Name, Phone Number, Password, and an optional auto-generated id.
 - Customer Management: Can register new customers in the system.
 - Installment Entry: Can add new installment collection entries.
 - Permissions: Strictly restricted to adding data. Staff members cannot edit, update, or delete any record.
@@ -30,6 +30,8 @@ Every installment entry recorded in the system must collect and store the follow
 4. Product Name: Title or description of the product purchased on installment.
 5. Total Installment: Total number of installments or overall installment amount agreed upon.
 6. Downpayment: Initial upfront payment made by the customer at the time of purchase.
+7. Deadline: expected eng line.
+
 
 ---
 

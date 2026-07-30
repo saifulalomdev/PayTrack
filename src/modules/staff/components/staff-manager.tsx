@@ -2,15 +2,15 @@ import { PageHeader } from '@/components/ui/page-header';
 import ErrorAlert from '@/components/ui/error-alert';
 import StaffEmptyState from './staff-empty-state';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { SelectStaff } from '../staff.types';
-import StaffCard from './card';
 import { useAction } from '@/hooks/use-action';
+import { PublicStaff } from '../staff.types';
 import { actions } from 'astro:actions';
+import { Plus } from 'lucide-react';
+import StaffCard from './card';
 
 interface StaffManagerProps {
   errorMsg?: string;
-  staff?: SelectStaff[] | null;
+  staff?: PublicStaff[] | null;
 }
 
 export function StaffManager({ errorMsg, staff = [] }: StaffManagerProps) {
