@@ -20,7 +20,6 @@ const { data: staffList, error: errMsg } = await safeFetch(() =>
 <MainLayout>
     <DashboardLayout
         client:load
-        transition:persist
         staff={{ name: currentStaff.name, role: currentStaff.role }}
     >
         <StaffManager client:load errorMsg={errMsg} staff={staffList} />

@@ -7,7 +7,6 @@ const staff = Astro.locals.staff!;
 <MainLayout>
     <DashboardLayout
         client:load
-        transition:persist
         staff={{ name: staff.name, role: staff.role }}
     >
         customer content

@@ -1,7 +1,6 @@
 ---
 import "@/styles/global.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -12,11 +11,10 @@ import { ClientRouter } from "astro:transitions";
 		<link rel="icon" type="image/svg+xml" href="/logo.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>PayTrack</title>
-		<ClientRouter />
 		<meta name="description" content="" />
 	</head>
 	<body>
 		<slot />
-		<Toaster richColors client:load transition:persist />
+		<Toaster richColors client:load />
 	</body>
 </html>
