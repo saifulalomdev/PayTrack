@@ -1,0 +1,37 @@
+---
+// src/pages/customer/index.astro
+import MainLayout from "@/layouts/main.astro";
+import { DashboardLayout } from "@/layouts/layout";
+import { customerService } from "@/modules/customer/customer.service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+import { CustomerManager } from "@/modules/customer/components/manger";
+
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard.
+const currentStaff = Astro.locals.staff!;
+
+const { data: customerList, error: errMsg } = await safeFetch(() =>
+  customerService.listAll(getDb(env))
+);
+
+// Any staff can view/add customers, but only admins may edit or delete
+// them — this is the single place that decides "isAdmin" for the UI;
+// CustomerManager/CustomerCard just render whatever they're told.
+const isAdmin = currentStaff.role === "admin";
+---
+
+<MainLayout>
+    <DashboardLayout
+        client:load
+        staff={{ name: currentStaff.name, role: currentStaff.role }}
+    >
+        <CustomerManager
+            client:load
+            errorMsg={errMsg}
+            customers={customerList}
+            isAdmin={isAdmin}
+        />
+    </DashboardLayout>
+</MainLayout>
