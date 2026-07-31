@@ -1,3 +1,5 @@
+// src/modules/staff/staff.types.ts
+
 import { z } from "zod";
 import { insertStaffSchema, selectStaffSchema, updateStaffSchema } from "./staff.schema";
 

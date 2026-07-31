@@ -1,0 +1,92 @@
+// src/modules/customer/customer.service.ts
+import { ActionError } from "astro:actions";
+import type { D1Instance } from "@/utils";
+import { customerRepository } from "./customer.repository";
+import type { InsertCustomer, UpdateCustomer, SelectCustomer, PublicCustomer } from "./customer.types";
+
+/**
+ * No password-like field exists on customer, so this is just an identity
+ * pass-through — kept for symmetry with staffService.toSafeStaff so every
+ * method below returns through the same "one safe shape" convention.
+ */
+function toSafeCustomer(customer: SelectCustomer): PublicCustomer {
+    return customer;
+}
+
+export const customerService = {
+    /**
+     * createdByName must be captured server-side from the authenticated
+     * staff's own session (see customer.actions.ts) — never trust a
+     * client-supplied value here, since it's the only record left of who
+     * added the customer once/if that staff account is later deleted.
+     */
+    async createCustomer(
+        db: D1Instance,
+        input: InsertCustomer,
+        createdByName: string
+    ): Promise<PublicCustomer> {
+        const existing = await customerRepository.findBySerialNumber(db, input.serialNumber);
+        if (existing) {
+            throw new ActionError({
+                code: "CONFLICT",
+                message: "এই সিরিয়াল নম্বর দিয়ে ইতিমধ্যেই একজন গ্রাহক তৈরি করা হয়েছে।",
+            });
+        }
+
+        const newCustomer = await customerRepository.create(db, { ...input, createdByName });
+        return toSafeCustomer(newCustomer);
+    },
+
+    /**
+     * Admin only — role check is enforced in the action layer (requireAdmin),
+     * not here. This layer only owns business rules (existence + uniqueness).
+     */
+    async updateCustomer(db: D1Instance, id: string, input: UpdateCustomer): Promise<PublicCustomer> {
+        const { id: _ignoredId, ...updatePayload } = input;
+
+        const existingCustomer = await customerRepository.findById(db, id);
+        if (!existingCustomer) {
+            throw new ActionError({ code: "NOT_FOUND", message: "গ্রাহক পাওয়া যায়নি।" });
+        }
+
+        if (
+            updatePayload.serialNumber &&
+            updatePayload.serialNumber !== existingCustomer.serialNumber
+        ) {
+            const serialTaken = await customerRepository.findBySerialNumber(db, updatePayload.serialNumber);
+            if (serialTaken) {
+                throw new ActionError({
+                    code: "CONFLICT",
+                    message: "এই সিরিয়াল নম্বর দিয়ে ইতিমধ্যেই একজন গ্রাহক তৈরি করা হয়েছে।",
+                });
+            }
+        }
+
+        const customer = await customerRepository.update(db, id, updatePayload);
+        return toSafeCustomer(customer);
+    },
+
+    /**
+     * Admin only — role check is enforced in the action layer (requireAdmin),
+     * not here.
+     */
+    async deleteCustomer(db: D1Instance, id: string): Promise<PublicCustomer> {
+        const existingCustomer = await customerRepository.findById(db, id);
+        if (!existingCustomer) {
+            throw new ActionError({ code: "NOT_FOUND", message: "গ্রাহক পাওয়া যায়নি।" });
+        }
+
+        const deleted = await customerRepository.delete(db, id);
+        return toSafeCustomer(deleted);
+    },
+
+    async listAll(db: D1Instance): Promise<PublicCustomer[]> {
+        const customers = await customerRepository.findAll(db);
+        return customers.map(toSafeCustomer);
+    },
+
+    async getById(db: D1Instance, id: string): Promise<PublicCustomer | null> {
+        const customer = await customerRepository.findById(db, id);
+        return customer ? toSafeCustomer(customer) : null;
+    },
+};

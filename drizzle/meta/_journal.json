@@ -22,6 +22,13 @@
       "when": 1785399805944,
       "tag": "0002_strong_dorian_gray",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1785473189219,
+      "tag": "0003_blue_wolf_cub",
+      "breakpoints": true
     }
   ]
 }
