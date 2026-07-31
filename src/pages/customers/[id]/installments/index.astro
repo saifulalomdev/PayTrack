@@ -1,0 +1,43 @@
+---
+// src/pages/customers/[id]/installments/index.astro
+import MainLayout from "@/layouts/main.astro";
+import { DashboardLayout } from "@/layouts/layout";
+import { InstallmentManager } from "@/modules/installment/components/manager";
+import { installmentService } from "@/modules/installment/installment.service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+
+const { id: customerId } = Astro.params;
+
+if (!customerId) {
+    return Astro.redirect("/customers");
+}
+
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard.
+const currentStaff = Astro.locals.staff!;
+
+const { data: installmentList, error: errMsg } = await safeFetch(() =>
+  installmentService.listByCustomer(getDb(env), customerId)
+);
+
+// Any staff can view/add installments, but only admins may edit or delete
+// them — same single-source-of-truth pattern as customers/index.astro.
+const isAdmin = currentStaff.role === "admin";
+---
+
+<MainLayout>
+    <DashboardLayout
+        client:load
+        staff={{ name: currentStaff.name, role: currentStaff.role }}
+    >
+        <InstallmentManager
+            client:load
+            customerId={customerId}
+            errorMsg={errMsg}
+            installments={installmentList}
+            isAdmin={isAdmin}
+        />
+    </DashboardLayout>
+</MainLayout>

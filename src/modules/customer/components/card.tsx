@@ -7,6 +7,7 @@ import {
   Hash,
   Package,
   CalendarClock,
+  Wallet,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -34,9 +35,8 @@ import { PublicCustomer } from "../customer.types";
 interface CustomerCardProps extends Partial<PublicCustomer> {
   id?: string;
   // Only admins may edit/delete — staff can add and view customers, but
-  // never touch them afterward. The page rendering this card must pass
-  // the caller's real role down; this defaults to false so the
-  // add-only restriction fails safe if the prop is ever forgotten.
+  // never touch them afterward. Defaults to false so it fails safe if
+  // this prop is ever forgotten.
   isAdmin?: boolean;
   onUpdate?: () => void;
   onDelete?: () => void;
@@ -58,6 +58,7 @@ function formatTaka(amount?: number) {
 }
 
 export default function CustomerCard({
+  id,
   name,
   serialNumber,
   productName,
@@ -117,13 +118,26 @@ export default function CustomerCard({
           </div>
         </div>
 
-        {/* Right Side: Actions Dropdown — admin only */}
-        {isAdmin && (
-          <div className="flex items-center">
+        {/* Right Side: Actions */}
+        <div className="flex items-center gap-1 shrink-0">
+          {/* View installments — open to every staff member, not gated by
+              isAdmin, since staff are allowed to add/view payments even
+              though they can't edit/delete a customer's own record. */}
+          {id && (
+            <a href={`/customers/${id}/installments`}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" title="কিস্তি দেখুন">
+                <Wallet className="h-4 w-4" />
+                <span className="sr-only">কিস্তি দেখুন</span>
+              </Button>
+            </a>
+          )}
+
+          {/* Edit/Delete Dropdown — admin only */}
+          {isAdmin && (
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full shrink-0">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                     <MoreVertical className="h-4 w-4" />
                     <span className="sr-only">অপশন খুলুন</span>
                   </Button>
@@ -172,8 +186,8 @@ export default function CustomerCard({
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Card>
   );
