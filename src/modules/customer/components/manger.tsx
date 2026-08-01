@@ -1,35 +1,95 @@
+import { useEffect, useRef, useState } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import ErrorAlert from '@/components/ui/error-alert';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useAction } from '@/hooks/use-action';
 import { PublicCustomer } from '../customer.types';
 import { actions } from 'astro:actions';
-import { Plus } from 'lucide-react';
+import { Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import CustomerCard from './card';
 import CustomerEmptyState from './empty-state';
+
+interface Pagination {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
 
 interface CustomerManagerProps {
   errorMsg?: string;
   customers?: PublicCustomer[] | null;
-  // Passed down from the page/layout, which already knows the logged-in
-  // staff's role from the session. This component doesn't decide who's an
-  // admin — it only renders what it's told, defaulting to false so
-  // edit/delete controls fail safe (hidden) if this is ever omitted.
+  pagination?: Pagination;
+  initialSearch?: string;
   isAdmin?: boolean;
 }
 
-export function CustomerManager({ errorMsg, customers = [], isAdmin = false }: CustomerManagerProps) {
+const DEFAULT_PAGINATION: Pagination = { page: 1, pageSize: 10, total: 0, totalPages: 1 };
+
+// Mirrors the current search/page into the URL query string. The Astro
+// page reads these same two params on SSR, so a refresh (or a copied
+// link) reproduces the exact list the user was looking at.
+function syncUrl(search: string, page: number) {
+  const url = new URL(window.location.href);
+  search ? url.searchParams.set('search', search) : url.searchParams.delete('search');
+  page > 1 ? url.searchParams.set('page', String(page)) : url.searchParams.delete('page');
+  window.history.replaceState({}, '', url.toString());
+}
+
+export function CustomerManager({
+  errorMsg,
+  customers: initialCustomers = [],
+  pagination: initialPagination = DEFAULT_PAGINATION,
+  initialSearch = '',
+  isAdmin = false,
+}: CustomerManagerProps) {
+  const [customers, setCustomers] = useState<PublicCustomer[]>(initialCustomers ?? []);
+  const [pagination, setPagination] = useState<Pagination>(initialPagination);
+  const [search, setSearch] = useState(initialSearch);
+  const [fetchError, setFetchError] = useState<string | undefined>(errorMsg);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
   const isEmpty = !customers || customers.length === 0;
 
-  const { isLoading, execute } = useAction(actions.customer.deleteCustomer, {
-    onSuccess: () => {
-      window.location.reload()
-    }
-  })
+  const { isLoading: isDeleting, execute: executeDelete } = useAction(actions.customer.deleteCustomer, {
+    onSuccess: () => window.location.reload(),
+  });
+
+  const { isLoading: isSearching, execute: executeList } = useAction(actions.customer.listCustomers, {
+    onSuccess: (result) => {
+      setCustomers(result.data);
+      setPagination(result.pagination);
+      setFetchError(undefined);
+    },
+    onError: (err) => setFetchError((err as any)?.message ?? 'গ্রাহক খুঁজে পাওয়া যায়নি।'),
+  });
+
+  const fetchPage = (nextSearch: string, nextPage: number) => {
+    syncUrl(nextSearch, nextPage);
+    executeList({ search: nextSearch || undefined, page: nextPage, pageSize: pagination.pageSize });
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    // Debounced so we don't fire an action on every keystroke; always
+    // resets to page 1 since the result set changes.
+    debounceRef.current = setTimeout(() => fetchPage(value, 1), 350);
+  };
+
+  useEffect(() => () => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+  }, []);
+
+  const goToPage = (page: number) => {
+    if (page < 1 || page > pagination.totalPages || page === pagination.page) return;
+    fetchPage(search, page);
+  };
 
   return (
     <div className='space-y-8'>
-      <ErrorAlert errorMsg={errorMsg} />
+      <ErrorAlert errorMsg={fetchError} />
 
       <PageHeader title='গ্রাহক ব্যবস্থাপনা'>
         <Button asChild className='uppercase w-full md:w-auto'>
@@ -39,20 +99,60 @@ export function CustomerManager({ errorMsg, customers = [], isAdmin = false }: C
         </Button>
       </PageHeader>
 
-      {!errorMsg && isEmpty && <CustomerEmptyState />}
+      <div className='relative max-w-sm'>
+        <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+        <Input
+          value={search}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          placeholder='সিরিয়াল নম্বর দিয়ে খুঁজুন...'
+          className='pl-9'
+        />
+      </div>
+
+      {!fetchError && isEmpty && <CustomerEmptyState />}
 
       <div className='space-y-4'>
-        {!errorMsg && !isEmpty && customers.map(customer =>
+        {!fetchError && !isEmpty && customers.map(customer =>
           <CustomerCard
             key={customer.id}
             {...customer}
             isAdmin={isAdmin}
-            isDeleting={isLoading}
+            isDeleting={isDeleting}
             onUpdate={() => window.location.href = `/customers/${customer.id}/edit`}
-            onDelete={() => execute({ id: customer.id })}
+            onDelete={() => executeDelete({ id: customer.id })}
           />
         )}
       </div>
+
+      {!fetchError && pagination.total > 0 && (
+        <div className='flex items-center justify-between pt-2'>
+          <p className='text-sm text-muted-foreground'>
+            মোট {pagination.total} জনের মধ্যে {(pagination.page - 1) * pagination.pageSize + 1}
+            –{Math.min(pagination.page * pagination.pageSize, pagination.total)} জন দেখানো হচ্ছে
+          </p>
+          {pagination.totalPages > 1 && (
+            <div className='flex items-center gap-2'>
+              <Button
+                variant='outline'
+                size='icon'
+                disabled={pagination.page <= 1 || isSearching}
+                onClick={() => goToPage(pagination.page - 1)}
+              >
+                <ChevronLeft className='w-4 h-4' />
+              </Button>
+              <span className='text-sm'>{pagination.page} / {pagination.totalPages}</span>
+              <Button
+                variant='outline'
+                size='icon'
+                disabled={pagination.page >= pagination.totalPages || isSearching}
+                onClick={() => goToPage(pagination.page + 1)}
+              >
+                <ChevronRight className='w-4 h-4' />
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -80,13 +80,31 @@ export const customerService = {
         return toSafeCustomer(deleted);
     },
 
-    async listAll(db: D1Instance): Promise<PublicCustomer[]> {
-        const customers = await customerRepository.findAll(db);
-        return customers.map(toSafeCustomer);
-    },
-
     async getById(db: D1Instance, id: string): Promise<PublicCustomer | null> {
         const customer = await customerRepository.findById(db, id);
         return customer ? toSafeCustomer(customer) : null;
+    },
+    async listAll(
+        db: D1Instance,
+        params: { search?: string; page?: number; pageSize?: number } = {}
+    ): Promise<{
+        data: PublicCustomer[];
+        pagination: { page: number; pageSize: number; total: number; totalPages: number };
+    }> {
+        const page = Math.max(1, Math.floor(params.page ?? 1));
+        const pageSize = Math.min(100, Math.max(1, Math.floor(params.pageSize ?? 10)));
+        const search = params.search?.trim() || undefined;
+
+        const { data, total } = await customerRepository.findAll(db, { search, page, pageSize });
+
+        return {
+            data: data.map(toSafeCustomer),
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.max(1, Math.ceil(total / pageSize)),
+            },
+        };
     },
 };

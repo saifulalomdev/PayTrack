@@ -1,5 +1,4 @@
 ---
-// src/pages/customer/index.astro
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
 import { customerService } from "@/modules/customer/customer.service";
@@ -8,17 +7,19 @@ import { getDb } from "@/utils";
 import { safeFetch } from "@/utils/safe-fetch";
 import { CustomerManager } from "@/modules/customer/components/manger";
 
-// context.locals.staff is populated by the auth middleware and guaranteed
-// non-null here, since this route sits behind the auth guard.
 const currentStaff = Astro.locals.staff!;
 
-const { data: customerList, error: errMsg } = await safeFetch(() =>
-  customerService.listAll(getDb(env))
+// Search & page live in the URL, not just component state — this is what
+// makes pagination "precise on refresh": a hard reload re-runs this SSR
+// query with the exact same ?search=&page= the user was on.
+const PAGE_SIZE = 10;
+const search = Astro.url.searchParams.get("search")?.trim() || undefined;
+const page = Math.max(1, Number(Astro.url.searchParams.get("page")) || 1);
+
+const { data: result, error: errMsg } = await safeFetch(() =>
+  customerService.listAll(getDb(env), { search, page, pageSize: PAGE_SIZE })
 );
 
-// Any staff can view/add customers, but only admins may edit or delete
-// them — this is the single place that decides "isAdmin" for the UI;
-// CustomerManager/CustomerCard just render whatever they're told.
 const isAdmin = currentStaff.role === "admin";
 ---
 
@@ -30,7 +31,9 @@ const isAdmin = currentStaff.role === "admin";
         <CustomerManager
             client:load
             errorMsg={errMsg}
-            customers={customerList}
+            customers={result?.data ?? []}
+            pagination={result?.pagination ?? { page, pageSize: PAGE_SIZE, total: 0, totalPages: 1 }}
+            initialSearch={search ?? ""}
             isAdmin={isAdmin}
         />
     </DashboardLayout>

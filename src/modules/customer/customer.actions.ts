@@ -33,19 +33,6 @@ export const createCustomer = defineAction({
   },
 });
 
-// LIST CUSTOMERS — any logged-in staff (admin or staff) can view
-export const listCustomers = defineAction({
-  accept: "json",
-  handler: async (_, context) => {
-    requireAuth(context);
-
-    const db = getDb(env);
-    const customers = await customerService.listAll(db);
-
-    return { success: true, data: customers };
-  },
-});
-
 // GET CUSTOMER BY ID — any logged-in staff (admin or staff) can view
 export const getCustomer = defineAction({
   accept: "json",
@@ -96,5 +83,25 @@ export const deleteCustomer = defineAction({
     const deletedCustomer = await customerService.deleteCustomer(db, input.id);
 
     return { success: true, message: "গ্রাহক সফলভাবে মুছে ফেলা হয়েছে।", data: deletedCustomer };
+  },
+});
+
+// LIST CUSTOMERS — any logged-in staff (admin or staff) can view/search
+export const listCustomers = defineAction({
+  accept: "json",
+  input: z
+    .object({
+      search: z.string().optional(),
+      page: z.number().int().min(1).optional(),
+      pageSize: z.number().int().min(1).max(100).optional(),
+    })
+    .optional(),
+  handler: async (input, context) => {
+    requireAuth(context);
+
+    const db = getDb(env);
+    const { data, pagination } = await customerService.listAll(db, input ?? {});
+
+    return { success: true, data, pagination };
   },
 });

@@ -1,6 +1,6 @@
 // src/modules/customer/customer.repository.ts
 import { D1Instance } from "@/utils";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, like, sql } from "drizzle-orm";
 import { InsertCustomer, NewCustomer, SelectCustomer } from "./customer.types";
 import { customerTable } from "./customer.table";
 
@@ -71,15 +71,41 @@ export const customerRepository = {
   },
 
   /**
-   * FIND ALL: Retrieves all customers, ordered by creation date
+   * FIND ALL: Paginated, optionally filtered by a partial serial-number match.
+   * `page` is 1-indexed. Returns both the page of rows and the total count
+   * (matching the filter) so the caller can compute totalPages.
    */
-  async findAll(db: D1Instance): Promise<SelectCustomer[]> {
-    const records = await db
-      .select()
-      .from(customerTable)
-      .orderBy(desc(customerTable.createdAt))
-      .execute();
+  async findAll(
+    db: D1Instance,
+    options: { search?: string; page: number; pageSize: number }
+  ): Promise<{ data: SelectCustomer[]; total: number }> {
+    const { search, page, pageSize } = options;
+    const offset = (page - 1) * pageSize;
 
-    return records || [];
+    // Partial, case-sensitive-per-SQLite-default match on serial number only.
+    const whereClause = search
+      ? like(customerTable.serialNumber, `%${search}%`)
+      : undefined;
+
+    const [records, countResult] = await Promise.all([
+      db
+        .select()
+        .from(customerTable)
+        .where(whereClause)
+        .orderBy(desc(customerTable.createdAt))
+        .limit(pageSize)
+        .offset(offset)
+        .execute(),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(customerTable)
+        .where(whereClause)
+        .execute(),
+    ]);
+
+    return {
+      data: records || [],
+      total: Number(countResult[0]?.count ?? 0),
+    };
   },
 };
