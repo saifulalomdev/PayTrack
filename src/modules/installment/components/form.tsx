@@ -41,42 +41,18 @@ export function InstallmentForm<T extends FieldValues>({
                 was opened from (see AddNewInstallment). */}
             <input type="hidden" {...register("customerId" as Path<T>)} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Amount */}
-                <div className="space-y-2">
-                    <Label htmlFor="amount">পরিশোধের পরিমাণ (৳)</Label>
-                    <Input
-                        id="amount"
-                        type="number"
-                        disabled={isLoading}
-                        placeholder="৫০০০"
-                        {...register("amount" as Path<T>, { valueAsNumber: true })}
-                    />
-                    {errors.amount && (
-                        <p className="text-red-500 text-sm">{errors.amount.message as string}</p>
-                    )}
-                </div>
-
-                {/* Paid At */}
-                <div className="space-y-2">
-                    <Label htmlFor="paidAt">পরিশোধের তারিখ</Label>
-                    <Controller
-                        control={control}
-                        name={"paidAt" as Path<T>}
-                        render={({ field }) => (
-                            <Input
-                                id="paidAt"
-                                type="date"
-                                disabled={isLoading}
-                                value={unixToDateInputValue(field.value)}
-                                onChange={(e) => field.onChange(dateInputValueToUnix(e.target.value))}
-                            />
-                        )}
-                    />
-                    {errors.paidAt && (
-                        <p className="text-red-500 text-sm">{errors.paidAt.message as string}</p>
-                    )}
-                </div>
+            <div className="space-y-2">
+                <Label htmlFor="amount">পরিশোধের পরিমাণ (৳)</Label>
+                <Input
+                    id="amount"
+                    type="number"
+                    disabled={isLoading}
+                    placeholder="৫০০০"
+                    {...register("amount" as Path<T>, { valueAsNumber: true })}
+                />
+                {errors.amount && (
+                    <p className="text-red-500 text-sm">{errors.amount.message as string}</p>
+                )}
             </div>
 
             {/* Note */}

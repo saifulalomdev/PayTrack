@@ -3,12 +3,18 @@ import ErrorAlert from '@/components/ui/error-alert';
 import { Button } from '@/components/ui/button';
 import { useAction } from '@/hooks/use-action';
 import { PublicInstallment } from '../installment.types';
+import { PublicCustomer } from '@/modules/customer/customer.types';
 import { actions } from 'astro:actions';
 import { Plus } from 'lucide-react';
 import InstallmentCard from './card';
+import { CustomerDetailsCard } from '@/modules/customer/components/customer-details-card';
 
 interface InstallmentManagerProps {
   customerId: string;
+  // The customer this page is showing installments for — this page IS
+  // that customer's detail view, since CustomerCard on /customers links
+  // straight here now. Nullable because the fetch can fail/miss.
+  customer?: PublicCustomer | null;
   errorMsg?: string;
   installments?: PublicInstallment[] | null;
   // Same convention as CustomerManager — the page passes down what it
@@ -16,18 +22,40 @@ interface InstallmentManagerProps {
   isAdmin?: boolean;
 }
 
-export function InstallmentManager({ customerId, errorMsg, installments = [], isAdmin = false }: InstallmentManagerProps) {
+export function InstallmentManager({ customerId, customer, errorMsg, installments = [], isAdmin = false }: InstallmentManagerProps) {
   const isEmpty = !installments || installments.length === 0;
 
-  const { isLoading, execute } = useAction(actions.installment.deleteInstallment, {
+  // Deleting the CUSTOMER (admin only) — separate action/loading state
+  // from deleting an individual INSTALLMENT below, since they're
+  // different entities with different effects (deleting the customer
+  // cascades and removes every installment too, then leaves this page).
+  const { isLoading: isDeletingCustomer, execute: executeDeleteCustomer } = useAction(actions.customer.deleteCustomer, {
     onSuccess: () => {
-      window.location.reload()
+      window.location.href = "/customers";
     }
-  })
+  });
+
+  const { isLoading: isDeletingInstallment, execute: executeDeleteInstallment } = useAction(actions.installment.deleteInstallment, {
+    onSuccess: () => {
+      window.location.reload();
+    }
+  });
 
   return (
     <div className='space-y-8'>
       <ErrorAlert errorMsg={errorMsg} />
+
+      {/* Customer's own details — edit/delete only rendered for admins,
+          same isAdmin gate as everywhere else. */}
+      {!errorMsg && customer && (
+        <CustomerDetailsCard
+          {...customer}
+          isAdmin={isAdmin}
+          isDeleting={isDeletingCustomer}
+          onUpdate={() => window.location.href = `/customers/${customerId}/edit`}
+          onDelete={() => executeDeleteCustomer({ id: customerId })}
+        />
+      )}
 
       <PageHeader title='কিস্তির তালিকা'>
         <Button asChild className='uppercase w-full md:w-auto'>
@@ -49,9 +77,9 @@ export function InstallmentManager({ customerId, errorMsg, installments = [], is
             key={installment.id}
             {...installment}
             isAdmin={isAdmin}
-            isDeleting={isLoading}
+            isDeleting={isDeletingInstallment}
             onUpdate={() => window.location.href = `/customers/${customerId}/installments/${installment.id}/edit`}
-            onDelete={() => execute({ id: installment.id })}
+            onDelete={() => executeDeleteInstallment({ id: installment.id })}
           />
         )}
       </div>

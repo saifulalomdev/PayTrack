@@ -20,7 +20,6 @@ export const installmentTable = sqliteTable('installmentTable', {
   amount: integer('amount').notNull(),
 
   // Unix timestamp of when this installment was actually paid.
-  paidAt: integer('paid_at').notNull(),
 
   note: text('note'),
 
@@ -30,5 +29,6 @@ export const installmentTable = sqliteTable('installmentTable', {
   // record of who logged the payment should persist.
   createdByName: text('created_by_name').notNull(),
 
+  // Unix timestamp of when this installment was actually paid.
   createdAt: integer('created_at').notNull().$defaultFn(generateUnixTimestamp),
 });

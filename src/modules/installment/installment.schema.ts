@@ -12,7 +12,6 @@ import z from "zod";
 const baseInstallmentSchema = createInsertSchema(installmentTable, {
     customerId: (s) => s.min(1, `গ্রাহক আইডি আবশ্যক`),
     amount: (s) => s.positive(`কিস্তির পরিমাণ অবশ্যই ধনাত্মক সংখ্যা হতে হবে`),
-    paidAt: (s) => s.positive(`পরিশোধের তারিখ আবশ্যক`),
 }).omit({
     createdAt: true,
     createdByName: true,

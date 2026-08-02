@@ -63,7 +63,7 @@ export const installmentRepository = {
       .select()
       .from(installmentTable)
       .where(eq(installmentTable.customerId, customerId))
-      .orderBy(desc(installmentTable.paidAt))
+      .orderBy(desc(installmentTable.createdAt))
       .execute();
 
     return records || [];
