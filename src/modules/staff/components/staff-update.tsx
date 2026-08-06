@@ -1,12 +1,12 @@
 import { PageHeader } from '@/components/ui/page-header';
 import { useFormAction } from '@/hooks/use-form-action';
-import { updateStaffSchema } from '../staff.schema';
-import { UpdateStaff } from '../staff.types';
+import { updateStaffSchema } from '../staff-schema';
+import { UpdateStaff } from '../staff-types';
 import { actions } from 'astro:actions';
-import { StaffForm } from './form';
+import { StaffForm } from './staff-form';
 import ErrorAlert from '@/components/ui/error-alert';
 
-export function EditStaff({ staffData , errorMsg}: { staffData: UpdateStaff, errorMsg?: string}) {
+export function StaffUpdate({ staffData , errorMsg}: { staffData: UpdateStaff, errorMsg?: string}) {
 
     const { form, onSubmit, isLoading } = useFormAction<UpdateStaff, any>({
         actionFn: actions.staff.updateStaff,

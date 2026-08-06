@@ -1,8 +1,8 @@
 import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
-import { staffRepository } from "@/modules/staff/staff.repository";
+import { staffRepository } from "@/modules/staff/staff-repository";
 import type { AstroCookies } from "astro";
-import type { SelectStaff } from "@/modules/staff/staff.types";
+import type { SelectStaff } from "@/modules/staff/staff-types";
 
 export const SESSION_COOKIE_NAME = "staff_session";
 

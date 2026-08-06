@@ -1,7 +1,7 @@
 // src/modules/staff/staff.schema.ts
 
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { staffTable } from "./staff.table";
+import { staffTable } from "./staff-table";
 import z from "zod";
 
 const RULES = {

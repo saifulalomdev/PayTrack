@@ -1,6 +1,6 @@
 // src/env.d.ts
 /// <reference types="astro/client" />
-import { SelectStaff } from "./modules/staff/staff.types";
+import { SelectStaff } from "./modules/staff/staff-types";
 
 
 declare global {

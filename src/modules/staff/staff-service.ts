@@ -3,9 +3,9 @@
 import { ActionError } from "astro:actions";
 import type { D1Instance } from "@/utils";
 import { env } from "cloudflare:workers";
-import { staffRepository } from "./staff.repository";
+import { staffRepository } from "./staff-repository";
 import { hashPassword, verifyPassword } from "@/utils/password";
-import type { InsertStaff, UpdateStaff, SelectStaff, PublicStaff } from "./staff.types";
+import type { InsertStaff, UpdateStaff, SelectStaff, PublicStaff } from "./staff-types";
 
 function assertNotSuperAdmin(staff: SelectStaff, action: string) {
     if (staff.phoneNumber === env.SUPER_ADMIN_PHONE) {

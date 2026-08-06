@@ -1,4 +1,4 @@
-import { staffRepository } from "@/modules/staff/staff.repository";
+import { staffRepository } from "@/modules/staff/staff-repository";
 import { hashPassword, verifyPassword } from "./password";
 import { getDb } from "./get-db";
 

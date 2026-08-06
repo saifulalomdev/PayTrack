@@ -6,8 +6,8 @@ import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
 import { loginSchema } from "../auth/auth.schema";
 import { requireAdmin } from "@/utils/auth-guards";
-import { staffService } from "./staff.service";
-import { insertStaffSchema, updateStaffSchema } from "./staff.schema";
+import { staffService } from "./staff-service";
+import { insertStaffSchema, updateStaffSchema } from "./staff-schema";
 import { buildSessionCookieValue, SESSION_COOKIE_NAME } from "@/utils/auth";
 
 // CREATE STAFF — admin only

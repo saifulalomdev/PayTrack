@@ -29,7 +29,7 @@ import {
 import { TableRow, TableCell } from "@/components/ui/table";
 import { useState } from "react";
 import { cn } from "@/utils/utils";
-import { InsertStaff } from "../staff.types";
+import { InsertStaff } from "../staff-types";
 
 interface StaffTableRowProps extends Partial<InsertStaff> {
   id?: string;

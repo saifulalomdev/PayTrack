@@ -1,11 +1,11 @@
-import { useFormAction } from '@/hooks/use-form-action';
-import { actions } from 'astro:actions';
-import { insertStaffSchema } from '../staff.schema';
-import { StaffForm } from './form';
 import { PageHeader } from '@/components/ui/page-header';
+import { useFormAction } from '@/hooks/use-form-action';
+import { insertStaffSchema } from '../staff-schema';
+import { actions } from 'astro:actions';
+import { StaffForm } from './staff-form';
 
 
-export function AddNewStaff() {
+export function StaffAdd() {
     const { form, onSubmit, isLoading } = useFormAction({
         actionFn: actions.staff.createStaff,
         defaultValues: {

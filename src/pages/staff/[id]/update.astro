@@ -3,9 +3,9 @@
 
 import MainLayout from "@/layouts/main.astro";
 import { DashboardLayout } from "@/layouts/layout";
-import { EditStaff } from "@/modules/staff/components/edit-staff";
+import { StaffUpdate } from "@/modules/staff/components/staff-update";
 import { safeFetch } from "@/utils/safe-fetch";
-import { staffService } from "@/modules/staff/staff.service";
+import { staffService } from "@/modules/staff/staff-service";
 import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
 
@@ -29,6 +29,6 @@ const { data: staffData, error: errMsg } = await safeFetch(() =>
         client:load
         staff={{ name: currentStaff.name, role: currentStaff.role }}
     >
-        <EditStaff client:load staffData={staffData as any} errorMsg={errMsg} />
+        <StaffUpdate client:load staffData={staffData as any} errorMsg={errMsg} />
     </DashboardLayout>
 </MainLayout>
