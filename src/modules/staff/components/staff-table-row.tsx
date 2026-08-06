@@ -1,13 +1,12 @@
-import {
-  User,
-  Package,
-  Pencil,
-  Trash2,
-  MoreVertical,
-  Eye,
-} from "lucide-react";
-import { TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import {
+  Trash2,
+  Pencil,
+  MoreVertical,
+  User,
+  Phone,
+  Shield,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,84 +26,67 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { TableRow, TableCell } from "@/components/ui/table";
 import { useState } from "react";
-import { PublicCustomer } from "../customer.types";
+import { cn } from "@/utils/utils";
+import { InsertStaff } from "../staff.types";
 
-interface CustomerTableRowProps extends Partial<PublicCustomer> {
+interface StaffTableRowProps extends Partial<InsertStaff> {
   id?: string;
-  isAdmin?: boolean;
   onUpdate?: () => void;
   onDelete?: () => void;
   isDeleting?: boolean;
 }
 
-function formatTaka(amount?: number) {
-  if (amount === undefined || amount === null) return "-";
-  return `৳${amount.toLocaleString("bn-BD")}`;
-}
-
-export default function CustomerTableRow({
+export default function StaffTableRow({
   id,
   name,
-  serialNumber,
-  productName,
-  totalPrice,
-  downPayment,
-  installmentAmount,
+  role = "staff",
+  phoneNumber,
   isDeleting,
   onDelete,
   onUpdate,
-}: CustomerTableRowProps) {
+}: StaffTableRowProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+  const isAdmin = role === "admin";
+
   return (
-    <TableRow className="hover:bg-muted/50 transition-colors">
-      {/* 1. Name */}
-      <TableCell className="font-medium">
+    <TableRow>
+      {/* Name and Avatar */}
+      <TableCell>
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
             <User className="h-5 w-5" />
           </div>
-          <a
-            href={`/customers/${id}/installments`}
-            className="text-foreground hover:underline"
-          >
-            {name}
-          </a>
+          <span className="font-medium text-foreground">{name}</span>
         </div>
       </TableCell>
 
-      {/* 2. Serial Number */}
-      <TableCell>
-        <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-          #{serialNumber}
-        </span>
+      {/* Role */}
+      <TableCell className="uppercase">
+        {/* <span
+          className={cn(
+            "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium",
+            isAdmin
+              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400"
+              : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+          )}
+        >
+          <Shield className="h-3 w-3" /> */}
+          {role}
+        {/* </span> */}
       </TableCell>
 
-      {/* 3. Product Name */}
+      {/* Phone Number */}
       <TableCell className="text-muted-foreground">
         <div className="flex items-center gap-1.5 text-sm">
-          <Package className="h-3.5 w-3.5" />
-          <span>{productName}</span>
+          <Phone className="h-3.5 w-3.5" />
+          <span>{phoneNumber}</span>
         </div>
       </TableCell>
 
-      {/* 4. Total Price */}
-      <TableCell className="font-medium text-foreground">
-        {formatTaka(totalPrice)}
-      </TableCell>
-
-      {/* 5. Down Payment */}
-      <TableCell className="text-muted-foreground">
-        {formatTaka(downPayment)}
-      </TableCell>
-
-      {/* 6. Installment Amount */}
-      <TableCell className="text-muted-foreground">
-        {formatTaka(installmentAmount)}
-      </TableCell>
-
-      {/* 7. Actions */}
+      {/* Actions */}
       <TableCell className="text-right">
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DropdownMenu>
@@ -115,16 +97,9 @@ export default function CustomerTableRow({
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="w-48" align="end">
-              <DropdownMenuLabel>Customer Actions</DropdownMenuLabel>
+            <DropdownMenuContent className="w-44" align="end">
+              <DropdownMenuLabel>Staff Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-
-              <DropdownMenuItem asChild className="gap-2 cursor-pointer">
-                <a href={`/customers/${id}/installments`}>
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span>View Installments</span>
-                </a>
-              </DropdownMenuItem>
 
               <DropdownMenuItem onClick={onUpdate} className="gap-2 cursor-pointer">
                 <Pencil className="h-4 w-4 text-muted-foreground" />
@@ -136,7 +111,7 @@ export default function CustomerTableRow({
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem className="gap-2 cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
                   <Trash2 className="h-4 w-4" />
-                  <span>Delete Customer</span>
+                  <span>Delete Staff</span>
                 </DropdownMenuItem>
               </AlertDialogTrigger>
             </DropdownMenuContent>
@@ -144,7 +119,7 @@ export default function CustomerTableRow({
 
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete Customer</AlertDialogTitle>
+              <AlertDialogTitle>Delete Staff Member</AlertDialogTitle>
               <AlertDialogDescription>
                 Are you sure you want to delete <strong className="text-foreground">{name}</strong>? This action cannot be undone.
               </AlertDialogDescription>
@@ -159,7 +134,7 @@ export default function CustomerTableRow({
                 }}
                 disabled={isDeleting}
               >
-                {isDeleting ? "Deleting..." : "Delete Customer"}
+                {isDeleting ? "Deleting..." : "Delete Member"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

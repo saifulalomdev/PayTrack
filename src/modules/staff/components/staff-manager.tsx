@@ -6,7 +6,14 @@ import { useAction } from '@/hooks/use-action';
 import { PublicStaff } from '../staff.types';
 import { actions } from 'astro:actions';
 import { Plus } from 'lucide-react';
-import StaffCard from './card';
+import StaffTableRow from './staff-table-row';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface StaffManagerProps {
   errorMsg?: string;
@@ -18,16 +25,16 @@ export function StaffManager({ errorMsg, staff = [] }: StaffManagerProps) {
 
   const { isLoading, execute } = useAction(actions.staff.deleteStaff, {
     onSuccess: () => {
-      window.location.reload()
-    }
-  })
+      window.location.reload();
+    },
+  });
 
   return (
-    <div className='space-y-8'>
+    <div className="space-y-8">
       <ErrorAlert errorMsg={errorMsg} />
 
-      <PageHeader title='Staff Management'>
-        <Button asChild className='uppercase w-full md:w-auto'>
+      <PageHeader title="Staff Management">
+        <Button asChild className="uppercase w-full md:w-auto">
           <a href="/staff/new">
             <Plus className="w-4 h-4 mr-2" /> Add a new staff
           </a>
@@ -36,17 +43,31 @@ export function StaffManager({ errorMsg, staff = [] }: StaffManagerProps) {
 
       {!errorMsg && isEmpty && <StaffEmptyState />}
 
-      <div className='space-y-4'>
-        {!errorMsg && !isEmpty && staff.map(staff =>
-          <StaffCard
-            key={staff.id}
-            {...staff}
-            isDeleting={isLoading}
-            onUpdate={() => window.location.href = `/staff/${staff.id}/edit`}
-            onDelete={() => execute({ id: staff.id })}
-          />
-        )}
-      </div>
+      {!errorMsg && !isEmpty && (
+        <div className="rounded-md border bg-card">
+          <Table>
+            <TableHeader>
+              <TableRow className='bg-muted'>
+                <TableHead>Name</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead className="text-right border-r">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {staff.map((member) => (
+                <StaffTableRow
+                  key={member.id}
+                  {...member}
+                  isDeleting={isLoading}
+                  onUpdate={() => (window.location.href = `/staff/${member.id}/update`)}
+                  onDelete={() => execute({ id: member.id })}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 }

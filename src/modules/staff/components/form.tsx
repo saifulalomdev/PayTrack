@@ -75,12 +75,12 @@ export function StaffForm<T extends FieldValues>({
                             onValueChange={field.onChange}
                             value={field.value ?? ""}
                         >
-                            <SelectTrigger className="w-full rounded-full p-4">
-                                <SelectValue placeholder="Select role" />
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select role" className="uppercase" />
                             </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="staff">Staff</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
+                            <SelectContent className="uppercase">
+                                <SelectItem value="staff" className="uppercase">Staff</SelectItem>
+                                <SelectItem value="admin" className="uppercase">Admin</SelectItem>
                             </SelectContent>
                         </Select>
                     )}

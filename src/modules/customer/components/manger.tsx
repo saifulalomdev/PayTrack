@@ -7,8 +7,15 @@ import { useAction } from '@/hooks/use-action';
 import { PublicCustomer } from '../customer.types';
 import { actions } from 'astro:actions';
 import { Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import CustomerCard from './card';
+import CustomerTableRow from './card';
 import CustomerEmptyState from './empty-state';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface Pagination {
   page: number;
@@ -27,9 +34,6 @@ interface CustomerManagerProps {
 
 const DEFAULT_PAGINATION: Pagination = { page: 1, pageSize: 10, total: 0, totalPages: 1 };
 
-// Mirrors the current search/page into the URL query string. The Astro
-// page reads these same two params on SSR, so a refresh (or a copied
-// link) reproduces the exact list the user was looking at.
 function syncUrl(search: string, page: number) {
   const url = new URL(window.location.href);
   search ? url.searchParams.set('search', search) : url.searchParams.delete('search');
@@ -73,8 +77,6 @@ export function CustomerManager({
   const handleSearchChange = (value: string) => {
     setSearch(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    // Debounced so we don't fire an action on every keystroke; always
-    // resets to page 1 since the result set changes.
     debounceRef.current = setTimeout(() => fetchPage(value, 1), 350);
   };
 
@@ -111,18 +113,35 @@ export function CustomerManager({
 
       {!fetchError && isEmpty && <CustomerEmptyState />}
 
-      <div className='space-y-4'>
-        {!fetchError && !isEmpty && customers.map(customer =>
-          <CustomerCard
-            key={customer.id}
-            {...customer}
-            isAdmin={isAdmin}
-            isDeleting={isDeleting}
-            onUpdate={() => window.location.href = `/customers/${customer.id}/edit`}
-            onDelete={() => executeDelete({ id: customer.id })}
-          />
-        )}
-      </div>
+      {!fetchError && !isEmpty && (
+        <div className='rounded-md border bg-card'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>নাম</TableHead>
+                <TableHead>সিরিয়াল</TableHead>
+                <TableHead>পণ্য</TableHead>
+                <TableHead>মোট মূল্য</TableHead>
+                <TableHead>ডাউন পেমেন্ট</TableHead>
+                <TableHead>কিস্তি</TableHead>
+                <TableHead className='text-right'>অ্যাকশন</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {customers.map((customer) => (
+                <CustomerTableRow
+                  key={customer.id}
+                  {...customer}
+                  isAdmin={isAdmin}
+                  isDeleting={isDeleting}
+                  onUpdate={() => (window.location.href = `/customers/${customer.id}/update`)}
+                  onDelete={() => executeDelete({ id: customer.id })}
+                />
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
 
       {!fetchError && pagination.total > 0 && (
         <div className='flex items-center justify-between pt-2'>

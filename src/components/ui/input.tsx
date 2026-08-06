@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
     <div 
     className={cn(
       "focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50",
-      "relative w-full flex items-center border border-input px-4 rounded-full"
+      "relative w-full flex items-center border border-input px-4"
     )}
     >
       {type === "email" && <Mail size={16}/>}
@@ -25,7 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
         type={isPassword ? (showPassword ? "text" : "password") : type}
         data-slot="input"
         className={cn(
-          "h-10 w-full min-w-0 bg-transparent px-2.5 pr-10 py-1 text-base transition-colors outline-none placeholder:text-muted-foreground  disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 md:text-sm",
+          "h-12 w-full min-w-0 bg-transparent px-2 pr-10 py-1 text-lg transition-colors outline-none placeholder:text-muted-foreground  disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 md:text-sm",
           className
         )}
         {...props}

@@ -30,7 +30,7 @@ export function CustomerForm<T extends FieldValues>({
     const { register, handleSubmit, control, formState: { errors } } = form;
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4 pb-14">
 
             {/* Serial Number */}
             <div className="space-y-2">
