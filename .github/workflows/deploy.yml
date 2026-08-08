@@ -1,7 +1,8 @@
 name: Deploy PayTrack
+
 on:
   push:
-    branches: [main,features]
+    branches: [main, features]
   workflow_dispatch:
 
 jobs:
@@ -20,8 +21,8 @@ jobs:
       - name: Setup Node.js Runtime Environment
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-          cache-dependency-path: 'pnpm-lock.yaml'
+          node-version: 22
+          cache: 'pnpm'
 
       - name: Install Application Dependencies
         run: pnpm install --frozen-lockfile
@@ -30,9 +31,6 @@ jobs:
         run: pnpm run test run
 
       - name: Compile and Build Assets
-        env:
-          PUBLIC_SITE_URL: https://tf.saifulalom.com
-          PUBLIC_SITE_NAME: TrackFlow
         run: pnpm run build
 
       - name: Apply Cloudflare D1 Migrations
@@ -43,7 +41,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: d1 migrations apply paytrack --remote
 
-      - name: Deploy Build to Cloudflare Pages
+      - name: Deploy Worker to Cloudflare
         if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
