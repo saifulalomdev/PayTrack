@@ -1,16 +1,9 @@
 ---
 // src/pages/staff/new.astro
 import MainLayout from "@/layouts/main.astro";
-import { DashboardLayout } from "@/layouts/layout";
 import { StaffAdd } from "@/modules/staff/components/staff-add";
-const staff = Astro.locals.staff!;
 ---
 
 <MainLayout>
-    <DashboardLayout
-        client:load
-        staff={{ name: staff.name, role: staff.role }}
-    >
-        <StaffAdd client:load />
-    </DashboardLayout>
+    <StaffAdd client:load />
 </MainLayout>

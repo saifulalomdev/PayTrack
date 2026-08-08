@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { useStore } from '@nanostores/react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Globe, User, Menu, X, XIcon, ChevronRight } from "lucide-react";
+import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Card, CardContent } from '@/components/ui/card';
 import { adminNavItems } from '@/data/nav-nav-item';
 import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
+import { useStore } from '@nanostores/react';
+import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
-import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
+import { Theme } from "@/types/theme";
 
 interface CurrentStaff {
     name: string;
@@ -15,10 +17,11 @@ interface CurrentStaff {
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
-    staff: CurrentStaff; // passed from the .astro page via context.locals.staff
+    staff: CurrentStaff;
+    theme?: Theme
 }
 
-export function DashboardLayout({ children, staff }: DashboardLayoutProps) {
+export function DashboardLayout({ children, staff, theme }: DashboardLayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
@@ -38,6 +41,7 @@ export function DashboardLayout({ children, staff }: DashboardLayoutProps) {
                     isSidebarOpen={isSidebarOpen}
                     onClick={() => setIsSidebarOpen(p => !p)}
                     staff={staff}
+                    theme={theme}
                 />
                 <main className="p-4">
                     {children}
@@ -63,9 +67,9 @@ function DashboardSidebar({ className, onClick }: DashboardSidebarProps) {
                     {/* sidebar header */}
                     <div className='flex gap-3 items-center'>
                         <AppBranding border={true} />
-                        <Button onClick={onClick} className='lg:hidden' variant="ghost" >
+                        <button onClick={onClick} className='lg:hidden'>
                             <XIcon />
-                        </Button>
+                        </button>
                     </div>
                     {/* sidebar navigations */}
                     <nav className='mt-8'>
@@ -97,9 +101,10 @@ interface DashboardHeaderProps {
     isSidebarOpen: boolean;
     onClick: () => void;
     staff: CurrentStaff;
+    theme?: Theme;
 }
 
-function DashboardHeader({ isSidebarOpen, onClick, staff }: DashboardHeaderProps) {
+function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: DashboardHeaderProps) {
     const language = useStore($language);
     const t = useStore($t);
 
@@ -110,9 +115,7 @@ function DashboardHeader({ isSidebarOpen, onClick, staff }: DashboardHeaderProps
     return (
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-4 lg:px-6">
             <div className="flex items-center gap-3">
-                <Button
-                    variant="ghost"
-                    size="icon"
+                <button
                     className="lg:hidden"
                     onClick={onClick}
                     aria-label="Toggle Sidebar"
@@ -122,10 +125,11 @@ function DashboardHeader({ isSidebarOpen, onClick, staff }: DashboardHeaderProps
                     ) : (
                         <Menu className="h-5 w-5" />
                     )}
-                </Button>
+                </button>
             </div>
 
             <div className="flex items-center gap-4">
+                <ThemeToggle currentTheme={theme} />
                 <Button
                     onClick={toggleLanguage}
                     aria-label="Switch Language"
@@ -135,7 +139,7 @@ function DashboardHeader({ isSidebarOpen, onClick, staff }: DashboardHeaderProps
                     <span>{language === "EN" ? "English" : "বাংলা"}</span>
                 </Button>
 
-                <div className="flex items-center gap-2 border-l pl-4">
+                <div className="items-center gap-2 border-l pl-4 hidden md:flex">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
                         <User className="h-5 w-5 text-muted-foreground" />
                     </div>

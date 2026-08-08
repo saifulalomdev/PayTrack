@@ -17,10 +17,5 @@ const staff = Astro.locals.staff!;
 ---
 
 <MainLayout>
-    <DashboardLayout
-        client:load
-        staff={{ name: staff.name, role: staff.role }}
-    >
         <AddNewInstallment client:load customerId={customerId} />
-    </DashboardLayout>
 </MainLayout>

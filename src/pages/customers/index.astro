@@ -1,6 +1,5 @@
 ---
 import MainLayout from "@/layouts/main.astro";
-import { DashboardLayout } from "@/layouts/layout";
 import { customerService } from "@/modules/customer/customer.service";
 import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
@@ -17,24 +16,24 @@ const search = Astro.url.searchParams.get("search")?.trim() || undefined;
 const page = Math.max(1, Number(Astro.url.searchParams.get("page")) || 1);
 
 const { data: result, error: errMsg } = await safeFetch(() =>
-  customerService.listAll(getDb(env), { search, page, pageSize: PAGE_SIZE })
+    customerService.listAll(getDb(env), { search, page, pageSize: PAGE_SIZE }),
 );
 
 const isAdmin = currentStaff.role === "admin";
 ---
 
 <MainLayout>
-    <DashboardLayout
+    <CustomerManager
         client:load
-        staff={{ name: currentStaff.name, role: currentStaff.role }}
-    >
-        <CustomerManager
-            client:load
-            errorMsg={errMsg}
-            customers={result?.data ?? []}
-            pagination={result?.pagination ?? { page, pageSize: PAGE_SIZE, total: 0, totalPages: 1 }}
-            initialSearch={search ?? ""}
-            isAdmin={isAdmin}
-        />
-    </DashboardLayout>
+        errorMsg={errMsg}
+        customers={result?.data ?? []}
+        pagination={result?.pagination ?? {
+            page,
+            pageSize: PAGE_SIZE,
+            total: 0,
+            totalPages: 1,
+        }}
+        initialSearch={search ?? ""}
+        isAdmin={isAdmin}
+    />
 </MainLayout>

@@ -2,7 +2,6 @@
 // src/pages/staff/[id]/edit.astro
 
 import MainLayout from "@/layouts/main.astro";
-import { DashboardLayout } from "@/layouts/layout";
 import { StaffUpdate } from "@/modules/staff/components/staff-update";
 import { safeFetch } from "@/utils/safe-fetch";
 import { staffService } from "@/modules/staff/staff-service";
@@ -15,20 +14,11 @@ if (!id) {
     return Astro.redirect("/staff");
 }
 
-// context.locals.staff is populated by the auth middleware and guaranteed
-// non-null here, since this route sits behind the auth guard.
-const currentStaff = Astro.locals.staff!;
-
 const { data: staffData, error: errMsg } = await safeFetch(() =>
-    staffService.getById(getDb(env), id)
+    staffService.getById(getDb(env), id),
 );
 ---
 
 <MainLayout>
-    <DashboardLayout
-        client:load
-        staff={{ name: currentStaff.name, role: currentStaff.role }}
-    >
-        <StaffUpdate client:load staffData={staffData as any} errorMsg={errMsg} />
-    </DashboardLayout>
+    <StaffUpdate client:load staffData={staffData as any} errorMsg={errMsg} />
 </MainLayout>

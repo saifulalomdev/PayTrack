@@ -34,10 +34,5 @@ const { data: customerData, error: errMsg } = await safeFetch(() =>
 ---
 
 <MainLayout>
-    <DashboardLayout
-        client:load
-        staff={{ name: currentStaff.name, role: currentStaff.role }}
-    >
         <EditCustomer client:load customerData={customerData as any} errorMsg={errMsg} />
-    </DashboardLayout>
 </MainLayout>

@@ -34,15 +34,14 @@ if (currentStaff.role !== "admin") {
 }
 
 const { data: installmentData, error: errMsg } = await safeFetch(() =>
-    installmentService.getById(getDb(env), installmentId)
+    installmentService.getById(getDb(env), installmentId),
 );
 ---
 
 <MainLayout>
-    <DashboardLayout
+    <EditInstallment
         client:load
-        staff={{ name: currentStaff.name, role: currentStaff.role }}
-    >
-        <EditInstallment client:load installmentData={installmentData as any} errorMsg={errMsg} />
-    </DashboardLayout>
+        installmentData={installmentData as any}
+        errorMsg={errMsg}
+    />
 </MainLayout>

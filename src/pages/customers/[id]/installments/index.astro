@@ -1,7 +1,6 @@
 ---
 // src/pages/customers/[id]/installments/index.astro
 import MainLayout from "@/layouts/main.astro";
-import { DashboardLayout } from "@/layouts/layout";
 import { InstallmentManager } from "@/modules/installment/components/manager";
 import { installmentService } from "@/modules/installment/installment.service";
 import { customerService } from "@/modules/customer/customer.service";
@@ -23,11 +22,11 @@ const currentStaff = Astro.locals.staff!;
 // on /customers links straight here, so we need the customer record
 // itself (for CustomerDetailsCard), not just their installments.
 const { data: customerData, error: customerErrMsg } = await safeFetch(() =>
-  customerService.getById(getDb(env), customerId)
+    customerService.getById(getDb(env), customerId),
 );
 
-const { data: installmentList, error: installmentErrMsg } = await safeFetch(() =>
-  installmentService.listByCustomer(getDb(env), customerId)
+const { data: installmentList, error: installmentErrMsg } = await safeFetch(
+    () => installmentService.listByCustomer(getDb(env), customerId),
 );
 
 // Surface whichever fetch failed first; customer existing is the more
@@ -41,17 +40,12 @@ const isAdmin = currentStaff.role === "admin";
 ---
 
 <MainLayout>
-    <DashboardLayout
+    <InstallmentManager
         client:load
-        staff={{ name: currentStaff.name, role: currentStaff.role }}
-    >
-        <InstallmentManager
-            client:load
-            customerId={customerId}
-            customer={customerData}
-            errorMsg={errMsg}
-            installments={installmentList}
-            isAdmin={isAdmin}
-        />
-    </DashboardLayout>
+        customerId={customerId}
+        customer={customerData}
+        errorMsg={errMsg}
+        installments={installmentList}
+        isAdmin={isAdmin}
+    />
 </MainLayout>

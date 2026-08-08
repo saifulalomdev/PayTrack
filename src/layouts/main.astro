@@ -1,10 +1,13 @@
 ---
-import "@/styles/global.css";
 import { Toaster } from "@/components/ui/sonner";
+import { DashboardLayout } from "@/layouts/layout";
+const staff = Astro.locals.staff!;
+const { theme } = Astro.locals;
+import "@/styles/global.css";
 ---
 
 <!doctype html>
-<html lang="en" class="">
+<html lang="en" class={theme === "dark" ? "dark" : ""}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -14,7 +17,13 @@ import { Toaster } from "@/components/ui/sonner";
 		<meta name="description" content="" />
 	</head>
 	<body>
-		<slot />
-		<Toaster richColors client:load />
+		<DashboardLayout
+			client:load
+			staff={{ name: staff.name, role: staff.role }}
+			theme={theme}
+		>
+			<slot />
+			<Toaster richColors client:load />
+		</DashboardLayout>
 	</body>
 </html>
