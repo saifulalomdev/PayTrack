@@ -1,17 +1,16 @@
+import { type LoginInput, loginSchema } from "../auth-schema";
+import { FieldError } from "@/components/ui/field-error";
 import { useFormAction } from "@/hooks/use-form-action";
-import { actions } from "astro:actions";
+import { loginDefaultValue } from "../auth-default";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoginInput, loginSchema } from "../auth.schema";
+import { actions } from "astro:actions";
 
 export function LoginForm() {
   const { form, onSubmit, isLoading } = useFormAction<LoginInput>({
     actionFn: actions.staff.loginStaff,
-    defaultValues: {
-      phoneNumber: "",
-      password: "",
-    },
+    defaultValues: loginDefaultValue,
     schema: loginSchema,
     loadingMessage: "লগইন করা হচ্ছে...",
     successMessage: "সফলভাবে লগইন করা হয়েছে!",
@@ -29,34 +28,38 @@ export function LoginForm() {
         <p className="text-sm text-gray-500 text-center">আপনার অ্যাকাউন্ট তথ্য দিয়ে প্রবেশ করুন</p>
       </div>
 
-      {/* Phone Number */}
+      {/* Phone Number Field */}
       <div className="space-y-2">
-        <Label htmlFor="phoneNumber">মোবাইল নম্বর</Label>
+        {/* Pass error status to change text label state color */}
+        <Label htmlFor="phoneNumber" error={!!errors.phoneNumber}>
+          মোবাইল নম্বর
+        </Label>
         <Input
           id="phoneNumber"
           type="text"
           disabled={isLoading}
           placeholder="01700000000"
+          error={!!errors.phoneNumber}
           {...register("phoneNumber")}
         />
-        {errors.phoneNumber && (
-          <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>
-        )}
+        <FieldError message={errors?.phoneNumber?.message} />
       </div>
 
-      {/* Password */}
+      {/* Password Field */}
       <div className="space-y-2">
-        <Label htmlFor="password">পাসওয়ার্ড</Label>
+        {/* Pass error status to change text label state color */}
+        <Label htmlFor="password" error={!!errors.password}>
+          পাসওয়ার্ড
+        </Label>
         <Input
           id="password"
           type="password"
           disabled={isLoading}
           placeholder="••••••••"
+          error={!!errors.password}
           {...register("password")}
         />
-        {errors.password && (
-          <p className="text-red-500 text-sm">{errors.password.message}</p>
-        )}
+        <FieldError message={errors?.password?.message} />
       </div>
 
       <Button type="submit" disabled={isLoading} className="w-full">

@@ -1,6 +1,6 @@
 // src/modules/staff/staff.schema.ts
 
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { staffTable } from "./staff-table";
 import z from "zod";
 
