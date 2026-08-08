@@ -9,7 +9,6 @@ dist/
 node_modules/
 seed-data.json
 
-worker-configuration.d.ts
 # logs
 npm-debug.log*
 yarn-debug.log*
