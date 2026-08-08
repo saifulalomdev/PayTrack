@@ -28,7 +28,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { PublicCustomer } from "../customer.types";
+import type { PublicCustomer } from "../customer.types";
 
 interface CustomerTableRowProps extends Partial<PublicCustomer> {
   id?: string;

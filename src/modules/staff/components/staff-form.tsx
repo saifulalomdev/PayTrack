@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Controller,
+import type{
   FieldValues,
   Path,
   UseFormReturn,
 } from "react-hook-form";
+import {   Controller } from 'react-hook-form'
 import {
   Select,
   SelectContent,

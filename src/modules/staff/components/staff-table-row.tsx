@@ -5,7 +5,6 @@ import {
   MoreVertical,
   User,
   Phone,
-  Shield,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -28,8 +27,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { useState } from "react";
-import { cn } from "@/utils/utils";
-import { InsertStaff } from "../staff-types";
+import type { InsertStaff } from "../staff-types";
 
 interface StaffTableRowProps extends Partial<InsertStaff> {
   id?: string;
@@ -65,17 +63,7 @@ export default function StaffTableRow({
 
       {/* Role */}
       <TableCell className="uppercase">
-        {/* <span
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium",
-            isAdmin
-              ? "bg-purple-500/10 text-purple-600 dark:text-purple-400"
-              : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
-          )}
-        >
-          <Shield className="h-3 w-3" /> */}
-          {role}
-        {/* </span> */}
+        {role}
       </TableCell>
 
       {/* Phone Number */}

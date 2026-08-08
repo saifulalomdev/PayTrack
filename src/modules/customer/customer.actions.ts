@@ -1,7 +1,7 @@
 // src/modules/customer/customer.actions.ts
 
 import { ActionError, defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { z } from "zod";
 import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
 import { requireAdmin, requireAuth } from "@/utils/auth-guards";

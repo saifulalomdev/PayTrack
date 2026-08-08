@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/ui/page-header';
 import { useFormAction } from '@/hooks/use-form-action';
 import { updateCustomerSchema } from '../customer.schema';
-import { UpdateCustomer } from '../customer.types';
+import type { UpdateCustomer } from '../customer.types';
 import { actions } from 'astro:actions';
 import { CustomerForm } from './form';
 import ErrorAlert from '@/components/ui/error-alert';

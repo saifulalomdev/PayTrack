@@ -1,15 +1,16 @@
-import { type LoginInput, loginSchema } from "../auth-schema";
+import { loginDefaultValue } from "../auth-default-value";
 import { FieldError } from "@/components/ui/field-error";
 import { useFormAction } from "@/hooks/use-form-action";
-import { loginDefaultValue } from "../auth-default";
 import { Button } from "@/components/ui/button";
+import type { LoginInput } from "../auth-type";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginSchema } from "../auth-schema";
 import { actions } from "astro:actions";
 
 export function LoginForm() {
   const { form, onSubmit, isLoading } = useFormAction<LoginInput>({
-    actionFn: actions.staff.loginStaff,
+    actionFn: actions.auth.login,
     defaultValues: loginDefaultValue,
     schema: loginSchema,
     loadingMessage: "লগইন করা হচ্ছে...",

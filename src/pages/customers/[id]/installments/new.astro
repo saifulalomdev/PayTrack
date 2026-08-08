@@ -1,7 +1,6 @@
 ---
 // src/pages/customers/[id]/installments/new.astro
 import MainLayout from "@/layouts/main.astro";
-import { DashboardLayout } from "@/layouts/layout";
 import { AddNewInstallment } from "@/modules/installment/components/add";
 
 const { id: customerId } = Astro.params;
@@ -9,11 +8,6 @@ const { id: customerId } = Astro.params;
 if (!customerId) {
     return Astro.redirect("/customers");
 }
-
-// context.locals.staff is populated by the auth middleware and guaranteed
-// non-null here, since this route sits behind the auth guard. No admin
-// check needed — any logged-in staff can log an installment payment.
-const staff = Astro.locals.staff!;
 ---
 
 <MainLayout>

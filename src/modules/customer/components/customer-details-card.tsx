@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { PublicCustomer } from "../customer.types";
+import type { PublicCustomer } from "../customer.types";
 
 interface CustomerDetailsCardProps extends Partial<PublicCustomer> {
   id?: string;

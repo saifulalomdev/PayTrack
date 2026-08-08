@@ -15,5 +15,3 @@ export const loginSchema = z.object({
     .min(6, { message: "পাসওয়ার্ডটি কমপক্ষে ৬ অক্ষরের হতে হবে।" })
     .max(32, { message: "পাসওয়ার্ডটি ৩২ অক্ষরের বেশি হতে পারবে না।" }),
 }).strict();
-
-export type LoginInput = z.infer<typeof loginSchema>;

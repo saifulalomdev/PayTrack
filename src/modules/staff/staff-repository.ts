@@ -1,8 +1,8 @@
 // src/modules/staff/staff.repository.ts
-import { D1Instance } from "@/utils";
-import { desc, eq } from "drizzle-orm";
-import { InsertStaff, SelectStaff } from "./staff-types";
+import type { InsertStaff, SelectStaff } from "./staff-types";
+import type { D1Instance } from "@/utils";
 import { staffTable } from "./staff-table";
+import { desc, eq } from "drizzle-orm";
 
 export const staffRepository = {
   /**

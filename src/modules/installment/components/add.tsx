@@ -16,7 +16,6 @@ export function AddNewInstallment({ customerId }: AddNewInstallmentProps) {
         defaultValues: {
             customerId,
             amount: undefined,
-            paidAt: undefined,
             note: '',
         },
         schema: insertInstallmentSchema,

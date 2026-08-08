@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/ui/page-header';
 import { useFormAction } from '@/hooks/use-form-action';
 import { updateStaffSchema } from '../staff-schema';
-import { UpdateStaff } from '../staff-types';
+import type { UpdateStaff } from '../staff-types';
 import { actions } from 'astro:actions';
 import { StaffForm } from './staff-form';
 import ErrorAlert from '@/components/ui/error-alert';

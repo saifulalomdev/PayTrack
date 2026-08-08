@@ -6,9 +6,9 @@ import { adminNavItems } from '@/data/nav-nav-item';
 import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
 import { useStore } from '@nanostores/react';
+import type { Theme } from "@/types/theme";
 import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
-import { Theme } from "@/types/theme";
 
 interface CurrentStaff {
     name: string;

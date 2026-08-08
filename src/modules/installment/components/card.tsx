@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { PublicInstallment } from "../installment.types";
+import type { PublicInstallment } from "../installment.types";
 
 interface InstallmentCardProps extends Partial<PublicInstallment> {
   id?: string;

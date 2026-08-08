@@ -1,15 +1,14 @@
 import { eq } from "drizzle-orm";
-import { customerProductTable } from "./product-table";
-import { NewCustomerProduct } from "./product-types";
-import { D1Instance } from "@/utils";
+import  { productTable } from "./product-table";
+import type { D1Instance } from "@/utils";
 
 export const createCustomerProduct = async (
   db: D1Instance,
-  data: NewCustomerProduct
+  data: undefined
 ) => {
   const [result] = await db
-    .insert(customerProductTable)
-    .values(data)
+    .insert(productTable)
+    .values(data as any)
     .returning();
   return result;
 };
@@ -20,15 +19,15 @@ export const findCustomerProductsByCustomerId = async (
 ) => {
   return await db
     .select()
-    .from(customerProductTable)
-    .where(eq(customerProductTable.customerId, customerId));
+    .from(productTable)
+    .where(eq(productTable.customerId, customerId));
 };
 
 export const findCustomerProductById = async (db: D1Instance, id: string) => {
   const results = await db
     .select()
-    .from(customerProductTable)
-    .where(eq(customerProductTable.id, id));
+    .from(productTable)
+    .where(eq(productTable.id, id));
 
   return results[0] || null;
 };

@@ -1,7 +1,7 @@
 import { PageHeader } from '@/components/ui/page-header';
 import { useFormAction } from '@/hooks/use-form-action';
 import { updateInstallmentSchema } from '../installment.schema';
-import { UpdateInstallment } from '../installment.types';
+import type { UpdateInstallment } from '../installment.types';
 import { actions } from 'astro:actions';
 import { InstallmentForm } from './form';
 import ErrorAlert from '@/components/ui/error-alert';

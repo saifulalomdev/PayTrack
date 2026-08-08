@@ -1,5 +1,4 @@
 import type { MiddlewareHandler } from "astro";
-import { defineMiddleware } from "astro:middleware";
 
 export const logger: MiddlewareHandler = async (context, next) => {
     console.log("Request received for:", context.url.pathname);

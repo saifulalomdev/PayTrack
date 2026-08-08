@@ -1,7 +1,7 @@
 // src/modules/customer/customer.repository.ts
-import { D1Instance } from "@/utils";
+import type { D1Instance } from "@/utils";
 import { desc, eq, like, sql } from "drizzle-orm";
-import { InsertCustomer, NewCustomer, SelectCustomer } from "./customer.types";
+import type { InsertCustomer, NewCustomer, SelectCustomer } from "./customer.types";
 import { customerTable } from "./customer.table";
 
 export const customerRepository = {

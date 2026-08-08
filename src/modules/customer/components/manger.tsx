@@ -4,7 +4,7 @@ import ErrorAlert from '@/components/ui/error-alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAction } from '@/hooks/use-action';
-import { PublicCustomer } from '../customer.types';
+import type { PublicCustomer } from '../customer.types';
 import { actions } from 'astro:actions';
 import { Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import CustomerTableRow from './card';

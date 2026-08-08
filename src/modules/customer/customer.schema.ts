@@ -1,5 +1,5 @@
 // src/modules/customer/customer.schema.ts
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { customerTable } from "./customer.table";
 import z from "zod";
 

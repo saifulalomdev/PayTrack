@@ -274,6 +274,7 @@ function ChartLegendContent({
   className,
   hideIcon = false,
   payload,
+  // @ts-ignore
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> & {

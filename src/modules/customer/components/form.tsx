@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Controller, UseFormReturn, FieldValues, Path } from "react-hook-form";
+import {  type UseFormReturn, type FieldValues, type Path } from "react-hook-form";
+import { Controller } from 'react-hook-form';
 
 interface CustomerFormProps<T extends FieldValues> {
     form: UseFormReturn<T>;

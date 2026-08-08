@@ -3,7 +3,7 @@ import ErrorAlert from '@/components/ui/error-alert';
 import StaffEmptyState from './staff-empty-state';
 import { Button } from '@/components/ui/button';
 import { useAction } from '@/hooks/use-action';
-import { PublicStaff } from '../staff-types';
+import type { PublicStaff } from '../staff-types';
 import { actions } from 'astro:actions';
 import { Plus } from 'lucide-react';
 import StaffTableRow from './staff-table-row';

@@ -17,7 +17,7 @@ export default function DashboardSidebar({ className }: DashboardSidebarProps) {
                 <AppBranding border={true}/>
                 {/* sidebar navigations */}
                 <nav className='mt-4 space-y-4'>
-                    {adminNavItems.map(({ href, name, Icon }) => (
+                    {adminNavItems.map(({ href, Icon, key }) => (
                         <a
                             key={href}
                             href={href}
@@ -28,7 +28,7 @@ export default function DashboardSidebar({ className }: DashboardSidebarProps) {
                         >
                             {/* Render Icon with consistent sizing */}
                             <Icon className="h-5 w-5 shrink-0" />
-                            <span className="text-sm">{name}</span>
+                            <span className="text-sm uppercase">{key}</span>
                         </a>
                     ))}
                 </nav>

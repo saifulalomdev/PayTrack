@@ -1,7 +1,7 @@
 // src/modules/installment/installment.repository.ts
-import { D1Instance } from "@/utils";
+import type { D1Instance } from "@/utils";
 import { desc, eq } from "drizzle-orm";
-import { InsertInstallment, NewInstallment, SelectInstallment } from "./installment.types";
+import type { InsertInstallment, NewInstallment, SelectInstallment } from "./installment.types";
 import { installmentTable } from "./installment.table";
 
 export const installmentRepository = {

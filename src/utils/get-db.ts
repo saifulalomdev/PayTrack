@@ -21,7 +21,7 @@ export const getDb = (env: Env | undefined) => {
     if (!env || !env.DB) {
         throw new Error("DATABASE_BINDING_MISSING: Ensure wrangler.jsonc contains the DB binding and env is passed correctly.");
     }
-    return drizzle(env.DB, { schema });
+    return drizzle(env.DB);
 };
 
 // This correctly extracts the exact Drizzle client instance type automatically!
