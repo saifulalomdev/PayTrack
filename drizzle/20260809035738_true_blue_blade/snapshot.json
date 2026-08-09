@@ -1,0 +1,263 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "c086ef5e-d194-4848-9e5b-9e8a2129f15a",
+  "prevIds": [
+    "387e7647-a1cc-4436-bc5d-e9aecd230d17"
+  ],
+  "ddl": [
+    {
+      "name": "customerTable",
+      "entityType": "tables"
+    },
+    {
+      "name": "installmentTable",
+      "entityType": "tables"
+    },
+    {
+      "name": "staffTable",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "customerTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "serial_number",
+      "entityType": "columns",
+      "table": "customerTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "customerTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_by_name",
+      "entityType": "columns",
+      "table": "customerTable"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "customerTable"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "customer_id",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "amount",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "note",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_by_name",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "installmentTable"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "password",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "phone_number",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'staff'",
+      "generated": null,
+      "name": "role",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "token_version",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "staffTable"
+    },
+    {
+      "columns": [
+        "customer_id"
+      ],
+      "tableTo": "customerTable",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "installmentTable_customer_id_customerTable_id_fk",
+      "entityType": "fks",
+      "table": "installmentTable"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "customerTable_pk",
+      "table": "customerTable",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "installmentTable_pk",
+      "table": "installmentTable",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "staffTable_pk",
+      "table": "staffTable",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "serial_number"
+      ],
+      "nameExplicit": false,
+      "name": "customerTable_serial_number_unique",
+      "entityType": "uniques",
+      "table": "customerTable"
+    },
+    {
+      "columns": [
+        "phone_number"
+      ],
+      "nameExplicit": false,
+      "name": "staffTable_phone_number_unique",
+      "entityType": "uniques",
+      "table": "staffTable"
+    }
+  ],
+  "renames": []
+}

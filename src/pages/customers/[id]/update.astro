@@ -1,0 +1,41 @@
+---
+// src/pages/customer/[id]/edit.astro
+
+import { EditCustomer } from "@/modules/customer/components/customer-update";
+import { customerService } from "@/modules/customer/customer-service";
+import { safeFetch } from "@/utils/safe-fetch";
+import MainLayout from "@/layouts/main.astro";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+
+const { id } = Astro.params;
+
+if (!id) {
+    return Astro.redirect("/customer");
+}
+
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard.
+const currentStaff = Astro.locals.staff!;
+
+// Editing a customer is admin-only. Staff can add and view customers but
+// must never reach this route — bounce them out server-side rather than
+// relying only on the UI hiding the edit button. The updateCustomer
+// action also enforces requireAdmin itself, so this is defense in depth,
+// not the only gate.
+if (currentStaff.role !== "admin") {
+    return Astro.redirect("/customer");
+}
+
+const { data: customerData, error: errMsg } = await safeFetch(() =>
+    customerService.getById(getDb(env), id),
+);
+---
+
+<MainLayout>
+    <EditCustomer
+        client:load
+        customerData={customerData as any}
+        errorMsg={errMsg}
+    />
+</MainLayout>

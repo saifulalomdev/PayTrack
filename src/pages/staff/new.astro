@@ -1,0 +1,9 @@
+---
+// src/pages/staff/new.astro
+import MainLayout from "@/layouts/main.astro";
+import { StaffAdd } from "@/modules/staff/components/staff-add";
+---
+
+<MainLayout>
+    <StaffAdd client:load />
+</MainLayout>

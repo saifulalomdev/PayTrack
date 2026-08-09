@@ -1,0 +1,39 @@
+---
+import { CustomerManager } from "@/modules/customer/components/customer-manger";
+import { customerService } from "@/modules/customer/customer-service";
+import { safeFetch } from "@/utils/safe-fetch";
+import MainLayout from "@/layouts/main.astro";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+
+const currentStaff = Astro.locals.staff!;
+
+// Search & page live in the URL, not just component state — this is what
+// makes pagination "precise on refresh": a hard reload re-runs this SSR
+// query with the exact same ?search=&page= the user was on.
+const PAGE_SIZE = 10;
+const search = Astro.url.searchParams.get("search")?.trim() || undefined;
+const page = Math.max(1, Number(Astro.url.searchParams.get("page")) || 1);
+
+const { data: result, error: errMsg } = await safeFetch(() =>
+    customerService.listAll(getDb(env), { search, page, pageSize: PAGE_SIZE }),
+);
+
+const isAdmin = currentStaff.role === "admin";
+---
+
+<MainLayout>
+    <CustomerManager
+        client:load
+        errorMsg={errMsg}
+        customers={result?.data ?? []}
+        pagination={result?.pagination ?? {
+            page,
+            pageSize: PAGE_SIZE,
+            total: 0,
+            totalPages: 1,
+        }}
+        initialSearch={search ?? ""}
+        isAdmin={isAdmin}
+    />
+</MainLayout>

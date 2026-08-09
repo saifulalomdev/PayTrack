@@ -1,0 +1,24 @@
+---
+// src/pages/staff/[id]/edit.astro
+
+import MainLayout from "@/layouts/main.astro";
+import { StaffUpdate } from "@/modules/staff/components/staff-update";
+import { safeFetch } from "@/utils/safe-fetch";
+import { staffService } from "@/modules/staff/staff-service";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+const { id } = Astro.params;
+
+if (!id) {
+    return Astro.redirect("/staff");
+}
+
+const { data: staffData, error: errMsg } = await safeFetch(() =>
+    staffService.getById(getDb(env), id),
+);
+---
+
+<MainLayout>
+    <StaffUpdate client:load staffData={staffData as any} errorMsg={errMsg} />
+</MainLayout>

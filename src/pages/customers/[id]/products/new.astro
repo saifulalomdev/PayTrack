@@ -1,0 +1,15 @@
+---
+// src/pages/customers/[id]/products/new.astro
+import { ProductAdd } from "@/modules/product/components/product-add";
+import MainLayout from "@/layouts/main.astro";
+
+const { id: customerId } = Astro.params;
+
+if (!customerId) {
+    return Astro.redirect("/customers");
+}
+---
+
+<MainLayout> 
+    <ProductAdd customerId={customerId}/>
+</MainLayout>

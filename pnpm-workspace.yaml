@@ -1,0 +1,13 @@
+packages: []
+
+allowBuilds:
+  '@prisma/client': true
+  better-sqlite3: true
+  esbuild: true
+  msw: true
+  sharp: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@astrojs/cloudflare@14.1.5'
+  - astro@7.1.4

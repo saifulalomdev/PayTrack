@@ -1,0 +1,98 @@
+{
+  "dialect": "sqlite",
+  "id": "a5013ebc-3c86-4363-8da5-affc38c073e5",
+  "prevIds": [
+    "026291f5-748e-4dd6-8227-a5ac2da1e42e"
+  ],
+  "version": "7",
+  "ddl": [
+    {
+      "name": "staffTable",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "staffTable_pk",
+      "table": "staffTable",
+      "entityType": "pks"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "phone_number",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "password",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'staff'",
+      "generated": null,
+      "name": "role",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_at",
+      "table": "staffTable",
+      "entityType": "columns"
+    },
+    {
+      "columns": [
+        {
+          "value": "phone_number",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "staffTable_phone_number_unique",
+      "table": "staffTable",
+      "entityType": "indexes"
+    }
+  ],
+  "renames": []
+}

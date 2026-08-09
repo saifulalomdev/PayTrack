@@ -1,0 +1,22 @@
+---
+import "@/styles/global.css";
+const { theme } = Astro.locals;
+import { LoginForm } from "@/modules/auth/components/login-form";
+---
+
+<!doctype html>
+<html lang="en" class={theme === "dark" ? "dark" : ""}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>PayTrack</title>
+    <meta name="description" content="" />
+  </head>
+  <body>
+    <div class="min-h-screen min-h-dvh flex items-center justify-center p-4">
+      <LoginForm client:load />
+    </div>
+  </body>
+</html>

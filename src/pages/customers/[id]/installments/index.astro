@@ -1,0 +1,51 @@
+---
+// src/pages/customers/[id]/installments/index.astro
+import MainLayout from "@/layouts/main.astro";
+import { InstallmentManager } from "@/modules/installment/components/manager";
+import { installmentService } from "@/modules/installment/installment.service";
+import { customerService } from "@/modules/customer/customer-service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+
+const { id: customerId } = Astro.params;
+
+if (!customerId) {
+    return Astro.redirect("/customers");
+}
+
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard.
+const currentStaff = Astro.locals.staff!;
+
+// This page IS the customer's detail view now — the whole CustomerCard
+// on /customers links straight here, so we need the customer record
+// itself (for CustomerDetailsCard), not just their installments.
+const { data: customerData, error: customerErrMsg } = await safeFetch(() =>
+    customerService.getById(getDb(env), customerId),
+);
+
+const { data: installmentList, error: installmentErrMsg } = await safeFetch(
+    () => installmentService.listByCustomer(getDb(env), customerId),
+);
+
+// Surface whichever fetch failed first; customer existing is the more
+// fundamental precondition, so its error takes priority if both failed.
+const errMsg = customerErrMsg || installmentErrMsg;
+
+// Any staff can view/add installments, but only admins may edit or delete
+// a customer or an installment — same single-source-of-truth pattern as
+// customers/index.astro.
+const isAdmin = currentStaff.role === "admin";
+---
+
+<MainLayout>
+    <InstallmentManager
+        client:load
+        customerId={customerId}
+        customer={customerData}
+        errorMsg={errMsg}
+        installments={installmentList}
+        isAdmin={isAdmin}
+    />
+</MainLayout>

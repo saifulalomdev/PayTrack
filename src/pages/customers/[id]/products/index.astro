@@ -1,0 +1,20 @@
+---
+// src/pages/customers/[id]/products/index.astro
+import { ProductManager } from "@/modules/product/components/product-manager";
+import MainLayout from "@/layouts/main.astro";
+
+const { id: customerId } = Astro.params;
+
+if (!customerId) {
+    return Astro.redirect("/customers");
+}
+---
+
+<MainLayout>
+    <ProductManager
+        customerName={"Saiful Alom"}
+        serialNumber="2014"
+        customerId={customerId}
+        client:load
+    />
+</MainLayout>

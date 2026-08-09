@@ -1,0 +1,13 @@
+---
+// src/pages/customer/new.astro
+import MainLayout from "@/layouts/main.astro";
+import { AddNewCustomer } from "@/modules/customer/components/add-form";
+
+// context.locals.staff is populated by the auth middleware and guaranteed
+// non-null here, since this route sits behind the auth guard. No admin
+// check needed — any logged-in staff can add a customer.
+---
+
+<MainLayout>
+    <AddNewCustomer client:load />
+</MainLayout>
