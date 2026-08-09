@@ -11,7 +11,13 @@ export default defineConfig({
     host: true,
     port: 3000
   },
-
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "bn"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   vite: {
     // @ts-ignore
     plugins: [tailwindcss()],

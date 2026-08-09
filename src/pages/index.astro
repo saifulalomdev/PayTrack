@@ -1,5 +1,10 @@
 ---
+import { getTranslator } from "@/i18n/use-translation";
 import MainLayout from "@/layouts/main.astro";
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslator("bn", "auth");
 ---
 
-<MainLayout> Dashboard content </MainLayout>
+<MainLayout>
+    {t("login.title")}
+</MainLayout>
