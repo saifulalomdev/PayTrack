@@ -106,11 +106,6 @@ interface DashboardHeaderProps {
 
 function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: DashboardHeaderProps) {
     const language = useStore($language);
-    const t = useStore($t);
-
-    // Localized role label — falls back to the raw role if translations
-    // for it aren't defined yet in your i18n store.
-    const roleLabel = t.common[staff.role] ?? (staff.role === "admin" ? "Admin" : "Staff");
 
     return (
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-4 lg:px-6">
@@ -139,14 +134,10 @@ function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: Das
                     <span>{language === "EN" ? "English" : "বাংলা"}</span>
                 </Button>
 
-                <div className="items-center gap-2 border-l pl-4 hidden md:flex">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
+                <div className="items-center gap-2 border-l pl-4">
+                    <Button size="icon" variant="secondary" className="border rounded-full">
                         <User className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                    <div className="flex flex-col leading-tight">
-                        <span className="text-sm font-medium">{staff.name}</span>
-                        <span className="text-xs text-muted-foreground">{roleLabel}</span>
-                    </div>
+                    </Button>
                 </div>
             </div>
         </header>

@@ -4,14 +4,15 @@ import { Plus, ChevronRight, User } from 'lucide-react'
 
 interface ProductManagerProps {
     customerId: string;
-    customerName: string;
-    serialNumber: string;
+    customerName?: string;
+    serialNumber?: string;
+    errorMsg?: string;
 }
 
-export function ProductManager({ customerId, customerName, serialNumber }: ProductManagerProps) {
+export function ProductManager({ customerId, customerName, serialNumber , errorMsg}: ProductManagerProps) {
     return (
         <div className='space-y-6'>
-            <ErrorAlert errorMsg={""} />
+            <ErrorAlert errorMsg={errorMsg} />
 
             {/* 1. Breadcrumb Navigation */}
             <nav className='flex items-center gap-2 text-xs text-zinc-400'>

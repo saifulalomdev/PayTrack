@@ -92,9 +92,9 @@ export default function CustomerTableRow({
               <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild className="gap-2 cursor-pointer">
-                <a href={`/customers/${id}/installments`}>
+                <a href={`/customers/${id}/products`}>
                   <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span>View Installments</span>
+                  <span>View products</span>
                 </a>
               </DropdownMenuItem>
 

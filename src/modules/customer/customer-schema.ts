@@ -15,7 +15,7 @@ const RULES = {
 const baseCustomerSchema = createInsertSchema(customerTable, {
     serialNumber: (s) => s.min(RULES.serialNumber, `সিরিয়াল নম্বর আবশ্যক`),
 
-    name: (s) => s.min(RULES.name, `গ্রাহকের নাম কমপক্ষে ১ অক্ষরের হতে হবে`)
+    name: (s) => s.min(RULES.name, `গ্রাহকের নাম আবশ্যক`)
 }).omit({
     createdAt: true,
     createdByName: true,
