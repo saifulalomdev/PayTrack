@@ -1,4 +1,4 @@
-import { Globe, User, Menu, X, XIcon, ChevronRight } from "lucide-react";
+import { Globe, User, Menu, X, XIcon, ChevronRight, LogOut } from "lucide-react";
 import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,8 +7,19 @@ import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
 import { useStore } from '@nanostores/react';
 import type { Theme } from "@/types/theme";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import React, { useState } from 'react';
 import { cn } from '@/utils/utils';
+import { useAction } from "@/hooks/use-action";
+import { actions } from "astro:actions";
+
 
 interface CurrentStaff {
     name: string;
@@ -107,6 +118,13 @@ interface DashboardHeaderProps {
 function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: DashboardHeaderProps) {
     const language = useStore($language);
 
+    const { isLoading, execute } = useAction(actions.auth.logout, {
+        loadingMessage: "Logging out...",
+        onSuccess: () => {
+            window.location.href = "/login"
+        }
+    })
+
     return (
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-4 lg:px-6">
             <div className="flex items-center gap-3">
@@ -135,9 +153,24 @@ function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: Das
                 </Button>
 
                 <div className="items-center gap-2 border-l pl-4">
-                    <Button size="icon" variant="secondary" className="border rounded-full">
-                        <User className="h-5 w-5 text-muted-foreground" />
-                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="secondary" className="border rounded-full">
+                                <User className="h-5 w-5 text-muted-foreground" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuLabel className="flex flex-col gap-0.5">
+                                <span className="text-sm font-medium leading-none">{staff.name}</span>
+                                <span className="text-xs capitalize text-muted-foreground">{staff.role}</span>
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => execute(undefined)} className="cursor-pointer text-destructive focus:text-destructive">
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>{isLoading ? "Logging out..." : "Logout"}</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
         </header>
