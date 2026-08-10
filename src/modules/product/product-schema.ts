@@ -1,3 +1,4 @@
+// src/modules/product/product-schema.ts
 import { createSelectSchema, createInsertSchema } from 'drizzle-orm/zod';
 import { productTable } from './product-table';
 import { z } from 'zod';
@@ -20,3 +21,9 @@ export const insertProductSchema = createInsertSchema(productTable, {
   installmentAmount: z.number().positive({ message: "কিস্তির পরিমাণ অবশ্যই ০ থেকে বেশি হতে হবে।" }),
   installmentDeadline: z.number().positive({ message: "সঠিক কিস্তির সময়সীমা উল্লেখ করুন।" }),
 }).strict();
+
+export const updateProductSchema = insertProductSchema
+  .extend({
+    id: z.string(),
+  })
+  .strict();

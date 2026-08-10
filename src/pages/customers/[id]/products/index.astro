@@ -1,9 +1,11 @@
 ---
 // src/pages/customers/[id]/products/index.astro
 import { ProductManager } from "@/modules/product/components/product-manager";
+import { productRepository } from "@/modules/product/product-repository";
 import { customerService } from "@/modules/customer/customer-service";
-import MainLayout from "@/layouts/main.astro";
+
 import { safeFetch } from "@/utils/safe-fetch";
+import MainLayout from "@/layouts/main.astro";
 import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 
@@ -15,14 +17,19 @@ if (!customerId) {
 const { data: customer, error: errMsg } = await safeFetch(() =>
     customerService.getById(getDb(env), customerId),
 );
+
+const { data: products, error: errMsgProducts } = await safeFetch(() =>
+    productRepository.findProductsByCustomerId(getDb(env), customerId),
+);
 ---
 
 <MainLayout>
     <ProductManager
-        errorMsg={errMsg}
+        errorMsg={errMsg || errMsgProducts}
         customerName={customer?.name}
         serialNumber={customer?.serialNumber}
         customerId={customerId}
+        products={products ?? []}
         client:load
     />
 </MainLayout>

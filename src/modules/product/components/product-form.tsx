@@ -51,6 +51,11 @@ export default function ProductForm<T extends FieldValues>({
         {...register("customerId" as Path<T>)}
       />
 
+      <input
+        type="hidden"
+        {...register("id" as Path<T>)}
+      />
+
       {/* Product Name */}
       <div className="space-y-2">
         <Label htmlFor="productName" error={!!errors.productName}>
@@ -136,6 +141,10 @@ export default function ProductForm<T extends FieldValues>({
                 onChange={(e) =>
                   field.onChange(dateInputValueToUnix(e.target.value))
                 }
+                onClick={(e) => {
+                  const input = e.currentTarget as HTMLInputElement;
+                  input.showPicker?.();
+                }}
               />
             )}
           />
