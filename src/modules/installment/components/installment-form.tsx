@@ -38,7 +38,8 @@ export function InstallmentForm<T extends FieldValues>({
 
             {/* customerId travels with the form but is never shown/typed by
                 the user — it's fixed by whichever customer's page this form
-                was opened from (see AddNewInstallment). */}
+                was opened from (see AddNewInstallment). 
+            */}
             <input type="hidden" {...register("customerId" as Path<T>)} />
 
             <div className="space-y-2">

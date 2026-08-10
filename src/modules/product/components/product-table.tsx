@@ -82,7 +82,7 @@ export default function ProductTable({
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" disabled={isDeleting}>
+                      <Button variant="ghost" size="icon-xs" className='rounded-full' disabled={isDeleting}>
                         <MoreHorizontal className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>

@@ -1,7 +1,6 @@
 ---
 // src/pages/customers/[id]/installments/new.astro
 import MainLayout from "@/layouts/main.astro";
-import { AddNewInstallment } from "@/modules/installment/components/add";
 
 const { id: customerId } = Astro.params;
 
@@ -11,5 +10,5 @@ if (!customerId) {
 ---
 
 <MainLayout>
-        <AddNewInstallment client:load customerId={customerId} />
+        <!-- <AddNewInstallment client:load customerId={customerId} /> -->
 </MainLayout>

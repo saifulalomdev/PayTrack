@@ -2,7 +2,6 @@
 // src/pages/customers/[id]/products/[productId]/index.astro
 import { productService } from "@/modules/product/product-service";
 import { installmentService } from "@/modules/installment/installment-service";
-import { InstallmentBalance } from "@/modules/installment/components/installment-balance";
 import { safeFetch } from "@/utils/safe-fetch";
 import MainLayout from "@/layouts/main.astro";
 import { env } from "cloudflare:workers";
@@ -20,5 +19,4 @@ const { data: balance, error: errMsg } = await safeFetch(() =>
 ---
 
 <MainLayout>
-    {balance && <InstallmentBalance client:load {...balance} />}
 </MainLayout>
