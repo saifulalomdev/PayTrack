@@ -9,9 +9,13 @@ export const insertInstallmentSchema = createInsertSchema(installmentTable, {
   id: (s) => s.optional(),
   paidAt: (s) => s.optional(),
   createdAt: (s) => s.optional(),
-  createdByName: (s) => s.optional(), // injected server-side from session
+  createdByName: (s) => s.optional(),
 
   productId: z.string(),
 
   amountPaid: z.number().positive({ message: "পরিশোধিত পরিমাণ অবশ্যই ০ থেকে বেশি হতে হবে।" }),
+}).strict();
+
+export const updateInstallmentSchema = insertInstallmentSchema.extend({
+  id: z.string(),
 }).strict();

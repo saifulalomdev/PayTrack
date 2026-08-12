@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { PackageX, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { PackageX, MoreHorizontal, Pencil, Trash2, Receipt } from 'lucide-react';
 import type { PublicProduct } from '../product-types';
 
 interface ProductTableProps {
@@ -22,6 +22,7 @@ interface ProductTableProps {
   isDeleting: boolean;
   onUpdate: (id: string) => void;
   onDelete: (id: string) => void;
+  onViewInstallments: (id: string) => void;
 }
 
 function formatBDT(amount?: number | null) {
@@ -43,6 +44,7 @@ export default function ProductTable({
   isDeleting,
   onUpdate,
   onDelete,
+  onViewInstallments,
 }: ProductTableProps) {
   const isEmpty = !products || products.length === 0;
 
@@ -73,7 +75,15 @@ export default function ProductTable({
           ) : (
             products.map((product) => (
               <TableRow key={product.id}>
-                <TableCell className="font-medium">{product.productName}</TableCell>
+                <TableCell className="font-medium">
+                  <button
+                    type="button"
+                    onClick={() => onViewInstallments(product.id)}
+                    className="hover:underline hover:text-primary text-left transition-colors"
+                  >
+                    {product.productName}
+                  </button>
+                </TableCell>
                 <TableCell>{formatBDT(product.totalPrice)}</TableCell>
                 <TableCell>{formatBDT(product.downPayment)}</TableCell>
                 <TableCell>{formatBDT(product.installmentAmount)}</TableCell>
@@ -87,6 +97,10 @@ export default function ProductTable({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onViewInstallments(product.id)}>
+                        <Receipt className="w-4 h-4 mr-2" />
+                        কিস্তি দেখুন
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => onUpdate(product.id)}>
                         <Pencil className="w-4 h-4 mr-2" />
                         সম্পাদনা করুন

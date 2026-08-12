@@ -1,0 +1,50 @@
+---
+// src/pages/customers/[id]/products/[productId]/installments/[installmentId]/edit.astro
+import Layout from "@/layouts/main.astro";
+import { InstallmentUpdate } from "@/modules/installment";
+import { requireAdmin } from "@/utils/auth-guards";
+import { installmentService } from "@/modules/installment/installment-service";
+import { productService } from "@/modules/product/product-service";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+// Editing a payment record is admin-only, same tier as delete.
+requireAdmin(Astro);
+
+const { id: customerId, productId, installmentId } = Astro.params;
+
+if (!customerId || !productId || !installmentId) {
+  return Astro.redirect("/customers");
+}
+
+const db = getDb(env);
+
+let errorMsg: string | undefined;
+let installment;
+let product;
+
+try {
+  product = await productService.getById(db, productId);
+  installment = await installmentService.getById(db, installmentId);
+
+  if (product.customerId !== customerId || installment.productId !== productId) {
+    return Astro.redirect(`/customers/${customerId}/products/${productId}/installments`);
+  }
+} catch (e: any) {
+  errorMsg = e?.message || "কিস্তিটি খুঁজে পাওয়া যায়নি।";
+}
+---
+
+<Layout title="কিস্তি আপডেট করুন">
+  {installment && product ? (
+    <InstallmentUpdate
+      client:load
+      productId={productId}
+      customerId={customerId}
+      installmentData={installment}
+      errorMsg={errorMsg}
+    />
+  ) : (
+    <p class="text-red-500">{errorMsg}</p>
+  )}
+</Layout>

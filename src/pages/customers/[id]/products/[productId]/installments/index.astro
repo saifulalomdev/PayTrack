@@ -1,0 +1,60 @@
+---
+// src/pages/customers/[id]/products/[productId]/installments/index.astro
+import Layout from "@/layouts/main.astro";
+import { InstallmentManager } from "@/modules/installment";
+import { requireAuth } from "@/utils/auth-guards";
+import { installmentService } from "@/modules/installment/installment-service";
+import { productService } from "@/modules/product/product-service";
+import { customerRepository } from "@/modules/customer/customer-repository";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+const staff = requireAuth(Astro);
+const { id: customerId, productId } = Astro.params;
+
+if (!customerId || !productId) {
+  return Astro.redirect("/customers");
+}
+
+const db = getDb(env);
+
+let errorMsg: string | undefined;
+let product;
+let customer;
+let installments: Awaited<ReturnType<typeof installmentService.listByProductId>> = [];
+let balance;
+
+try {
+  product = await productService.getById(db, productId);
+
+  if (product.customerId !== customerId) {
+    return Astro.redirect(`/customers/${customerId}/products`);
+  }
+
+  // was: customerRepository.findCustomerById(db, customerId) — repository
+  // method is actually named `findById`.
+  customer = await customerRepository.findById(db, customerId);
+  installments = await installmentService.listByProductId(db, productId);
+  balance = await installmentService.getBalance(db, productId);
+} catch (e: any) {
+  errorMsg = e?.message || "পণ্যটি খুঁজে পাওয়া যায়নি।";
+}
+---
+
+<Layout title={`কিস্তি — ${product?.productName ?? ""}`}>
+  {product && balance ? (
+    <InstallmentManager
+      client:load
+      productId={productId}
+      productName={product.productName}
+      customerId={customerId}
+      customerName={customer?.name}
+      isAdmin={staff.role === "admin"}
+      errorMsg={errorMsg}
+      installments={installments}
+      balance={balance}
+    />
+  ) : (
+    <p class="text-red-500 p-6">{errorMsg}</p>
+  )}
+</Layout>

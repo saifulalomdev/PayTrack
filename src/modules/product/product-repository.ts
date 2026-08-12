@@ -6,9 +6,10 @@ import type { InsertProduct, UpdateProduct } from "./product-types";
 
 export const productRepository = {
   createProduct: async (db: D1Instance, data: InsertProduct) => {
+    const { id, ...rest } = data as any; // drop id if present — always let $defaultFn generate it
     const [result] = await db
       .insert(productTable)
-      .values(data as any)
+      .values(rest)
       .returning();
     return result;
   },

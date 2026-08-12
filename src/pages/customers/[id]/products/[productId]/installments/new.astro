@@ -1,0 +1,33 @@
+---
+// src/pages/customers/[id]/products/[productId]/installments/new.astro
+import Layout from "@/layouts/main.astro";
+import { InstallmentAdd } from "@/modules/installment";
+import { requireAuth } from "@/utils/auth-guards";
+import { productService } from "@/modules/product/product-service";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+requireAuth(Astro);
+const { id: customerId, productId } = Astro.params;
+
+if (!customerId || !productId) {
+  return Astro.redirect("/customers");
+}
+
+const db = getDb(env);
+
+let product;
+try {
+  product = await productService.getById(db, productId);
+} catch {
+  return Astro.redirect(`/customers/${customerId}/products`);
+}
+
+if (product.customerId !== customerId) {
+  return Astro.redirect(`/customers/${customerId}/products`);
+}
+---
+
+<Layout title={`নতুন কিস্তি — ${product.productName}`}>
+  <InstallmentAdd client:load productId={productId} customerId={customerId} />
+</Layout>

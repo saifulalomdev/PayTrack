@@ -21,6 +21,8 @@ const { data: customer, error: errMsg } = await safeFetch(() =>
 const { data: products, error: errMsgProducts } = await safeFetch(() =>
     productRepository.findProductsByCustomerId(getDb(env), customerId),
 );
+
+console.log(products)
 ---
 
 <MainLayout>

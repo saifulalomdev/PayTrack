@@ -2,21 +2,16 @@
 import { installmentRepository } from "./installment-repository";
 import { productRepository } from "@/modules/product/product-repository";
 import type { D1Instance } from "@/utils";
-import type { InsertInstallment } from "./installment-types";
+import type { InsertInstallment, UpdateInstallment } from "./installment-types";
 
 export const installmentService = {
   create: async (db: D1Instance, data: InsertInstallment) => {
-    // Guard: don't let payments get recorded against a product that
-    // doesn't exist (e.g. stale form, deleted product in another tab).
     const product = await productRepository.findCustomerProductById(db, data.productId);
 
     if (!product) {
       throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
     }
 
-    // Guard: don't let total payments exceed what's actually owed.
-    // (totalPrice - downPayment) is the amount installments are meant to
-    // cover; downPayment itself is recorded on the product, not here.
     const alreadyPaid = await installmentRepository.getTotalPaidByProductId(db, data.productId);
     const owed = product.totalPrice - product.downPayment;
     const remaining = owed - alreadyPaid;
@@ -34,8 +29,59 @@ export const installmentService = {
     return await installmentRepository.findInstallmentsByProductId(db, productId);
   },
 
+  getById: async (db: D1Instance, id: string) => {
+    const installment = await installmentRepository.findInstallmentById(db, id);
+
+    if (!installment) {
+      throw new Error("কিস্তিটি খুঁজে পাওয়া যায়নি।");
+    }
+
+    return installment;
+  },
+
+  update: async (db: D1Instance, data: UpdateInstallment) => {
+    const existing = await installmentRepository.findInstallmentById(db, data.id);
+
+    if (!existing) {
+      throw new Error("কিস্তিটি খুঁজে পাওয়া যায়নি।");
+    }
+
+    if (existing.productId !== data.productId) {
+      throw new Error("এই কিস্তিটি এই পণ্যের নয়।");
+    }
+
+    const product = await productRepository.findCustomerProductById(db, data.productId);
+
+    if (!product) {
+      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+    }
+
+    // Exclude this installment's own current amount from "already paid"
+    // before checking the new amount against what's remaining.
+    const paidByOthers = await installmentRepository.getTotalPaidByProductIdExcluding(
+      db,
+      data.productId,
+      data.id
+    );
+    const owed = product.totalPrice - product.downPayment;
+    const remaining = owed - paidByOthers;
+
+    if (data.amountPaid > remaining) {
+      throw new Error(
+        `পরিশোধের পরিমাণ বাকি টাকার (৳${remaining}) চেয়ে বেশি হতে পারবে না।`
+      );
+    }
+
+    const updated = await installmentRepository.updateInstallmentById(db, data);
+
+    if (!updated) {
+      throw new Error("কিস্তি আপডেট করা যায়নি।");
+    }
+
+    return updated;
+  },
+
   /**
-   * Core "how much is left to pay" calculation.
    * remaining = totalPrice - downPayment - sum(installments paid)
    */
   getBalance: async (db: D1Instance, productId: string) => {

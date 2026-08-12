@@ -20,7 +20,7 @@ export const insertProductSchema = createInsertSchema(productTable, {
   downPayment: z.number().min(0, { message: "ডাউন পেমেন্ট ০ বা তার বেশি হতে হবে।" }),
   installmentAmount: z.number().positive({ message: "কিস্তির পরিমাণ অবশ্যই ০ থেকে বেশি হতে হবে।" }),
   installmentDeadline: z.number().positive({ message: "সঠিক কিস্তির সময়সীমা উল্লেখ করুন।" }),
-}).strict();
+}).strict().omit({ id: true });
 
 export const updateProductSchema = insertProductSchema
   .extend({

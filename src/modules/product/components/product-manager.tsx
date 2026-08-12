@@ -41,11 +41,14 @@ export function ProductManager({
         window.location.href = `/customers/${customerId}/products/${id}/update`;
     };
 
+    const handleViewInstallments = (id: string) => {
+        window.location.href = `/customers/${customerId}/products/${id}/installments`;
+    };
+
     return (
         <div className='space-y-6'>
             <ErrorAlert errorMsg={errorMsg} />
 
-            {/* 1. Breadcrumb Navigation */}
             <nav className='flex items-center gap-2 text-xs text-zinc-400'>
                 <a href="/customers" className='hover:text-white transition-colors'>
                     গ্রাহক তালিকা (Customers)
@@ -54,7 +57,6 @@ export function ProductManager({
                 <span className='text-zinc-200 font-medium'>{customerName}</span>
             </nav>
 
-            {/* 2. Focused Customer Profile Bar */}
             <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-900/50 border border-zinc-800 rounded-xl p-5'>
                 <div className='flex items-center gap-4'>
                     <div className='w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0'>
@@ -81,12 +83,12 @@ export function ProductManager({
                 </Button>
             </div>
 
-            {/* 3. Product Table */}
             <ProductTable
                 products={products}
                 isDeleting={isDeleting}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
+                onViewInstallments={handleViewInstallments}
             />
         </div>
     )
