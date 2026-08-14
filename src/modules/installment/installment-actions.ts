@@ -12,13 +12,22 @@ export const createInstallment = defineAction({
   accept: "json",
   input: insertInstallmentSchema,
   handler: async (input, context) => {
-    requireAuth(context);
+    // 1. Get the logged-in user/staff member
+    const user = requireAuth(context); 
     const db = getDb(env);
-    const newInstallment = await installmentService.create(db, input);
+
+    // 2. Separate 'id' so Drizzle can auto-generate a new UUID
+    const { id, ...installmentData } = input;
+
+    // 3. Pass createdByName from the logged-in user
+    const newInstallment = await installmentService.create(db, {
+      ...installmentData,
+      createdByName: user.name,
+    });
 
     return {
       success: true,
-      message: "কিস্তি সফলভাবে যোগ করা হয়েছে!",
+      message: "কিস্তি সফলভাবে যোগ করা হয়েছে!",
       data: newInstallment,
     };
   },

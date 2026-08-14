@@ -18,6 +18,9 @@ export function EditCustomer({ customerData, errorMsg }: { customerData: UpdateC
         schema: updateCustomerSchema,
         loadingMessage: "গ্রাহক তথ্য আপডেট হচ্ছে...",
         successMessage: "গ্রাহক তথ্য সফলভাবে আপডেট হয়েছে!",
+        onSuccess: () => {
+            window.location.href = "/customers"
+        }
     });
 
     return (
