@@ -1,0 +1,15 @@
+---
+// src/pages/customers/[id]/products/[productId]/fines/new.astro
+import MainLayout from "@/layouts/main.astro";
+import { FineAdd } from "@/modules/fine/components/fine-add";
+
+const { id: customerId, productId } = Astro.params;
+
+if (!productId || !customerId) {
+    return Astro.redirect("/");
+}
+---
+
+<MainLayout>
+    <FineAdd client:load customerId={customerId} productId={productId} />
+</MainLayout>

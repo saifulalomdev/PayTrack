@@ -1,6 +1,7 @@
 // src/modules/installment/installment-service.ts
 import { installmentRepository } from "./installment-repository";
 import { productRepository } from "@/modules/product/product-repository";
+import { fineRepository } from "@/modules/fine/fine-repository";
 import type { D1Instance } from "@/utils";
 import type { InsertInstallment, UpdateInstallment } from "./installment-types";
 
@@ -13,7 +14,9 @@ export const installmentService = {
     }
 
     const alreadyPaid = await installmentRepository.getTotalPaidByProductId(db, data.productId);
-    const owed = product.totalPrice - product.downPayment;
+    const totalFines = await fineRepository.getTotalByProductId(db, data.productId);
+    // Fines add to what's owed, the same way downPayment subtracts from it.
+    const owed = product.totalPrice - product.downPayment + totalFines;
     const remaining = owed - alreadyPaid;
 
     if (data.amountPaid > remaining) {
@@ -63,7 +66,8 @@ export const installmentService = {
       data.productId,
       data.id
     );
-    const owed = product.totalPrice - product.downPayment;
+    const totalFines = await fineRepository.getTotalByProductId(db, data.productId);
+    const owed = product.totalPrice - product.downPayment + totalFines;
     const remaining = owed - paidByOthers;
 
     if (data.amountPaid > remaining) {
@@ -82,7 +86,12 @@ export const installmentService = {
   },
 
   /**
-   * remaining = totalPrice - downPayment - sum(installments paid)
+   * remaining = totalPrice - downPayment + totalFines - sum(installments paid)
+   *
+   * Fines are treated as additional charges on top of the product price —
+   * the same role downPayment plays in the opposite direction. A product
+   * is only "fully paid" once installments have covered the original
+   * price AND any fines levied against it.
    */
   getBalance: async (db: D1Instance, productId: string) => {
     const product = await productRepository.findCustomerProductById(db, productId);
@@ -92,13 +101,15 @@ export const installmentService = {
     }
 
     const totalPaid = await installmentRepository.getTotalPaidByProductId(db, productId);
-    const owed = product.totalPrice - product.downPayment;
+    const totalFines = await fineRepository.getTotalByProductId(db, productId);
+    const owed = product.totalPrice - product.downPayment + totalFines;
     const remaining = Math.max(owed - totalPaid, 0);
     const isFullyPaid = remaining === 0;
 
     return {
       totalPrice: product.totalPrice,
       downPayment: product.downPayment,
+      totalFines,
       totalPaid,
       owed,
       remaining,

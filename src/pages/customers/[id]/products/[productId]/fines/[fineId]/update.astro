@@ -1,0 +1,39 @@
+---
+// src/pages/customers/[id]/products/[productId]/fines/[fineId]/update.astro
+import MainLayout from "@/layouts/main.astro";
+import { FineUpdate } from "@/modules/fine/components/fine-update";
+import { safeFetch } from "@/utils/safe-fetch";
+import { fineService } from "@/modules/fine/fine-service";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+const { id: customerId, productId, fineId } = Astro.params;
+
+if (!fineId || !productId || !customerId) {
+    return Astro.redirect("/");
+}
+
+// Update is admin-only — mirror that here as a server-side redirect so
+// non-admins can't reach the update page at all, not just have the button
+// hidden. The action's own requireAdmin remains the final enforcement layer.
+const currentStaff = Astro.locals.staff;
+if (currentStaff?.role !== "admin") {
+    return Astro.redirect(
+        `/customers/${customerId}/products/${productId}/fines`,
+    );
+}
+
+const { data: fineData, error: errMsg } = await safeFetch(() =>
+    fineService.getById(getDb(env), fineId),
+);
+---
+
+<MainLayout>
+    <FineUpdate
+        client:load
+        fineData={fineData as any}
+        customerId={customerId}
+        productId={productId}
+        errorMsg={errMsg}
+    />
+</MainLayout>

@@ -1,3 +1,5 @@
+// src/modules/staff/components/staff-add.tsx
+
 import { PageHeader } from '@/components/ui/page-header';
 import { useFormAction } from '@/hooks/use-form-action';
 import { insertStaffSchema } from '../staff-schema';

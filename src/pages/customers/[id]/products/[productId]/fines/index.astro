@@ -1,0 +1,39 @@
+---
+// src/pages/customers/[id]/products/[productId]/fines/index.astro
+import MainLayout from "@/layouts/main.astro";
+import { FineManager } from "@/modules/fine/components/fine-manager";
+import { safeFetch } from "@/utils/safe-fetch";
+import { fineService } from "@/modules/fine/fine-service";
+import { productService } from "@/modules/product/product-service";
+import { getDb } from "@/utils";
+import { env } from "cloudflare:workers";
+
+const { id: customerId, productId } = Astro.params;
+
+if (!customerId || !productId) {
+    return Astro.redirect("/");
+}
+
+const currentStaff = Astro.locals.staff;
+const isAdmin = currentStaff?.role === "admin";
+
+const db = getDb(env);
+
+const { data: fines, error: errMsg } = await safeFetch(() =>
+    fineService.listByProductId(db, productId),
+);
+
+const product = await productService.getById(db, productId);
+---
+
+<MainLayout>
+    <FineManager
+        client:load
+        customerId={customerId}
+        productId={productId}
+        productName={product?.productName}
+        fines={fines ?? []}
+        errorMsg={errMsg}
+        isAdmin={isAdmin}
+    />
+</MainLayout>

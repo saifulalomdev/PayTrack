@@ -10,6 +10,7 @@ import type { PublicInstallment } from '../installment-types'
 interface InstallmentBalance {
   totalPrice: number;
   downPayment: number;
+  totalFines: number;
   totalPaid: number;
   owed: number;
   remaining: number;
@@ -90,16 +91,29 @@ export function InstallmentManager({
           </div>
         </div>
 
-        {!balance.isFullyPaid && (
-          <Button asChild className='uppercase shrink-0'>
-            <a href={`/customers/${customerId}/products/${productId}/installments/new`}>
-              <Plus className="w-4 h-4 mr-2" /> Add New Installment
+        <div className="flex flex-col md:flex-row gap-2">
+          {/* Button to go to the Fines page */}
+          <Button asChild variant="outline">
+            <a href={`/customers/${customerId}/products/${productId}/fines`}>
+              জরিমানা দেখুন (View Fines)
             </a>
           </Button>
-        )}
+
+          {!balance.isFullyPaid && (
+            <Button asChild className='uppercase shrink-0'>
+              <a href={`/customers/${customerId}/products/${productId}/installments/new`}>
+                <Plus className="w-4 h-4 mr-2" /> Add New Installment
+              </a>
+            </Button>
+          )}
+
+        </div>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+      {/* 5 cards now — totalFines only shows a non-zero highlight when
+          there actually are fines, so products with no fines look the
+          same as before. */}
+      <div className='grid grid-cols-2 md:grid-cols-5 gap-4'>
         <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
           <p className='text-xs text-zinc-400'>মোট মূল্য</p>
           <p className='text-lg font-semibold text-white'>{formatBDT(balance.totalPrice)}</p>
@@ -108,6 +122,12 @@ export function InstallmentManager({
           <p className='text-xs text-zinc-400'>পরিশোধিত</p>
           <p className='text-lg font-semibold text-white'>
             {formatBDT(balance.downPayment + balance.totalPaid)}
+          </p>
+        </div>
+        <div className={`rounded-xl p-4 border ${balance.totalFines > 0 ? 'bg-red-950/30 border-red-900/50' : 'bg-zinc-900/50 border-zinc-800'}`}>
+          <p className='text-xs text-zinc-400'>জরিমানা</p>
+          <p className={`text-lg font-semibold ${balance.totalFines > 0 ? 'text-red-400' : 'text-white'}`}>
+            {formatBDT(balance.totalFines)}
           </p>
         </div>
         <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
