@@ -17,7 +17,7 @@ export function FineUpdate({ fineData, customerId, productId, errorMsg }: { fine
         loadingMessage: "Updating fine...",
         successMessage: "Fine updated successfully!",
         onSuccess: () => {
-            window.location.href = `/customers/${customerId}/products/${productId}/fines`
+            window.location.href = `/customers/${customerId}/products/${productId}/installments`
         }
     });
 

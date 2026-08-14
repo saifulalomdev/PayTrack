@@ -20,7 +20,7 @@ export function FineAdd({ customerId, productId }: { customerId: string; product
         loadingMessage: "Saving fine...",
         successMessage: "Fine created successfully!",
         onSuccess: () => {
-            window.location.href = `/customers/${customerId}/products/${productId}/fines`
+            window.location.href = `/customers/${customerId}/products/${productId}/installments`
         }
     });
 
