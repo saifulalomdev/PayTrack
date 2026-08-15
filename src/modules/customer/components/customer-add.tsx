@@ -1,3 +1,4 @@
+// add-new-customer.tsx
 import { useFormAction } from '@/hooks/use-form-action';
 import { actions } from 'astro:actions';
 import { insertCustomerSchema } from '../customer-schema';
@@ -10,7 +11,10 @@ export function AddNewCustomer() {
         defaultValues: {
             serialNumber: '',
             name: '',
-            productName: '',
+            guardianName: '',
+            guardianType: 'father',
+            phoneNumber: '',
+            address: '',
         },
         schema: insertCustomerSchema,
         loadingMessage: "গ্রাহক সংরক্ষণ হচ্ছে...",

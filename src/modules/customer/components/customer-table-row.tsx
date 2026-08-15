@@ -1,3 +1,4 @@
+// customer-table-row.tsx
 import {
   User,
   Pencil,
@@ -37,18 +38,22 @@ interface CustomerTableRowProps extends Partial<PublicCustomer> {
   isDeleting?: boolean;
 }
 
-function formatTaka(amount?: number) {
-  if (amount === undefined || amount === null) return "-";
-  return `৳${amount.toLocaleString("bn-BD")}`;
-}
+const guardianTypeLabel: Record<string, string> = {
+  father: "পিতা",
+  husband: "স্বামী",
+};
 
 export default function CustomerTableRow({
   id,
   name,
   serialNumber,
+  guardianName,
+  guardianType,
+  phoneNumber,
   isDeleting,
   onDelete,
   onUpdate,
+  address,
 }: CustomerTableRowProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -60,6 +65,7 @@ export default function CustomerTableRow({
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
             <User className="h-5 w-5" />
           </div>
+
           <a
             href={`/customers/${id}/products`}
             className="text-foreground hover:underline"
@@ -76,7 +82,28 @@ export default function CustomerTableRow({
         </span>
       </TableCell>
 
-      {/* 7. Actions */}
+      {/* 3. Guardian */}
+      <TableCell>
+        <div className="flex flex-col">
+          <span className="text-foreground">{guardianName ?? "-"}</span>
+          {guardianType && (
+            <span className="text-xs text-muted-foreground">
+              {guardianTypeLabel[guardianType] ?? guardianType}
+            </span>
+          )}
+        </div>
+      </TableCell>
+
+      {/* 4. Phone Number */}
+      <TableCell>
+        <span className="text-foreground">{phoneNumber ?? "-"}</span>
+      </TableCell>
+
+      <TableCell>
+        <span className="text-foreground">{address ?? "-"}</span>
+      </TableCell>
+
+      {/* 5. Actions */}
       <TableCell className="text-right">
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DropdownMenu>

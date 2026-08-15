@@ -105,8 +105,11 @@ export function CustomerManager({
         <CustomerTable
           customers={customers}
           isAdmin={isAdmin}
-          isDeleting={isDeleting}
           onDelete={(id) => executeDelete({ id })}
+          onUpdate={(id) => {
+            // Navigate to update page OR open your update modal
+            window.location.href = `/customers/${id}/update`;
+          }}
         />
       )}
 
