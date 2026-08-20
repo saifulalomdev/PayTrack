@@ -1,0 +1,35 @@
+---
+// src/pages/dashboard/collections/[date].astro
+import MainLayout from "@/layouts/main.astro";
+import { DailyDetailsTable } from "@/modules/dashboard/components/daily-details-table";
+import { dashboardService } from "@/modules/dashboard/dashboard-service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+
+// Read URL parameter
+const { date } = Astro.params;
+
+if (!date) {
+  return Astro.redirect("/dashboard");
+}
+
+const db = getDb(env);
+
+// Fetch details server-side
+const { data: details, error: errMsg } = await safeFetch(() =>
+  dashboardService.getDailyCollectionDetails(db, date)
+);
+---
+
+<MainLayout>
+  <div class="container mx-auto py-6">
+    {errMsg ? (
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600 text-sm">
+        {errMsg}
+      </div>
+    ) : (
+      <DailyDetailsTable client:load dateStr={date} details={details ?? []} />
+    )}
+  </div>
+</MainLayout>

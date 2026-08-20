@@ -1,10 +1,51 @@
 ---
-import { getTranslator } from "@/i18n/use-translation";
+// src/pages/dashboard/index.astro
 import MainLayout from "@/layouts/main.astro";
-const locale = Astro.currentLocale ?? "en";
-const t = getTranslator("bn", "auth");
+import { DashboardMetricsCard } from "@/modules/dashboard/components/dashboard-metrics-card";
+import { DailyCollectionsTable } from "@/modules/dashboard/components/daily-collections-table";
+import { dashboardService } from "@/modules/dashboard/dashboard-service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { safeFetch } from "@/utils/safe-fetch";
+
+// 1. Get page and limit from URL query params (defaults: page 1, limit 10)
+const pageParam = Astro.url.searchParams.get("page");
+const limitParam = Astro.url.searchParams.get("limit");
+
+const page = pageParam ? Math.max(1, parseInt(pageParam, 10)) : 1;
+const limit = limitParam ? Math.max(1, parseInt(limitParam, 10)) : 10;
+const offset = (page - 1) * limit;
+
+// 2. Fetch metrics and paginated daily collections
+const db = getDb(env);
+
+const { data: metrics, error: errMsg } = await safeFetch(() =>
+  dashboardService.getDashboardMetrics(db)
+);
+
+const { data: dailyData, error: dailyErrorMsg } = await safeFetch(() =>
+  dashboardService.getDailyCollections(db, limit, offset)
+);
+
+// Fallbacks if data fetching fails
+const collections = dailyData?.items ?? [];
+const totalDays = dailyData?.totalCount ?? 0;
+const totalPages = Math.ceil(totalDays / limit) || 1;
 ---
 
 <MainLayout>
-    {t("login.title")}
+  <div class="space-y-6">
+    {/* Metrics Top Section */}
+    <DashboardMetricsCard client:load metrics={metrics} errorMsg={errMsg} />
+
+    {/* Daily Collections Section with URL Pagination */}
+    <DailyCollectionsTable 
+      client:load 
+      collections={collections}
+      currentPage={page}
+      totalPages={totalPages}
+      limit={limit}
+      errorMsg={dailyErrorMsg}
+    />
+  </div>
 </MainLayout>

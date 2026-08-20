@@ -51,7 +51,6 @@ export default function ProductForm<T extends FieldValues>({
         {...register("customerId" as Path<T>)}
       />
 
-     // src/modules/product/components/product-form.tsx
       {form.getValues("id" as Path<T>) && (
         <input type="hidden" {...register("id" as Path<T>)} />
       )}
