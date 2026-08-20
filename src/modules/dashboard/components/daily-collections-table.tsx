@@ -46,6 +46,13 @@ export function DailyCollectionsTable({
   errorMsg,
 }: DailyCollectionsTableProps) {
   const isEmpty = !collections || collections.length === 0;
+  const daysCount = collections?.length || 0;
+
+  // Calculate total money for the displayed days
+  const pageTotal = collections.reduce(
+    (sum, item) => sum + item.totalCollected,
+    0
+  );
 
   // Helper function to generate URL params for page navigation
   const getPageUrl = (page: number) => {
@@ -62,12 +69,22 @@ export function DailyCollectionsTable({
 
   return (
     <div className="rounded-md border bg-card shadow-sm space-y-2 mt-4 md:mt-6 lg:mt-10">
-      {/* Table Header */}
-      <div className="p-4 border-b flex items-center justify-between">
+      {/* Header with clear summary highlight */}
+      <div className="p-4 border-b flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-muted-foreground" />
           <h3 className="font-semibold text-lg">দৈনিক কালেকশন (Daily Collections)</h3>
         </div>
+
+        {/* Highlighted UX Summary Box */}
+        {!isEmpty && (
+          <div className="flex items-center gap-2 bg-green-50 text-green-800 border border-green-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+            <span>গত {daysCount} দিনের মোট কালেকশন:</span>
+            <span className="font-bold text-base text-green-700">
+              {formatBDT(pageTotal)}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Main Table */}
@@ -75,7 +92,7 @@ export function DailyCollectionsTable({
         <TableHeader>
           <TableRow>
             <TableHead>তারিখ (Date)</TableHead>
-            <TableHead>মোট আদায় (Total Collected)</TableHead>
+            <TableHead>মোট আদায় (Total Collected)</TableHead>
             <TableHead className="text-right">বিস্তারিত (Details)</TableHead>
           </TableRow>
         </TableHeader>
@@ -110,37 +127,36 @@ export function DailyCollectionsTable({
           )}
         </TableBody>
       </Table>
-
-      {/* URL-based Pagination Footer */}
-      <div className="p-4 border-t flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">
-          পৃষ্ঠা {currentPage} / {totalPages} (Page {currentPage} of {totalPages})
+{/* URL-based Pagination Footer */}
+      <div className="p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground text-center sm:text-left">
+          পৃষ্ঠা <span className="font-semibold text-foreground">{currentPage}</span> / {totalPages}
         </p>
 
         <div className="flex items-center gap-2">
           {/* Previous Page Link */}
           {currentPage > 1 ? (
             <a href={getPageUrl(currentPage - 1)}>
-              <Button variant="outline" size="sm">
-                <ChevronLeft className="w-4 h-4 mr-1" /> আগেরটি (Prev)
+              <Button variant="outline" size="sm" className="h-8 px-3 text-xs">
+                <ChevronLeft className="w-4 h-4 mr-1" /> আগেরটি
               </Button>
             </a>
           ) : (
-            <Button variant="outline" size="sm" disabled>
-              <ChevronLeft className="w-4 h-4 mr-1" /> আগেরটি (Prev)
+            <Button variant="outline" size="sm" disabled className="h-8 px-3 text-xs">
+              <ChevronLeft className="w-4 h-4 mr-1" /> আগেরটি
             </Button>
           )}
 
           {/* Next Page Link */}
           {currentPage < totalPages ? (
             <a href={getPageUrl(currentPage + 1)}>
-              <Button variant="outline" size="sm">
-                পরেরটি (Next) <ChevronRight className="w-4 h-4 ml-1" />
+              <Button variant="outline" size="sm" className="h-8 px-3 text-xs">
+                পরেরটি <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </a>
           ) : (
-            <Button variant="outline" size="sm" disabled>
-              পরেরটি (Next) <ChevronRight className="w-4 h-4 ml-1" />
+            <Button variant="outline" size="sm" disabled className="h-8 px-3 text-xs">
+              পরেরটি <ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           )}
         </div>
