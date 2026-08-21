@@ -58,7 +58,7 @@ export function InstallmentManager({
   };
 
   const handleUpdate = (id: string) => {
-    window.location.href = `/customers/${customerId}/products/${productId}/installments/${id}/edit`;
+    window.location.href = `/customers/${customerId}/products/${productId}/installments/${id}/update`;
   };
 
   return (

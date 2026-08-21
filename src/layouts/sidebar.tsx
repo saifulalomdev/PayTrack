@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { AppBranding } from '@/components/brand';
 import { cn } from '@/utils/utils';
-import { adminNavItems } from '@/data/nav-nav-item';
+import { adminNavItems } from '@/data/nav-items';
 
 interface DashboardSidebarProps {
     className?: string

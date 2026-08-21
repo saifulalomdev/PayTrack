@@ -1,8 +1,8 @@
-import { loginDefaultValue } from "../auth-default-value";
+import { loginDefaultValue } from "../auth-default-values";
 import { FieldError } from "@/components/ui/field-error";
 import { useFormAction } from "@/hooks/use-form-action";
 import { Button } from "@/components/ui/button";
-import type { LoginInput } from "../auth-type";
+import type { LoginInput } from "../auth-types";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema } from "../auth-schema";

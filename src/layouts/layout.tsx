@@ -2,7 +2,7 @@ import { Globe, User, Menu, X, XIcon, ChevronRight, LogOut } from "lucide-react"
 import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Card, CardContent } from '@/components/ui/card';
-import { adminNavItems } from '@/data/nav-nav-item';
+import { adminNavItems } from '@/data/nav-items';
 import { AppBranding } from '@/components/brand';
 import { Button } from "@/components/ui/button";
 import { useStore } from '@nanostores/react';

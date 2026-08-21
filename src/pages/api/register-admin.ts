@@ -1,4 +1,4 @@
-import { jsonResponse, errorResponse } from '@/utils/respose';
+import { jsonResponse, errorResponse } from '@/utils/response';
 import { registerAdmin } from '@/utils/register-admin';
 import { env } from 'cloudflare:workers';
 import type { APIRoute } from 'astro';

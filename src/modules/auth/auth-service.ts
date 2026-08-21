@@ -1,6 +1,6 @@
 import { staffRepository } from "../staff/staff-repository";
 import { verifyPassword } from "@/utils/password";
-import type { LoginInput } from "./auth-type";
+import type { LoginInput } from "./auth-types";
 import { ActionError } from "astro:actions";
 import type { D1Instance } from "@/utils";
 
