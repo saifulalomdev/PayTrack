@@ -1,4 +1,5 @@
 // src/modules/dashboard/components/daily-details-table.tsx
+
 import {
   Table,
   TableBody,
@@ -25,22 +26,22 @@ interface DailyDetailsTableProps {
   details: CollectionDetail[];
 }
 
-function formatBDT(amount: number) {
-  return `৳${amount.toLocaleString("bn-BD")}`;
+function formatUSD(amount: number) {
+  return `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-function formatTimeBD(unixMs: number) {
-  return new Date(unixMs).toLocaleTimeString("bn-BD", {
+function formatTime(unixMs: number) {
+  return new Date(unixMs).toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "Asia/Dhaka",
   });
 }
 
-function formatDateBD(dateStr: string) {
+function formatDate(dateStr: string) {
   const [year, month, day] = dateStr.split("-").map(Number);
   const date = new Date(year, month - 1, day);
-  return date.toLocaleDateString("bn-BD", {
+  return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -62,9 +63,9 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
             </Button>
           </a>
           <div>
-            <h2 className="text-xl font-bold">{formatDateBD(dateStr)} এর বিস্তারিত কালেকশন</h2>
+            <h2 className="text-xl font-bold">Daily Collection Details ({formatDate(dateStr)})</h2>
             <p className="text-sm text-muted-foreground">
-              মোট আদায় হয়েছে: <span className="font-semibold text-green-600">{formatBDT(totalAmount)}</span>
+              Total Collected: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatUSD(totalAmount)}</span>
             </p>
           </div>
         </div>
@@ -75,11 +76,11 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>গ্রাহকের নাম (Customer)</TableHead>
-              <TableHead>পণ্য (Product)</TableHead>
-              <TableHead>পরিমাণ (Amount)</TableHead>
-              <TableHead>গ্রহীতা (Collected By)</TableHead>
-              <TableHead className="text-right">সময় (Time)</TableHead>
+              <TableHead>Customer</TableHead>
+              <TableHead>Product</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Collected By</TableHead>
+              <TableHead className="text-right">Time</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -88,7 +89,7 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
                 <TableCell colSpan={5} className="h-32 text-center">
                   <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                     <Receipt className="w-8 h-8 opacity-60" />
-                    <p className="text-sm font-medium">এই তারিখে কোনো কালেকশন পাওয়া যায়নি।</p>
+                    <p className="text-sm font-medium">No collections found for this date.</p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -102,11 +103,11 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
                     )}
                   </TableCell>
                   <TableCell>{item.productName}</TableCell>
-                  <TableCell className="font-bold text-green-600">
-                    {formatBDT(item.amountPaid)}
+                  <TableCell className="font-bold text-emerald-600 dark:text-emerald-400">
+                    {formatUSD(item.amountPaid)}
                   </TableCell>
                   <TableCell className="text-muted-foreground">{item.createdByName}</TableCell>
-                  <TableCell className="text-right">{formatTimeBD(item.paidAt)}</TableCell>
+                  <TableCell className="text-right">{formatTime(item.paidAt)}</TableCell>
                 </TableRow>
               ))
             )}

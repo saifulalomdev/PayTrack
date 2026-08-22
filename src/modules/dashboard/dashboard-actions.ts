@@ -1,4 +1,5 @@
 // src/modules/dashboard/dashboard-actions.ts
+
 import { defineAction } from "astro:actions";
 import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
@@ -16,7 +17,7 @@ export const getDashboardMetrics = defineAction({
 
     return {
       success: true,
-      message: "ড্যাশবোর্ড মেট্রিক্স সফলভাবে লোড করা হয়েছে।",
+      message: "Dashboard metrics loaded successfully.",
       data: metrics,
     };
   },
@@ -34,7 +35,7 @@ export const getTodayCollected = defineAction({
 
     return {
       success: true,
-      message: "আজকের সংগ্রহ সফলভাবে লোড করা হয়েছে।",
+      message: "Today's collection loaded successfully.",
       data: amount,
     };
   },
@@ -52,7 +53,7 @@ export const getTotalInvestmentRemaining = defineAction({
 
     return {
       success: true,
-      message: "বাকি বিনিয়োগ সফলভাবে লোড করা হয়েছে।",
+      message: "Total investment remaining loaded successfully.",
       data: amount,
     };
   },
@@ -70,7 +71,7 @@ export const getTotalCustomers = defineAction({
 
     return {
       success: true,
-      message: "মোট গ্রাহক সফলভাবে লোড করা হয়েছে।",
+      message: "Total customers loaded successfully.",
       data: count,
     };
   },
