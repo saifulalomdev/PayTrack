@@ -1,4 +1,5 @@
-// src/modules/customer/customer.types.ts
+// src/modules/customer/customer-types.ts
+
 import { z } from "zod";
 import { insertCustomerSchema, selectCustomerSchema, updateCustomerSchema } from "./customer-schema";
 
@@ -8,10 +9,7 @@ export type UpdateCustomer = z.infer<typeof updateCustomerSchema>;
 
 /**
  * Customer has no sensitive field (unlike staff's password hash), so the
- * client-facing shape is identical to the DB row. Kept as its own alias
- * anyway so the action layer reads consistently with the staff module
- * (PublicStaff / PublicCustomer), and so there's one place to change if a
- * sensitive field is ever added later.
+ * client-facing shape is identical to the DB row.
  */
 export type PublicCustomer = SelectCustomer;
 

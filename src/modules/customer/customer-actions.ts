@@ -1,23 +1,13 @@
-// src/modules/customer/customer.actions.ts
+// src/modules/customer/customer-actions.ts
 
-import { ActionError, defineAction } from "astro:actions";
-import { z } from "zod";
-import { getDb } from "@/utils";
-import { env } from "cloudflare:workers";
-import { requireAdmin, requireAuth } from "@/utils/auth-guards";
-import { customerService } from "./customer-service";
 import { insertCustomerSchema, updateCustomerSchema } from "./customer-schema";
+import { requireAdmin, requireAuth } from "@/utils/auth-guards";
+import { ActionError, defineAction } from "astro:actions";
+import { customerService } from "./customer-service";
+import { env } from "cloudflare:workers";
+import { getDb } from "@/utils";
+import { z } from "zod";
 
-// NOTE: `requireAuth` should exist alongside `requireAdmin` in
-// "@/utils/auth-guards" — same session/cookie check, just WITHOUT the
-// `role === 'admin'` restriction (i.e. it allows both 'admin' and 'staff').
-// It's expected to return the authenticated staff's session data
-// (at least { id, name, role }), same shape you already build the session
-// cookie from in staff.actions.ts. If it doesn't exist yet, add it next to
-// requireAdmin — this module is the first to need the "any logged-in
-// staff" tier instead of "admin only".
-
-// CREATE CUSTOMER — any logged-in staff (admin or staff) can add a customer.
 export const createCustomer = defineAction({
   accept: "json",
   input: insertCustomerSchema,
@@ -25,15 +15,12 @@ export const createCustomer = defineAction({
     const staff = requireAuth(context);
 
     const db = getDb(env);
-    // createdByName is taken from the session, never from client input —
-    // see the comment on customerService.createCustomer.
     const newCustomer = await customerService.createCustomer(db, input, staff.name);
 
     return { success: true, message: "গ্রাহক সফলভাবে যোগ করা হয়েছে!", data: newCustomer };
   },
 });
 
-// GET CUSTOMER BY ID — any logged-in staff (admin or staff) can view
 export const getCustomer = defineAction({
   accept: "json",
   input: z.object({ id: z.string() }),
@@ -51,7 +38,6 @@ export const getCustomer = defineAction({
   },
 });
 
-// UPDATE CUSTOMER — admin only. Staff can add customers but can never edit them.
 export const updateCustomer = defineAction({
   accept: "json",
   input: updateCustomerSchema,
@@ -72,7 +58,6 @@ export const updateCustomer = defineAction({
   },
 });
 
-// DELETE CUSTOMER — admin only. Staff can add customers but can never delete them.
 export const deleteCustomer = defineAction({
   accept: "json",
   input: z.object({ id: z.string() }),
@@ -86,7 +71,6 @@ export const deleteCustomer = defineAction({
   },
 });
 
-// LIST CUSTOMERS — any logged-in staff (admin or staff) can view/search
 export const listCustomers = defineAction({
   accept: "json",
   input: z

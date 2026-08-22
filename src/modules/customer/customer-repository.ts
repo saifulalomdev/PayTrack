@@ -1,4 +1,5 @@
-// src/modules/customer/customer.repository.ts
+// src/modules/customer/customer-repository.ts
+
 import type { D1Instance } from "@/utils";
 import { desc, eq, like, sql } from "drizzle-orm";
 import type { InsertCustomer, NewCustomer, SelectCustomer } from "./customer-types";
@@ -8,18 +9,17 @@ export const customerRepository = {
   /**
    * CREATE: Inserts a new customer
    */
-   async create(db: D1Instance, data: NewCustomer): Promise<SelectCustomer> {
+  async create(db: D1Instance, data: NewCustomer): Promise<SelectCustomer> {
     const [newCustomer] = await db
       .insert(customerTable)
       .values(data)
       .returning();
- 
+
     return newCustomer;
   },
 
   /**
    * UPDATE: Updates customer details by ID.
-   * Admin-only — enforced in the action/service layer, not here.
    */
   async update(db: D1Instance, id: string, data: Partial<InsertCustomer>): Promise<SelectCustomer> {
     const [updatedCustomer] = await db
@@ -33,7 +33,6 @@ export const customerRepository = {
 
   /**
    * DELETE: Removes a customer.
-   * Admin-only — enforced in the action/service layer, not here.
    */
   async delete(db: D1Instance, id: string): Promise<SelectCustomer> {
     const [deletedCustomer] = await db
@@ -71,18 +70,28 @@ export const customerRepository = {
   },
 
   /**
-   * FIND ALL: Paginated, optionally filtered by a partial serial-number match.
-   * `page` is 1-indexed. Returns both the page of rows and the total count
-   * (matching the filter) so the caller can compute totalPages.
+   * FIND ALL: Fetches all customer records without pagination limits.
    */
-  async findAll(
+  async findAll(db: D1Instance): Promise<SelectCustomer[]> {
+    const records = await db
+      .select()
+      .from(customerTable)
+      .orderBy(desc(customerTable.createdAt))
+      .execute();
+
+    return records || [];
+  },
+
+  /**
+   * LIST: Paginated customer list, optionally filtered by serial number.
+   */
+  async list(
     db: D1Instance,
     options: { search?: string; page: number; pageSize: number }
   ): Promise<{ data: SelectCustomer[]; total: number }> {
     const { search, page, pageSize } = options;
     const offset = (page - 1) * pageSize;
 
-    // Partial, case-sensitive-per-SQLite-default match on serial number only.
     const whereClause = search
       ? like(customerTable.serialNumber, `%${search}%`)
       : undefined;
