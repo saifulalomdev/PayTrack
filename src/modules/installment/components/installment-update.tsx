@@ -2,7 +2,7 @@
 import { PageHeader } from "@/components/ui/page-header";
 import { useFormAction } from "@/hooks/use-form-action";
 import { updateInstallmentSchema } from "../installment-schema";
-import type { UpdateInstallment } from "../installment-types";
+import type { PublicInstallment } from "../installment-types";
 import ErrorAlert from "@/components/ui/error-alert";
 import { InstallmentForm } from "./installment-form";
 import { actions } from "astro:actions";
@@ -10,7 +10,7 @@ import { actions } from "astro:actions";
 interface InstallmentUpdateProps {
   productId: string;
   customerId: string;
-  installmentData: UpdateInstallment;
+  installmentData: PublicInstallment;
   errorMsg?: string;
 }
 
@@ -22,12 +22,16 @@ export function InstallmentUpdate({
 }: InstallmentUpdateProps) {
   const backHref = `/customers/${customerId}/products/${productId}/installments`;
 
-  const { form, onSubmit, isLoading } = useFormAction<UpdateInstallment, any>({
+  const { form, onSubmit, isLoading } = useFormAction({
     actionFn: actions.installment.updateInstallment,
-    defaultValues: installmentData,
+    defaultValues: {
+      id: installmentData.id,
+      productId,
+      amountPaid: installmentData.amountPaid,
+    },
     schema: updateInstallmentSchema,
-    loadingMessage: "কিস্তি আপডেট হচ্ছে...",
-    successMessage: "কিস্তি সফলভাবে আপডেট হয়েছে!",
+    loadingMessage: "Updating installment...",
+    successMessage: "Installment updated successfully!",
     onSuccess: () => {
       window.location.href = backHref;
     },
@@ -36,7 +40,7 @@ export function InstallmentUpdate({
   return (
     <div className="space-y-4">
       <ErrorAlert errorMsg={errorMsg} />
-      <PageHeader title="কিস্তি আপডেট করুন" />
+      <PageHeader title="Update Installment" />
       <InstallmentForm
         form={form}
         onSubmit={onSubmit}

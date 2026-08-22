@@ -10,7 +10,7 @@ export const installmentService = {
     const product = await productRepository.findCustomerProductById(db, data.productId);
 
     if (!product) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     const alreadyPaid = await installmentRepository.getTotalPaidByProductId(db, data.productId);
@@ -21,7 +21,7 @@ export const installmentService = {
 
     if (data.amountPaid > remaining) {
       throw new Error(
-        `পরিশোধের পরিমাণ বাকি টাকার (৳${remaining}) চেয়ে বেশি হতে পারবে না।`
+        `Payment amount cannot be greater than the remaining balance (৳${remaining}).`
       );
     }
 
@@ -36,27 +36,27 @@ export const installmentService = {
     const installment = await installmentRepository.findInstallmentById(db, id);
 
     if (!installment) {
-      throw new Error("কিস্তিটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Installment not found.");
     }
 
     return installment;
   },
 
-  update: async (db: D1Instance, data: UpdateInstallment) => {
-    const existing = await installmentRepository.findInstallmentById(db, data.id);
+  update: async (db: D1Instance, id: string, data: UpdateInstallment) => {
+    const existing = await installmentRepository.findInstallmentById(db, id);
 
     if (!existing) {
-      throw new Error("কিস্তিটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Installment not found.");
     }
 
     if (existing.productId !== data.productId) {
-      throw new Error("এই কিস্তিটি এই পণ্যের নয়।");
+      throw new Error("This installment does not belong to this product.");
     }
 
     const product = await productRepository.findCustomerProductById(db, data.productId);
 
     if (!product) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     // Exclude this installment's own current amount from "already paid"
@@ -64,7 +64,7 @@ export const installmentService = {
     const paidByOthers = await installmentRepository.getTotalPaidByProductIdExcluding(
       db,
       data.productId,
-      data.id
+      id
     );
     const totalFines = await fineRepository.getTotalByProductId(db, data.productId);
     const owed = product.totalPrice - product.downPayment + totalFines;
@@ -72,14 +72,14 @@ export const installmentService = {
 
     if (data.amountPaid > remaining) {
       throw new Error(
-        `পরিশোধের পরিমাণ বাকি টাকার (৳${remaining}) চেয়ে বেশি হতে পারবে না।`
+        `Payment amount cannot be greater than the remaining balance (৳${remaining}).`
       );
     }
 
-    const updated = await installmentRepository.updateInstallmentById(db, data);
+    const updated = await installmentRepository.updateInstallmentById(db, id, data);
 
     if (!updated) {
-      throw new Error("কিস্তি আপডেট করা যায়নি।");
+      throw new Error("Failed to update installment.");
     }
 
     return updated;
@@ -97,7 +97,7 @@ export const installmentService = {
     const product = await productRepository.findCustomerProductById(db, productId);
 
     if (!product) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     const totalPaid = await installmentRepository.getTotalPaidByProductId(db, productId);
@@ -121,7 +121,7 @@ export const installmentService = {
     const deleted = await installmentRepository.deleteInstallmentById(db, id);
 
     if (!deleted) {
-      throw new Error("কিস্তিটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Installment not found.");
     }
 
     return deleted;

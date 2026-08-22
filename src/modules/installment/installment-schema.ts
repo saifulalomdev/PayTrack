@@ -19,3 +19,7 @@ export const insertInstallmentSchema = createInsertSchema(installmentTable, {
 export const updateInstallmentSchema = insertInstallmentSchema.extend({
   id: z.string(),
 }).strict();
+
+export const deleteInstallmentSchema = z.object({
+  id: z.string().min(1, "Installment ID is required"),
+});

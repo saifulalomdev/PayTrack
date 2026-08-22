@@ -27,18 +27,17 @@ export function InstallmentForm<T extends FieldValues>({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full pb-14">
       <input type="hidden" {...register("productId" as Path<T>)} />
-      <input type="hidden" {...register("id" as Path<T>)} />
 
       <div className="space-y-2">
         <Label htmlFor="amountPaid" error={!!errors.amountPaid}>
-          পরিশোধের পরিমাণ (টাকা)
+          Amount Paid (BDT)
         </Label>
         <Input
           id="amountPaid"
           type="number"
           inputMode="numeric"
           disabled={isLoading}
-          placeholder="৫০০০"
+          placeholder="5000"
           error={!!errors.amountPaid}
           {...register("amountPaid" as Path<T>, { valueAsNumber: true })}
         />
@@ -48,11 +47,11 @@ export function InstallmentForm<T extends FieldValues>({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
         <a href={backHref} className="w-full">
           <Button type="button" variant="outline" className="w-full">
-            বাতিল
+            Cancel
           </Button>
         </a>
         <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? "সংরক্ষণ হচ্ছে..." : "কিস্তি সংরক্ষণ করুন"}
+          {isLoading ? "Saving..." : "Save Installment"}
         </Button>
       </div>
     </form>

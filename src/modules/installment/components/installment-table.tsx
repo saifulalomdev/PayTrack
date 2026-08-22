@@ -20,21 +20,21 @@ import type { PublicInstallment } from '../installment-types';
 interface InstallmentTableProps {
   installments: PublicInstallment[];
   isDeleting: boolean;
-  canManage: boolean; // update + delete are admin-only, see installment-actions.ts
+  canManage: boolean;
   onUpdate: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
 function formatBDT(amount?: number | null) {
   if (amount === undefined || amount === null) return '—';
-  return `৳${amount.toLocaleString('bn-BD')}`;
+  return `৳${amount.toLocaleString('en-US')}`;
 }
 
 function formatDate(unix?: number | null) {
   if (!unix) return '—';
-  return new Date(unix).toLocaleDateString('bn-BD', {
+  return new Date(unix * 1000).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 }
@@ -53,10 +53,10 @@ export default function InstallmentTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>পরিমাণ</TableHead>
-            <TableHead>তারিখ</TableHead>
-            <TableHead>যিনি নিয়েছেন</TableHead>
-            {canManage && <TableHead className='text-right'>অ্যাকশন</TableHead>}
+            <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Recorded By</TableHead>
+            {canManage && <TableHead className='text-right'>Actions</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -65,7 +65,7 @@ export default function InstallmentTable({
               <TableCell colSpan={canManage ? 4 : 3} className="h-48 text-center">
                 <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                   <Receipt className="w-8 h-8 opacity-60" />
-                  <p className="text-sm font-medium">এখনো কোনো কিস্তি যোগ করা হয়নি।</p>
+                  <p className="text-sm font-medium">No installments recorded yet.</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -86,14 +86,14 @@ export default function InstallmentTable({
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => onUpdate(installment.id)}>
                           <Pencil className="w-4 h-4 mr-2" />
-                          সম্পাদনা করুন
+                          Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => onDelete(installment.id)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
-                          মুছে ফেলুন
+                          Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

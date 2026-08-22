@@ -1,11 +1,11 @@
 // src/modules/installment/components/installment-manager.tsx
-import { Button } from '@/components/ui/button'
-import ErrorAlert from '@/components/ui/error-alert'
-import { Plus, ChevronRight, Package } from 'lucide-react'
-import { actions } from 'astro:actions'
-import { useAction } from '@/hooks/use-action'
-import InstallmentTable from './installment-table'
-import type { PublicInstallment } from '../installment-types'
+import { Button } from '@/components/ui/button';
+import ErrorAlert from '@/components/ui/error-alert';
+import { Plus, ChevronRight, Package } from 'lucide-react';
+import { actions } from 'astro:actions';
+import { useAction } from '@/hooks/use-action';
+import InstallmentTable from './installment-table';
+import type { PublicInstallment } from '../installment-types';
 
 interface InstallmentBalance {
   totalPrice: number;
@@ -29,14 +29,14 @@ interface InstallmentManagerProps {
 }
 
 function formatBDT(amount: number) {
-  return `৳${amount.toLocaleString('bn-BD')}`;
+  return `৳${amount.toLocaleString('en-US')}`;
 }
 
 export function InstallmentManager({
   productId,
-  productName,
+  productName = 'Product',
   customerId,
-  customerName,
+  customerName = 'Customer',
   isAdmin,
   errorMsg,
   installments,
@@ -45,8 +45,8 @@ export function InstallmentManager({
   const { execute: executeDelete, isLoading: isDeleting } = useAction(
     actions.installment.deleteInstallment,
     {
-      loadingMessage: 'মুছে ফেলা হচ্ছে...',
-      successMessage: 'কিস্তি মুছে ফেলা হয়েছে!',
+      loadingMessage: 'Deleting installment...',
+      successMessage: 'Installment deleted successfully!',
       onSuccess: () => {
         window.location.reload();
       },
@@ -54,7 +54,9 @@ export function InstallmentManager({
   );
 
   const handleDelete = (id: string) => {
-    executeDelete({ id });
+    if (window.confirm('Are you sure you want to delete this installment record?')) {
+      executeDelete({ id });
+    }
   };
 
   const handleUpdate = (id: string) => {
@@ -65,37 +67,38 @@ export function InstallmentManager({
     <div className='space-y-6'>
       <ErrorAlert errorMsg={errorMsg} />
 
-      <nav className='flex items-center gap-2 text-xs text-zinc-400'>
-        <a href="/customers" className='hover:text-white transition-colors'>
-          গ্রাহক তালিকা (Customers)
+      {/* Navigation Breadcrumb */}
+      <nav className='flex items-center gap-2 text-xs text-muted-foreground'>
+        <a href="/customers" className='hover:text-foreground transition-colors'>
+          Customers
         </a>
         <ChevronRight className='w-3 h-3' />
-        <a href={`/customers/${customerId}/products`} className='hover:text-white transition-colors'>
+        <a href={`/customers/${customerId}/products`} className='hover:text-foreground transition-colors'>
           {customerName}
         </a>
         <ChevronRight className='w-3 h-3' />
-        <span className='text-zinc-200 font-medium'>{productName}</span>
+        <span className='text-foreground font-medium'>{productName}</span>
       </nav>
 
-      <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 bg-zinc-900/50 border border-zinc-800 rounded-xl p-5'>
+      {/* Header Banner */}
+      <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card border rounded-xl p-5'>
         <div className='flex items-center gap-4'>
-          <div className='w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center shrink-0'>
-            <Package className='w-6 h-6 text-zinc-300' />
+          <div className='w-12 h-12 rounded-full bg-muted border flex items-center justify-center shrink-0'>
+            <Package className='w-6 h-6 text-muted-foreground' />
           </div>
 
           <div>
-            <h1 className='text-xl font-bold text-white'>{productName}</h1>
-            <p className='text-xs text-zinc-400 mt-1'>
-              কিস্তি ব্যবস্থাপনা (Installment Management)
+            <h1 className='text-xl font-bold'>{productName}</h1>
+            <p className='text-xs text-muted-foreground mt-1'>
+              Installment Management
             </p>
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row gap-2">
-          {/* Button to go to the Fines page */}
           <Button asChild variant="outline">
             <a href={`/customers/${customerId}/products/${productId}/fines`}>
-              জরিমানা দেখুন (View Fines)
+              View Fines
             </a>
           </Button>
 
@@ -106,38 +109,35 @@ export function InstallmentManager({
               </a>
             </Button>
           )}
-
         </div>
       </div>
 
-      {/* 5 cards now — totalFines only shows a non-zero highlight when
-          there actually are fines, so products with no fines look the
-          same as before. */}
+      {/* Financial Summary Cards */}
       <div className='grid grid-cols-2 md:grid-cols-5 gap-4'>
-        <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
-          <p className='text-xs text-zinc-400'>মোট মূল্য</p>
-          <p className='text-lg font-semibold text-white'>{formatBDT(balance.totalPrice)}</p>
+        <div className='bg-card border rounded-xl p-4'>
+          <p className='text-xs text-muted-foreground'>Total Price</p>
+          <p className='text-lg font-semibold'>{formatBDT(balance.totalPrice)}</p>
         </div>
-        <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
-          <p className='text-xs text-zinc-400'>পরিশোধিত</p>
-          <p className='text-lg font-semibold text-white'>
+        <div className='bg-card border rounded-xl p-4'>
+          <p className='text-xs text-muted-foreground'>Total Paid</p>
+          <p className='text-lg font-semibold'>
             {formatBDT(balance.downPayment + balance.totalPaid)}
           </p>
         </div>
-        <div className={`rounded-xl p-4 border ${balance.totalFines > 0 ? 'bg-red-950/30 border-red-900/50' : 'bg-zinc-900/50 border-zinc-800'}`}>
-          <p className='text-xs text-zinc-400'>জরিমানা</p>
-          <p className={`text-lg font-semibold ${balance.totalFines > 0 ? 'text-red-400' : 'text-white'}`}>
+        <div className={`rounded-xl p-4 border ${balance.totalFines > 0 ? 'bg-destructive/10 border-destructive/30' : 'bg-card'}`}>
+          <p className='text-xs text-muted-foreground'>Total Fines</p>
+          <p className={`text-lg font-semibold ${balance.totalFines > 0 ? 'text-destructive' : ''}`}>
             {formatBDT(balance.totalFines)}
           </p>
         </div>
-        <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
-          <p className='text-xs text-zinc-400'>বাকি</p>
-          <p className='text-lg font-semibold text-white'>{formatBDT(balance.remaining)}</p>
+        <div className='bg-card border rounded-xl p-4'>
+          <p className='text-xs text-muted-foreground'>Remaining</p>
+          <p className='text-lg font-semibold'>{formatBDT(balance.remaining)}</p>
         </div>
-        <div className='bg-zinc-900/50 border border-zinc-800 rounded-xl p-4'>
-          <p className='text-xs text-zinc-400'>অবস্থা</p>
-          <p className='text-lg font-semibold text-white'>
-            {balance.isFullyPaid ? 'সম্পূর্ণ পরিশোধিত' : 'চলমান'}
+        <div className='bg-card border rounded-xl p-4'>
+          <p className='text-xs text-muted-foreground'>Status</p>
+          <p className='text-lg font-semibold'>
+            {balance.isFullyPaid ? 'Fully Paid' : 'Active'}
           </p>
         </div>
       </div>

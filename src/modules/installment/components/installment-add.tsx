@@ -21,8 +21,8 @@ export function InstallmentAdd({ productId, customerId }: InstallmentAddProps) {
       amountPaid: undefined,
     } as any,
     schema: insertInstallmentSchema,
-    loadingMessage: "কিস্তি সংরক্ষণ হচ্ছে...",
-    successMessage: "কিস্তি সফলভাবে যোগ করা হয়েছে!",
+    loadingMessage: "Saving installment...",
+    successMessage: "Installment added successfully!",
     onSuccess: () => {
       window.location.href = backHref;
     },
@@ -30,7 +30,7 @@ export function InstallmentAdd({ productId, customerId }: InstallmentAddProps) {
 
   return (
     <div className="space-y-4">
-      <PageHeader title="নতুন কিস্তি যোগ করুন" />
+      <PageHeader title="Add New Installment" />
       <InstallmentForm
         form={form}
         onSubmit={onSubmit}

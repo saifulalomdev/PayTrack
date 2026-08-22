@@ -30,12 +30,10 @@ export const installmentRepository = {
     return results[0] || null;
   },
 
-  updateInstallmentById: async (db: D1Instance, data: UpdateInstallment) => {
-    const { id, ...updateData } = data;
-
+  updateInstallmentById: async (db: D1Instance, id: string, data: UpdateInstallment) => {
     const [result] = await db
       .update(installmentTable)
-      .set(updateData as any)
+      .set(data as any)
       .where(eq(installmentTable.id, id))
       .returning();
 
@@ -54,11 +52,20 @@ export const installmentRepository = {
   // Same as above, but excludes one installment — used when validating an
   // update, so the installment being edited doesn't count against its own
   // remaining-balance check.
-  getTotalPaidByProductIdExcluding: async (db: D1Instance, productId: string, excludeId: string) => {
+  getTotalPaidByProductIdExcluding: async (
+    db: D1Instance,
+    productId: string,
+    excludeId: string
+  ) => {
     const [result] = await db
       .select({ total: sum(installmentTable.amountPaid) })
       .from(installmentTable)
-      .where(and(eq(installmentTable.productId, productId), ne(installmentTable.id, excludeId)));
+      .where(
+        and(
+          eq(installmentTable.productId, productId),
+          ne(installmentTable.id, excludeId)
+        )
+      );
 
     return Number(result?.total ?? 0);
   },
