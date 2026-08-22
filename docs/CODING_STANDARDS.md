@@ -1,6 +1,6 @@
-# 📜 PayTrack Coding Standards
+# 📜 Messrs. Madina Enterprise Coding Standards
 
-This document defines the rules for writing clean, consistent, and scalable code in the **PayTrack** project. All developers and AI assistants must follow these rules.
+This document defines the rules for writing clean, consistent, and scalable code in the **Messrs. Madina Enterprise (m-m-enterprise.com)** project. All developers and AI assistants must follow these rules.
 
 ---
 
@@ -42,10 +42,11 @@ Repositories handle database operations. Do not write business logic inside repo
 Every module repository MUST implement these core methods:
 
 * `list(db, limit, offset)`: Returns `{ items, totalCount }`.
-* `getById(db, id)`: Returns a single record or `null`.
+* `findById(db, id)`: Returns a single record or `null`.
 * `create(db, data)`: Inserts a new record.
 * `update(db, id, data)`: Updates an existing record.
 * `deleteById(db, id)`: Deletes a record by ID.
+* `findAll(db)`: Returns all records.
 
 **Query Rules:**
 * Always wrap Drizzle aggregate results (like `sum()`) in `Number(...)` to prevent TypeScript type errors.

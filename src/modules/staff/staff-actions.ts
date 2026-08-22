@@ -1,5 +1,3 @@
-// src/modules/staff/staff.actions.ts
-
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "zod";
 import { getDb } from "@/utils";
@@ -10,7 +8,6 @@ import { staffService } from "./staff-service";
 import { insertStaffSchema, updateStaffSchema } from "./staff-schema";
 import { buildSessionCookieValue, SESSION_COOKIE_NAME } from "@/utils/auth";
 
-// CREATE STAFF — admin only
 export const createStaff = defineAction({
   accept: "json",
   input: insertStaffSchema,
@@ -24,35 +21,19 @@ export const createStaff = defineAction({
   },
 });
 
-// // UPDATE STAFF — admin only
 export const updateStaff = defineAction({
   accept: "json",
   input: updateStaffSchema,
   handler: async (input, context) => {
     requireAdmin(context);
 
-    if (!input.id) {
-      throw new ActionError({
-        code: "BAD_REQUEST",
-        message: "আপডেট করার জন্য স্টাফ আইডি প্রয়োজন।",
-      });
-    }
-
     const db = getDb(env);
     const { staff } = await staffService.updateStaff(db, input.id, input);
-
-    // No cookie-delete here anymore: deleting the cookie only affects the
-    // caller (the admin), not the staff member whose credentials changed.
-    // Real invalidation now happens via tokenVersion inside staffService —
-    // it's checked in getAuthenticatedStaff on every request, so every
-    // existing session belonging to THAT staff member is invalidated
-    // automatically, regardless of whose browser is calling this action.
 
     return { success: true, message: "স্টাফ তথ্য সফলভাবে আপডেট করা হয়েছে!", data: staff };
   },
 });
 
-// LOGIN STAFF — public, no guard
 export const loginStaff = defineAction({
   accept: "json",
   input: loginSchema,
@@ -60,9 +41,6 @@ export const loginStaff = defineAction({
     const db = getDb(env);
     const staff = await staffService.login(db, input.phoneNumber, input.password);
 
-    // Cookie now encodes "<id>:<tokenVersion>" instead of a raw id, so that
-    // a later credential change (which bumps tokenVersion) invalidates this
-    // exact cookie value on next request — see getAuthenticatedStaff.
     context.cookies.set(SESSION_COOKIE_NAME, buildSessionCookieValue(staff), {
       path: "/",
       httpOnly: true,
@@ -79,7 +57,6 @@ export const loginStaff = defineAction({
   },
 });
 
-// LOGOUT STAFF — public
 export const logoutStaff = defineAction({
   accept: "json",
   handler: async (_, context) => {
@@ -88,12 +65,19 @@ export const logoutStaff = defineAction({
   },
 });
 
-// DELETE STAFF — admin only
 export const deleteStaff = defineAction({
   accept: "json",
-  input: z.object({ id: z.string() }),
+  input: z.object({ id: z.string().min(1, "আইডি প্রয়োজন") }),
   handler: async (input, context) => {
-    requireAdmin(context);
+    const currentAdmin = requireAdmin(context);
+
+    // Prevent admin self-deletion
+    if (currentAdmin.id === input.id) {
+      throw new ActionError({
+        code: "FORBIDDEN",
+        message: "আপনি নিজের অ্যাকাউন্ট মুছে ফেলতে পারবেন না।",
+      });
+    }
 
     const db = getDb(env);
     const deletedStaff = await staffService.deleteStaff(db, input.id);

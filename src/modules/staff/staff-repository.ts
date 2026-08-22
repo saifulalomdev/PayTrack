@@ -1,50 +1,40 @@
-// src/modules/staff/staff.repository.ts
-import type { InsertStaff, SelectStaff } from "./staff-types";
+// src/modules/staff/staff-repository.ts
+import type { InsertStaff, SelectStaff, PublicStaff } from "./staff-types";
 import type { D1Instance } from "@/utils";
 import { staffTable } from "./staff-table";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, count } from "drizzle-orm";
+
+// Helper to exclude password hash from database return objects
+function sanitizeStaff(staff: SelectStaff): PublicStaff {
+  const { password, ...publicStaff } = staff;
+  return publicStaff;
+}
 
 export const staffRepository = {
-  /**
-   * CREATE: Inserts a new staff member
-   */
-  async create(db: D1Instance, data: InsertStaff): Promise<SelectStaff> {
-    const [newStaff] = await db
-      .insert(staffTable)
-      .values(data)
-      .returning();
-
-    return newStaff;
+  async create(db: D1Instance, data: InsertStaff): Promise<PublicStaff> {
+    const [newStaff] = await db.insert(staffTable).values(data).returning();
+    return sanitizeStaff(newStaff);
   },
 
-  /**
-   * UPDATE: Updates staff details by ID
-   */
-  async update(db: D1Instance, id: string, data: Partial<InsertStaff>): Promise<SelectStaff> {
+  async update(db: D1Instance, id: string, data: Partial<InsertStaff>): Promise<PublicStaff> {
     const [updatedStaff] = await db
       .update(staffTable)
       .set(data)
       .where(eq(staffTable.id, id))
       .returning();
 
-    return updatedStaff;
+    return sanitizeStaff(updatedStaff);
   },
 
-  /**
-   * DELETE: Removes a staff member securely
-   */
-  async delete(db: D1Instance, id: string): Promise<SelectStaff> {
+  async deleteById(db: D1Instance, id: string): Promise<PublicStaff> {
     const [deletedStaff] = await db
       .delete(staffTable)
       .where(eq(staffTable.id, id))
       .returning();
 
-    return deletedStaff;
+    return sanitizeStaff(deletedStaff);
   },
 
-  /**
-   * FIND BY ID: Retrieves a single staff member by ID
-   */
   async findById(db: D1Instance, id: string): Promise<SelectStaff | null> {
     const [staff] = await db
       .select()
@@ -55,9 +45,6 @@ export const staffRepository = {
     return staff || null;
   },
 
-  /**
-   * FIND BY PHONE NUMBER: Retrieves a staff member by phone number
-   */
   async findByPhoneNumber(db: D1Instance, phoneNumber: string): Promise<SelectStaff | null> {
     const [staff] = await db
       .select()
@@ -69,11 +56,18 @@ export const staffRepository = {
   },
 
   /**
-   * FIND ALL: Retrieves all staff members, ordered by creation date
+   * FIND ALL: Retrieves all staff records without pagination (sanitized)
    */
-  async findAll(db: D1Instance): Promise<SelectStaff[]> {
+  async findAll(db: D1Instance): Promise<PublicStaff[]> {
     const records = await db
-      .select()
+      .select({
+        id: staffTable.id,
+        name: staffTable.name,
+        phoneNumber: staffTable.phoneNumber,
+        role: staffTable.role,
+        tokenVersion: staffTable.tokenVersion,
+        createdAt: staffTable.createdAt,
+      })
       .from(staffTable)
       .orderBy(desc(staffTable.createdAt))
       .execute();
@@ -81,16 +75,30 @@ export const staffRepository = {
     return records || [];
   },
 
-  async findByRole(
-    db: D1Instance,
-    role: typeof staffTable.$inferSelect.role
-  ): Promise<SelectStaff | null> {
-    const result = await db
-      .select()
+  /**
+   * LIST: Paginated retrieval returning { items, totalCount }
+   */
+  async list(db: D1Instance, limit = 10, offset = 0): Promise<{ items: PublicStaff[]; totalCount: number }> {
+    const items = await db
+      .select({
+        id: staffTable.id,
+        name: staffTable.name,
+        phoneNumber: staffTable.phoneNumber,
+        role: staffTable.role,
+        tokenVersion: staffTable.tokenVersion,
+        createdAt: staffTable.createdAt,
+      })
       .from(staffTable)
-      .where(eq(staffTable.role, role))
-      .get();
+      .orderBy(desc(staffTable.createdAt))
+      .limit(limit)
+      .offset(offset)
+      .execute();
 
-    return result ?? null;
+    const [total] = await db.select({ value: count() }).from(staffTable).execute();
+
+    return {
+      items,
+      totalCount: Number(total?.value ?? 0),
+    };
   },
 };

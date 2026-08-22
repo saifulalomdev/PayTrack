@@ -1,4 +1,4 @@
-// src/modules/staff/staff.service.ts
+// src/modules/staff/staff-service.ts
 
 import { ActionError } from "astro:actions";
 import type { D1Instance } from "@/utils";
@@ -15,8 +15,7 @@ function assertNotSuperAdmin(staff: SelectStaff, action: string) {
 
 /**
  * Strips the password hash before staff data leaves the service layer.
- * Every method below returns through this — never return a raw
- * repository result directly to the action layer.
+ * Used ONLY when converting raw database models (SelectStaff) to PublicStaff.
  */
 function toSafeStaff(staff: SelectStaff): PublicStaff {
     const { password, ...safe } = staff;
@@ -42,8 +41,8 @@ export const staffService = {
         }
 
         const hashedPassword = await hashPassword(password);
-        const newStaff = await staffRepository.create(db, { ...input, password: hashedPassword });
-        return toSafeStaff(newStaff);
+        // repository.create already returns PublicStaff
+        return await staffRepository.create(db, { ...input, password: hashedPassword });
     },
 
     /**
@@ -94,8 +93,9 @@ export const staffService = {
             updatePayload.tokenVersion = existingStaff.tokenVersion + 1;
         }
 
+        // repository.update already returns PublicStaff
         const staff = await staffRepository.update(db, id, updatePayload);
-        return { staff: toSafeStaff(staff), credentialsChanged };
+        return { staff, credentialsChanged };
     },
 
     async deleteStaff(db: D1Instance, id: string): Promise<PublicStaff> {
@@ -106,14 +106,11 @@ export const staffService = {
 
         assertNotSuperAdmin(existingStaff, "deleted");
 
-        const deleted = await staffRepository.delete(db, id);
-        return toSafeStaff(deleted);
+        return await staffRepository.deleteById(db, id);
     },
 
-    // login() intentionally still returns full SelectStaff (with password
-    // hash) — this stays server-side only. The action layer never forwards
-    // the raw `staff` object; it manually picks { id, name, role } for the
-    // response and uses the full object only to build the session cookie.
+    // login() intentionally returns full SelectStaff (with password hash)
+    // for server-side verification and session token generation.
     async login(db: D1Instance, phoneNumber: string, password: string): Promise<SelectStaff> {
         const staff = await staffRepository.findByPhoneNumber(db, phoneNumber);
         if (!staff) {
@@ -135,8 +132,8 @@ export const staffService = {
     },
 
     async listAll(db: D1Instance): Promise<PublicStaff[]> {
-        const staff = await staffRepository.findAll(db);
-        return staff.map(toSafeStaff);
+        // repository.findAll already returns PublicStaff[]
+        return await staffRepository.findAll(db);
     },
     
     async getById(db: D1Instance, id: string): Promise<PublicStaff | null> {
