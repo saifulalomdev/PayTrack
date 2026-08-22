@@ -24,8 +24,8 @@ interface DailyCollectionsTableProps {
   errorMsg?: string;
 }
 
-function formatUSD(amount: number) {
-  return `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function formatBDT(amount: number) {
+  return `Tk ${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatDate(dateStr: string) {
@@ -79,7 +79,7 @@ export function DailyCollectionsTable({
           <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-3 py-1.5 rounded-lg text-sm font-medium">
             <span>Total for {daysCount} days:</span>
             <span className="font-bold text-base text-emerald-700 dark:text-emerald-400">
-              {formatUSD(pageTotal)}
+              {formatBDT(pageTotal)}
             </span>
           </div>
         )}
@@ -111,7 +111,7 @@ export function DailyCollectionsTable({
                   {formatDate(item.date)}
                 </TableCell>
                 <TableCell className="font-bold text-emerald-600 dark:text-emerald-400">
-                  {formatUSD(item.totalCollected)}
+                  {formatBDT(item.totalCollected)}
                 </TableCell>
                 <TableCell className="text-right">
                   <a href={`/collections/${item.date}`}>

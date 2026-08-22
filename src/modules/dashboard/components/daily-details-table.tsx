@@ -26,8 +26,8 @@ interface DailyDetailsTableProps {
   details: CollectionDetail[];
 }
 
-function formatUSD(amount: number) {
-  return `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function formatBDT(amount: number) {
+  return `Tk ${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatTime(unixMs: number) {
@@ -65,7 +65,7 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
           <div>
             <h2 className="text-xl font-bold">Daily Collection Details ({formatDate(dateStr)})</h2>
             <p className="text-sm text-muted-foreground">
-              Total Collected: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatUSD(totalAmount)}</span>
+              Total Collected: <span className="font-semibold text-emerald-600 dark:text-emerald-400">{formatBDT(totalAmount)}</span>
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function DailyDetailsTable({ dateStr, details }: DailyDetailsTableProps) 
                   </TableCell>
                   <TableCell>{item.productName}</TableCell>
                   <TableCell className="font-bold text-emerald-600 dark:text-emerald-400">
-                    {formatUSD(item.amountPaid)}
+                    {formatBDT(item.amountPaid)}
                   </TableCell>
                   <TableCell className="text-muted-foreground">{item.createdByName}</TableCell>
                   <TableCell className="text-right">{formatTime(item.paidAt)}</TableCell>
