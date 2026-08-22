@@ -32,7 +32,7 @@ function formatBDT(amount?: number | null) {
 
 function formatDate(unix?: number | null) {
   if (!unix) return '—';
-  return new Date(unix * 1000).toLocaleDateString('en-US', {
+  return new Date(unix).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
