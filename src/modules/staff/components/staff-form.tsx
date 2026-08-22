@@ -1,14 +1,11 @@
 // src/modules/staff/components/staff-form.tsx
+
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type{
-  FieldValues,
-  Path,
-  UseFormReturn,
-} from "react-hook-form";
-import {   Controller } from 'react-hook-form'
+import type { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { Controller } from 'react-hook-form';
 import {
   Select,
   SelectContent,
@@ -87,10 +84,7 @@ export function StaffForm<T extends FieldValues>({
               onValueChange={field.onChange}
             >
               <SelectTrigger className="w-full">
-                <SelectValue
-                  placeholder="Select role"
-                  className="uppercase"
-                />
+                <SelectValue placeholder="Select role" className="uppercase" />
               </SelectTrigger>
               <SelectContent className="uppercase">
                 <SelectItem value="staff">Staff</SelectItem>
@@ -103,11 +97,9 @@ export function StaffForm<T extends FieldValues>({
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <a href="/staff" className="w-full">
-          <Button type="button" variant="outline" className="w-full">
-            Cancel
-          </Button>
-        </a>
+        <Button asChild variant="outline" className="w-full" disabled={isLoading}>
+          <a href="/staff">Cancel</a>
+        </Button>
 
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save"}

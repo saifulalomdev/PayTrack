@@ -1,3 +1,4 @@
+// src/components/ui/copy-to-clipboard.tsx
 import { Copy } from 'lucide-react'
 import { Button } from './button'
 import { toast } from 'sonner';
@@ -9,7 +10,7 @@ interface CopyToClipboardProps {
   errorMessage: string;
 }
 
-export default function CopyToClipboard({
+export function CopyToClipboard({
   title = "Copy Code",
   data,
   errorMessage,
@@ -26,7 +27,7 @@ export default function CopyToClipboard({
   }
 
   return (
-    <Button onClick={handleCopy} variant="outline"  >
+    <Button onClick={handleCopy} variant="ghost" size="sm" >
       <Copy className="w-3.5 h-3.5" />
       {title}
     </Button>
