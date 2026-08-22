@@ -1,4 +1,3 @@
-// src/modules/product/product-service.ts
 import { productRepository } from "./product-repository";
 import type { D1Instance } from "@/utils";
 import type { InsertProduct, UpdateProduct } from "./product-types";
@@ -16,30 +15,27 @@ export const productService = {
     const product = await productRepository.findCustomerProductById(db, id);
 
     if (!product) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     return product;
   },
 
-  update: async (db: D1Instance, data: UpdateProduct) => {
-    // Guard: the product must exist and belong to the customerId being
-    // submitted, so one customer's product can't be silently reassigned
-    // or edited via a spoofed customerId in the form payload.
-    const existing = await productRepository.findCustomerProductById(db, data.id);
+  update: async (db: D1Instance, id: string, data: UpdateProduct) => {
+    const existing = await productRepository.findCustomerProductById(db, id);
 
     if (!existing) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     if (existing.customerId !== data.customerId) {
-      throw new Error("এই পণ্যটি এই গ্রাহকের নয়।");
+      throw new Error("This product does not belong to this customer.");
     }
 
-    const updated = await productRepository.updateProductById(db, data);
+    const updated = await productRepository.updateProductById(db, id, data);
 
     if (!updated) {
-      throw new Error("পণ্য আপডেট করা যায়নি।");
+      throw new Error("Failed to update product.");
     }
 
     return updated;
@@ -49,7 +45,7 @@ export const productService = {
     const deleted = await productRepository.deleteProductById(db, id);
 
     if (!deleted) {
-      throw new Error("পণ্যটি খুঁজে পাওয়া যায়নি।");
+      throw new Error("Product not found.");
     }
 
     return deleted;

@@ -1,4 +1,5 @@
 // src/modules/product/components/product-table.tsx
+
 import {
   Table,
   TableBody,
@@ -27,14 +28,14 @@ interface ProductTableProps {
 
 function formatBDT(amount?: number | null) {
   if (amount === undefined || amount === null) return '—';
-  return `৳${amount.toLocaleString('bn-BD')}`;
+  return `৳${amount.toLocaleString('en-US')}`;
 }
 
 function formatDate(unix?: number | null) {
   if (!unix) return '—';
-  return new Date(unix * 1000).toLocaleDateString('bn-BD', {
+  return new Date(unix * 1000).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 }
@@ -53,13 +54,13 @@ export default function ProductTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>পণ্যের নাম</TableHead>
-            <TableHead>মোট মূল্য</TableHead>
-            <TableHead>ডাউন পেমেন্ট</TableHead>
-            <TableHead>কিস্তির পরিমাণ</TableHead>
-            <TableHead>কিস্তির শেষ তারিখ</TableHead>
-            <TableHead>যোগ করেছেন</TableHead>
-            <TableHead className='text-right'>অ্যাকশন</TableHead>
+            <TableHead>Product Name</TableHead>
+            <TableHead>Total Price</TableHead>
+            <TableHead>Down Payment</TableHead>
+            <TableHead>Installment Amount</TableHead>
+            <TableHead>Deadline</TableHead>
+            <TableHead>Added By</TableHead>
+            <TableHead className='text-right'>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -68,7 +69,7 @@ export default function ProductTable({
               <TableCell colSpan={7} className="h-48 text-center">
                 <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                   <PackageX className="w-8 h-8 opacity-60" />
-                  <p className="text-sm font-medium">কোনো পণ্য পাওয়া যায়নি।</p>
+                  <p className="text-sm font-medium">No products found.</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -99,18 +100,18 @@ export default function ProductTable({
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => onViewInstallments(product.id)}>
                         <Receipt className="w-4 h-4 mr-2" />
-                        কিস্তি দেখুন
+                        View Installments
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => onUpdate(product.id)}>
                         <Pencil className="w-4 h-4 mr-2" />
-                        সম্পাদনা করুন
+                        Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onDelete(product.id)}
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
-                        মুছে ফেলুন
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

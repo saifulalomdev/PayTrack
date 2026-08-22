@@ -1,3 +1,4 @@
+// src/modules/product/components/product-form.tsx
 import { FieldError } from "@/components/ui/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,12 +59,12 @@ export default function ProductForm<T extends FieldValues>({
       {/* Product Name */}
       <div className="space-y-2">
         <Label htmlFor="productName" error={!!errors.productName}>
-          পণ্যের নাম
+          Product Name
         </Label>
         <Input
           id="productName"
           disabled={isLoading}
-          placeholder="যেমনঃ স্মার্টফোন, ল্যাপটপ"
+          placeholder="e.g. Smartphone, Laptop"
           error={!!errors.productName}
           {...register("productName" as Path<T>)}
         />
@@ -74,7 +75,7 @@ export default function ProductForm<T extends FieldValues>({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="totalPrice" error={!!errors.totalPrice}>
-            মোট মূল্য (টাকা)
+            Total Price (BDT)
           </Label>
           <Input
             id="totalPrice"
@@ -90,7 +91,7 @@ export default function ProductForm<T extends FieldValues>({
 
         <div className="space-y-2">
           <Label htmlFor="downPayment" error={!!errors.downPayment}>
-            ডাউন পেমেন্ট (টাকা)
+            Down Payment (BDT)
           </Label>
           <Input
             id="downPayment"
@@ -109,7 +110,7 @@ export default function ProductForm<T extends FieldValues>({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="installmentAmount" error={!!errors.installmentAmount}>
-            কিস্তির পরিমাণ (টাকা)
+            Installment Amount (BDT)
           </Label>
           <Input
             id="installmentAmount"
@@ -125,7 +126,7 @@ export default function ProductForm<T extends FieldValues>({
 
         <div className="space-y-2">
           <Label htmlFor="installmentDeadline" error={!!errors.installmentDeadline}>
-            কিস্তির শেষ তারিখ
+            Installment Deadline
           </Label>
           <Controller
             control={control}
@@ -155,11 +156,11 @@ export default function ProductForm<T extends FieldValues>({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
         <a href={`/customers/${customerId}/products`} className="w-full">
           <Button type="button" variant="outline" className="w-full">
-            বাতিল
+            Cancel
           </Button>
         </a>
         <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? "সংরক্ষণ হচ্ছে..." : "পণ্য সংরক্ষণ করুন"}
+          {isLoading ? "Saving..." : "Save Product"}
         </Button>
       </div>
     </form>

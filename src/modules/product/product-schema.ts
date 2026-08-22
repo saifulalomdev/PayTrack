@@ -1,4 +1,3 @@
-// src/modules/product/product-schema.ts
 import { createSelectSchema, createInsertSchema } from 'drizzle-orm/zod';
 import { productTable } from './product-table';
 import { z } from 'zod';
@@ -8,22 +7,24 @@ export const selectProductSchema = createSelectSchema(productTable).strict();
 export const insertProductSchema = createInsertSchema(productTable, {
   id: (s) => s.optional(),
   createdAt: (s) => s.optional(),
-  createdByName: (s) => s.optional(), // Make optional so UI doesn't require it
+  createdByName: (s) => s.optional(),
 
   customerId: z.string(),
 
   productName: (s) => s
-    .min(2, { message: "পণ্যের নাম কমপক্ষে ২ অক্ষরের হতে হবে।" })
-    .max(100, { message: "পণ্যের নাম ১০০ অক্ষরের বেশি হতে পারবে না।" }),
+    .min(2, { message: "Product name must be at least 2 characters." })
+    .max(100, { message: "Product name cannot exceed 100 characters." }),
 
-  totalPrice: z.number().positive({ message: "মোট মূল্য অবশ্যই ০ থেকে বেশি হতে হবে।" }),
-  downPayment: z.number().min(0, { message: "ডাউন পেমেন্ট ০ বা তার বেশি হতে হবে।" }),
-  installmentAmount: z.number().positive({ message: "কিস্তির পরিমাণ অবশ্যই ০ থেকে বেশি হতে হবে।" }),
-  installmentDeadline: z.number().positive({ message: "সঠিক কিস্তির সময়সীমা উল্লেখ করুন।" }),
+  totalPrice: z.number().positive({ message: "Total price must be greater than 0." }),
+  downPayment: z.number().min(0, { message: "Down payment must be 0 or greater." }),
+  installmentAmount: z.number().positive({ message: "Installment amount must be greater than 0." }),
+  installmentDeadline: z.number().positive({ message: "Please provide a valid deadline." }),
 }).strict().omit({ id: true });
 
-export const updateProductSchema = insertProductSchema
-  .extend({
-    id: z.string(),
-  })
-  .strict();
+export const updateProductSchema = insertProductSchema.extend({
+  id: z.string(),
+}).strict();
+
+export const deleteProductSchema = z.object({
+  id: z.string().min(1, "Product ID is required"),
+});
