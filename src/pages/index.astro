@@ -1,5 +1,5 @@
 ---
-// src/pages/dashboard/index.astro
+// src/pages/index.astro
 import DefaultLayout from "@/layouts/default.astro";
 import { DashboardMetricsCard } from "@/modules/dashboard/components/dashboard-metrics-card";
 import { DailyCollectionsTable } from "@/modules/dashboard/components/daily-collections-table";
@@ -8,7 +8,11 @@ import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 import { safeFetch } from "@/utils/safe-fetch";
 
-// 1. Get page and limit from URL query params (defaults: page 1, limit 10)
+// Get from middleware
+const lang = Astro.locals.lang;
+const t = Astro.locals.t;
+
+// Get page and limit
 const pageParam = Astro.url.searchParams.get("page");
 const limitParam = Astro.url.searchParams.get("limit");
 
@@ -16,7 +20,6 @@ const page = pageParam ? Math.max(1, parseInt(pageParam, 10)) : 1;
 const limit = limitParam ? Math.max(1, parseInt(limitParam, 10)) : 10;
 const offset = (page - 1) * limit;
 
-// 2. Fetch metrics and paginated daily collections
 const db = getDb(env);
 
 const { data: metrics, error: errMsg } = await safeFetch(() =>
@@ -27,7 +30,6 @@ const { data: dailyData, error: dailyErrorMsg } = await safeFetch(() =>
   dashboardService.getDailyCollections(db, limit, offset)
 );
 
-// Fallbacks if data fetching fails
 const collections = dailyData?.items ?? [];
 const totalDays = dailyData?.totalCount ?? 0;
 const totalPages = Math.ceil(totalDays / limit) || 1;
@@ -35,17 +37,21 @@ const totalPages = Math.ceil(totalDays / limit) || 1;
 
 <DefaultLayout>
   <div class="space-y-6">
-    {/* Metrics Top Section */}
-    <DashboardMetricsCard client:load metrics={metrics} errorMsg={errMsg} />
+    <DashboardMetricsCard 
+      metrics={metrics} 
+      errorMsg={errMsg}
+      lang={lang}
+      t={t}
+    />
 
-    {/* Daily Collections Section with URL Pagination */}
     <DailyCollectionsTable 
-      client:load 
       collections={collections}
       currentPage={page}
       totalPages={totalPages}
       limit={limit}
       errorMsg={dailyErrorMsg}
+      lang={lang}
+      t={t}
     />
   </div>
 </DefaultLayout>

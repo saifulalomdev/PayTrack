@@ -1,33 +1,23 @@
 // src/modules/dashboard/i18n/en.ts
-
-export const dashboardEn = {
+export const dashboardEN = {
   metrics: {
     todayCollected: "Today Collected",
-    todayCollectedDescription:
-      "Amount collected from customers today",
-
+    todayCollectedDesc: "Amount collected from customers today",
     investmentRemaining: "Investment Remaining",
-    investmentRemainingDescription:
-      "Amount customers still owe",
-
+    investmentRemainingDesc: "Amount customers still owe",
     totalCustomers: "Total Customers",
-    totalCustomersDescription:
-      "Active customers in system",
+    totalCustomersDesc: "Active customers in system",
   },
-
-  collections: {
+  dailyCollections: {
     title: "Daily Collections",
-    totalForDays: "Total for {count} days",
+    totalFor: "Total for",
+    days: "days",
     date: "Date",
     totalCollected: "Total Collected",
     actions: "Actions",
-    viewDetails: "View details",
-    empty: "No collection records found.",
-  },
-
-  pagination: {
+    noRecords: "No collection records found.",
+    pageOf: "Page",
     previous: "Previous",
     next: "Next",
-    page: "Page {current} of {total}",
   },
 };

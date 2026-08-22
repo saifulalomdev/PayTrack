@@ -7,7 +7,8 @@ import { Theme } from "./types/theme";
 declare global {
   namespace App {
     interface Locals {
-      locale: "en" | "bn";
+      lang: 'en' | 'bn';
+      t: (key: string) => string;
       staff: PublicStaff | null;
       theme: Theme;
       runtime: {

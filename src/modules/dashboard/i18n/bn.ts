@@ -1,33 +1,23 @@
 // src/modules/dashboard/i18n/bn.ts
-
-export const dashboardBn = {
+export const dashboardBN = {
   metrics: {
-    todayCollected: "আজকের সংগ্রহ",
-    todayCollectedDescription:
-      "আজ গ্রাহকদের কাছ থেকে সংগ্রহ করা টাকা",
-
-    investmentRemaining: "বকেয়া বিনিয়োগ",
-    investmentRemainingDescription:
-      "গ্রাহকদের কাছ থেকে এখনো পাওনা টাকা",
-
+    todayCollected: "আজ সংগৃহীত",
+    todayCollectedDesc: "আজ গ্রাহকদের কাছ থেকে সংগৃহীত পরিমাণ",
+    investmentRemaining: "বিনিয়োগ অবশিষ্ট",
+    investmentRemainingDesc: "গ্রাহকরা এখনও যা পাওনা",
     totalCustomers: "মোট গ্রাহক",
-    totalCustomersDescription:
-      "সিস্টেমে থাকা সক্রিয় গ্রাহক",
+    totalCustomersDesc: "সিস্টেমে সক্রিয় গ্রাহক",
   },
-
-  collections: {
+  dailyCollections: {
     title: "দৈনিক সংগ্রহ",
-    totalForDays: "{count} দিনের মোট",
+    totalFor: "মোট",
+    days: "দিনের জন্য",
     date: "তারিখ",
-    totalCollected: "মোট সংগ্রহ",
-    actions: "অ্যাকশন",
-    viewDetails: "বিস্তারিত দেখুন",
-    empty: "কোনো সংগ্রহের তথ্য পাওয়া যায়নি।",
-  },
-
-  pagination: {
-    previous: "আগের",
-    next: "পরের",
-    page: "{current} / {total} পৃষ্ঠা",
+    totalCollected: "মোট সংগৃহীত",
+    actions: "কর্মসূচি",
+    noRecords: "কোন সংগ্রহ রেকর্ড পাওয়া যায়নি।",
+    pageOf: "পৃষ্ঠা",
+    previous: "পূর্ববর্তী",
+    next: "পরবর্তী",
   },
 };

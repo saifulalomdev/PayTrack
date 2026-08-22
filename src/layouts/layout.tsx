@@ -1,5 +1,5 @@
-import { Globe, User, Menu, X, XIcon, ChevronRight, LogOut } from "lucide-react";
-import { $t, $language, toggleLanguage } from '@/stores/i18nStore';
+import { User, Menu, X, XIcon, ChevronRight, LogOut } from "lucide-react";
+import { $t, $language } from '@/stores/i18nStore';
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Card, CardContent } from '@/components/ui/card';
 import { adminNavItems } from '@/data/nav-items';
@@ -19,6 +19,8 @@ import React, { useState } from 'react';
 import { cn } from '@/utils/cn';
 import { useAction } from "@/hooks/use-action";
 import { actions } from "astro:actions";
+import { LanguageSwitcher } from "@/modules/i18n/components/language-switcher";
+import type { Language } from "@/utils/i18n";
 
 
 interface CurrentStaff {
@@ -29,10 +31,11 @@ interface CurrentStaff {
 interface DashboardLayoutProps {
     children: React.ReactNode;
     staff: CurrentStaff;
-    theme?: Theme
+    theme?: Theme;
+    lang: Language;
 }
 
-export function DashboardLayout({ children, staff, theme }: DashboardLayoutProps) {
+export function DashboardLayout({ children, staff, theme, lang }: DashboardLayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
@@ -53,6 +56,7 @@ export function DashboardLayout({ children, staff, theme }: DashboardLayoutProps
                     onClick={() => setIsSidebarOpen(p => !p)}
                     staff={staff}
                     theme={theme}
+                    lang={lang}
                 />
                 <main className="p-4">
                     {children}
@@ -113,9 +117,10 @@ interface DashboardHeaderProps {
     onClick: () => void;
     staff: CurrentStaff;
     theme?: Theme;
+    lang: Language;
 }
 
-function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: DashboardHeaderProps) {
+function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light", lang }: DashboardHeaderProps) {
     const language = useStore($language);
 
     const { isLoading, execute } = useAction(actions.auth.logout, {
@@ -143,14 +148,7 @@ function DashboardHeader({ isSidebarOpen, onClick, staff, theme = "light" }: Das
 
             <div className="flex items-center gap-4">
                 <ThemeToggle currentTheme={theme} />
-                <Button
-                    onClick={toggleLanguage}
-                    aria-label="Switch Language"
-                    variant="outline"
-                >
-                    <Globe className="h-4 w-4 text-muted-foreground" />
-                    <span>{language === "EN" ? "English" : "বাংলা"}</span>
-                </Button>
+                <LanguageSwitcher currentLang={lang} />
 
                 <div className="items-center gap-2 border-l pl-4">
                     <DropdownMenu>

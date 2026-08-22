@@ -1,9 +1,9 @@
-import { dashboardEn } from "./en";
-import { dashboardBn } from "./bn";
+import { dashboardEN } from "./en";
+import { dashboardBN } from "./bn";
 
 export const dashboardTranslations = {
-  en: dashboardEn,
-  bn: dashboardBn,
+  en: dashboardEN,
+  bn: dashboardBN,
 };
 
 export type DashboardTranslations =
