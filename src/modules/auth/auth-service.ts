@@ -17,8 +17,7 @@ export const authService = {
         const { phoneNumber, password } = input;
 
         // 1. Fetch staff record by phone number
-        const staff = await staffRepository.findByPhoneNumber(db, phoneNumber);
-        if (!staff) {
+const staff = await staffRepository.findByPhoneNumberWithPassword(db, phoneNumber);        if (!staff) {
             // Keep error messages generic to prevent user enumeration attacks
             throw new ActionError({
                 code: "UNAUTHORIZED",

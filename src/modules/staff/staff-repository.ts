@@ -35,17 +35,36 @@ export const staffRepository = {
     return sanitizeStaff(deletedStaff);
   },
 
-  async findById(db: D1Instance, id: string): Promise<SelectStaff | null> {
+  /**
+   * FIND BY ID: Returns sanitized PublicStaff record or null
+   */
+  async findById(db: D1Instance, id: string): Promise<PublicStaff | null> {
     const [staff] = await db
       .select()
       .from(staffTable)
       .where(eq(staffTable.id, id))
       .execute();
 
-    return staff || null;
+    return staff ? sanitizeStaff(staff) : null;
   },
 
-  async findByPhoneNumber(db: D1Instance, phoneNumber: string): Promise<SelectStaff | null> {
+  /**
+   * FIND BY PHONE NUMBER: Returns sanitized PublicStaff record or null
+   */
+  async findByPhoneNumber(db: D1Instance, phoneNumber: string): Promise<PublicStaff | null> {
+    const [staff] = await db
+      .select()
+      .from(staffTable)
+      .where(eq(staffTable.phoneNumber, phoneNumber))
+      .execute();
+
+    return staff ? sanitizeStaff(staff) : null;
+  },
+
+  /**
+   * AUTH ONLY: Retrieves full SelectStaff including password hash for login verification
+   */
+  async findByPhoneNumberWithPassword(db: D1Instance, phoneNumber: string): Promise<SelectStaff | null> {
     const [staff] = await db
       .select()
       .from(staffTable)

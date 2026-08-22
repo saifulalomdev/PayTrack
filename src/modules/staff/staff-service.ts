@@ -7,19 +7,10 @@ import { staffRepository } from "./staff-repository";
 import { hashPassword, verifyPassword } from "@/utils/password";
 import type { InsertStaff, UpdateStaff, SelectStaff, PublicStaff } from "./staff-types";
 
-function assertNotSuperAdmin(staff: SelectStaff, action: string) {
+function assertNotSuperAdmin(staff: PublicStaff, action: string) {
     if (staff.phoneNumber === env.SUPER_ADMIN_PHONE) {
         throw new ActionError({ code: "FORBIDDEN", message: `Super admin can not be ${action}` });
     }
-}
-
-/**
- * Strips the password hash before staff data leaves the service layer.
- * Used ONLY when converting raw database models (SelectStaff) to PublicStaff.
- */
-function toSafeStaff(staff: SelectStaff): PublicStaff {
-    const { password, ...safe } = staff;
-    return safe;
 }
 
 export const staffService = {
@@ -41,15 +32,13 @@ export const staffService = {
         }
 
         const hashedPassword = await hashPassword(password);
-        // repository.create already returns PublicStaff
         return await staffRepository.create(db, { ...input, password: hashedPassword });
     },
 
     /**
      * Returns the updated staff (password-safe) plus whether credentials
      * changed. When they did, tokenVersion is bumped, which invalidates
-     * every existing session cookie for this staff member on next request
-     * (see getAuthenticatedStaff).
+     * every existing session cookie for this staff member on next request.
      */
     async updateStaff(
         db: D1Instance,
@@ -93,7 +82,6 @@ export const staffService = {
             updatePayload.tokenVersion = existingStaff.tokenVersion + 1;
         }
 
-        // repository.update already returns PublicStaff
         const staff = await staffRepository.update(db, id, updatePayload);
         return { staff, credentialsChanged };
     },
@@ -109,10 +97,10 @@ export const staffService = {
         return await staffRepository.deleteById(db, id);
     },
 
-    // login() intentionally returns full SelectStaff (with password hash)
-    // for server-side verification and session token generation.
+    // login() intentionally fetches and returns full SelectStaff (with password hash)
+    // strictly for server-side verification and session token generation.
     async login(db: D1Instance, phoneNumber: string, password: string): Promise<SelectStaff> {
-        const staff = await staffRepository.findByPhoneNumber(db, phoneNumber);
+        const staff = await staffRepository.findByPhoneNumberWithPassword(db, phoneNumber);
         if (!staff) {
             throw new ActionError({
                 code: "UNAUTHORIZED",
@@ -132,12 +120,10 @@ export const staffService = {
     },
 
     async listAll(db: D1Instance): Promise<PublicStaff[]> {
-        // repository.findAll already returns PublicStaff[]
         return await staffRepository.findAll(db);
     },
     
     async getById(db: D1Instance, id: string): Promise<PublicStaff | null> {
-        const staff = await staffRepository.findById(db, id);
-        return staff ? toSafeStaff(staff) : null;
+        return await staffRepository.findById(db, id);
     },
 };
