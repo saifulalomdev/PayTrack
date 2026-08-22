@@ -3,7 +3,7 @@
 import { ProductUpdate } from "@/modules/product/components/product-update";
 import { productService } from "@/modules/product/product-service";
 import { safeFetch } from "@/utils/safe-fetch";
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 
@@ -18,11 +18,11 @@ const { data: productData, error: errMsg } = await safeFetch(() =>
 );
 ---
 
-<MainLayout>
+<DefaultLayout>
     <ProductUpdate
         client:load
         customerId={customerId}
         productData={productData as any}
         errorMsg={errMsg}
     />
-</MainLayout>
+</DefaultLayout>

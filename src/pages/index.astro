@@ -1,6 +1,6 @@
 ---
 // src/pages/dashboard/index.astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { DashboardMetricsCard } from "@/modules/dashboard/components/dashboard-metrics-card";
 import { DailyCollectionsTable } from "@/modules/dashboard/components/daily-collections-table";
 import { dashboardService } from "@/modules/dashboard/dashboard-service";
@@ -33,7 +33,7 @@ const totalDays = dailyData?.totalCount ?? 0;
 const totalPages = Math.ceil(totalDays / limit) || 1;
 ---
 
-<MainLayout>
+<DefaultLayout>
   <div class="space-y-6">
     {/* Metrics Top Section */}
     <DashboardMetricsCard client:load metrics={metrics} errorMsg={errMsg} />
@@ -48,4 +48,4 @@ const totalPages = Math.ceil(totalDays / limit) || 1;
       errorMsg={dailyErrorMsg}
     />
   </div>
-</MainLayout>
+</DefaultLayout>

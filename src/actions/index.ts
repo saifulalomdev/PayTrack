@@ -4,7 +4,9 @@ import * as staff from '@/modules/staff/staff-actions'
 import * as auth from '@/modules/auth/auth-actions'
 import { themeActions } from './theme.actions'
 import * as product from '@/modules/product/product-actions'
-import * as fine from '@/modules/fine/fine-actions'
+import * as fine from '@/modules/fine/fine-actions';
+import * as i18n from '@/modules/i18n/i18n-actions';
+
 export const server = {
    theme: themeActions,
    installment,
@@ -12,5 +14,6 @@ export const server = {
    product,
    staff,
    auth,
-   fine
+   fine,
+   i18n
 };

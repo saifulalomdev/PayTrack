@@ -1,6 +1,6 @@
 ---
 // src/pages/staff/index.astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { StaffManager } from "@/modules/staff/components/staff-manager";
 import { staffService } from "@/modules/staff/staff-service";
 import { env } from "cloudflare:workers";
@@ -12,6 +12,6 @@ const { data: staffList, error: errMsg } = await safeFetch(() =>
 );
 ---
 
-<MainLayout>
+<DefaultLayout>
   <StaffManager client:load errorMsg={errMsg} staff={staffList} />
-</MainLayout>
+</DefaultLayout>

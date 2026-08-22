@@ -1,7 +1,7 @@
 ---
 // src/pages/staff/[id]/update.astro
 
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { StaffUpdate } from "@/modules/staff/components/staff-update";
 import { safeFetch } from "@/utils/safe-fetch";
 import { staffService } from "@/modules/staff/staff-service";
@@ -19,6 +19,6 @@ const { data: staffData, error: errMsg } = await safeFetch(() =>
 );
 ---
 
-<MainLayout>
+<DefaultLayout>
     <StaffUpdate client:load staffData={staffData as any} errorMsg={errMsg} />
-</MainLayout>
+</DefaultLayout>

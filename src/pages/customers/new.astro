@@ -1,6 +1,6 @@
 ---
 // src/pages/customer/new.astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { AddCustomer } from "@/modules/customer/components/customer-add";
 
 // context.locals.staff is populated by the auth middleware and guaranteed
@@ -8,6 +8,6 @@ import { AddCustomer } from "@/modules/customer/components/customer-add";
 // check needed — any logged-in staff can add a customer.
 ---
 
-<MainLayout>
+<DefaultLayout>
     <AddCustomer client:load />
-</MainLayout>
+</DefaultLayout>

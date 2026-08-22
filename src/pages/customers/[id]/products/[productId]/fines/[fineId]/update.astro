@@ -1,6 +1,6 @@
 ---
 // src/pages/customers/[id]/products/[productId]/fines/[fineId]/update.astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { FineUpdate } from "@/modules/fine/components/fine-update";
 import { safeFetch } from "@/utils/safe-fetch";
 import { fineService } from "@/modules/fine/fine-service";
@@ -28,7 +28,7 @@ const { data: fineData, error: errMsg } = await safeFetch(() =>
 );
 ---
 
-<MainLayout>
+<DefaultLayout>
     <FineUpdate
         client:load
         fineData={fineData as any}
@@ -36,4 +36,4 @@ const { data: fineData, error: errMsg } = await safeFetch(() =>
         productId={productId}
         errorMsg={errMsg}
     />
-</MainLayout>
+</DefaultLayout>

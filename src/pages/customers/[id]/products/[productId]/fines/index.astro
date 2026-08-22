@@ -1,6 +1,6 @@
 ---
 // src/pages/customers/[id]/products/[productId]/fines/index.astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { FineManager } from "@/modules/fine/components/fine-manager";
 import { safeFetch } from "@/utils/safe-fetch";
 import { fineService } from "@/modules/fine/fine-service";
@@ -26,7 +26,7 @@ const { data: fines, error: errMsg } = await safeFetch(() =>
 const product = await productService.getById(db, productId);
 ---
 
-<MainLayout>
+<DefaultLayout>
     <FineManager
         client:load
         customerId={customerId}
@@ -36,4 +36,4 @@ const product = await productService.getById(db, productId);
         errorMsg={errMsg}
         isAdmin={isAdmin}
     />
-</MainLayout>
+</DefaultLayout>

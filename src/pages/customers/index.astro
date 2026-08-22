@@ -2,7 +2,7 @@
 import { CustomerManager } from "@/modules/customer/components/customer-manager";
 import { customerService } from "@/modules/customer/customer-service";
 import { safeFetch } from "@/utils/safe-fetch";
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 
@@ -22,7 +22,7 @@ const { data: result, error: errMsg } = await safeFetch(() =>
 const isAdmin = currentStaff.role === "admin";
 ---
 
-<MainLayout>
+<DefaultLayout>
     <CustomerManager
         client:load
         errorMsg={errMsg}
@@ -36,4 +36,4 @@ const isAdmin = currentStaff.role === "admin";
         initialSearch={search ?? ""}
         isAdmin={isAdmin}
     />
-</MainLayout>
+</DefaultLayout>

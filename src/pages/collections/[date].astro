@@ -1,6 +1,6 @@
 ---
 // src/pages/dashboard/collections/[date].astro
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { DailyDetailsTable } from "@/modules/dashboard/components/daily-details-table";
 import { dashboardService } from "@/modules/dashboard/dashboard-service";
 import { env } from "cloudflare:workers";
@@ -22,7 +22,7 @@ const { data: details, error: errMsg } = await safeFetch(() =>
 );
 ---
 
-<MainLayout>
+<DefaultLayout>
   <div class="container mx-auto py-6">
     {errMsg ? (
       <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600 text-sm">
@@ -32,4 +32,4 @@ const { data: details, error: errMsg } = await safeFetch(() =>
       <DailyDetailsTable client:load dateStr={date} details={details ?? []} />
     )}
   </div>
-</MainLayout>
+</DefaultLayout>

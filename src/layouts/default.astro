@@ -1,0 +1,16 @@
+---
+import { DashboardLayout } from "@/layouts/layout";
+import BaseLayout from "./base.astro";
+const staff = Astro.locals.staff!;
+const { theme } = Astro.locals;
+---
+
+<BaseLayout>
+    <DashboardLayout
+        client:load
+        staff={{ name: staff.name, role: staff.role }}
+        theme={theme}
+    >
+        <slot />
+    </DashboardLayout>
+</BaseLayout>

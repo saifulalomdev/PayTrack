@@ -1,7 +1,5 @@
 ---
 import { Toaster } from "@/components/ui/sonner";
-import { DashboardLayout } from "@/layouts/layout";
-const staff = Astro.locals.staff!;
 const { theme } = Astro.locals;
 import "@/styles/global.css";
 ---
@@ -17,13 +15,7 @@ import "@/styles/global.css";
 		<meta name="description" content="" />
 	</head>
 	<body>
-		<DashboardLayout
-			client:load
-			staff={{ name: staff.name, role: staff.role }}
-			theme={theme}
-		>
-			<slot />
-			<Toaster richColors client:load />
-		</DashboardLayout>
+		<slot />
+		<Toaster richColors client:load />
 	</body>
 </html>

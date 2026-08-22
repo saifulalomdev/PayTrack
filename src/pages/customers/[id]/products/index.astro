@@ -5,7 +5,7 @@ import { productRepository } from "@/modules/product/product-repository";
 import { customerService } from "@/modules/customer/customer-service";
 
 import { safeFetch } from "@/utils/safe-fetch";
-import MainLayout from "@/layouts/main.astro";
+import DefaultLayout from "@/layouts/default.astro";
 import { env } from "cloudflare:workers";
 import { getDb } from "@/utils";
 
@@ -24,7 +24,7 @@ const { data: products, error: errMsgProducts } = await safeFetch(() =>
 
 ---
 
-<MainLayout>
+<DefaultLayout>
     <ProductManager
         errorMsg={errMsg || errMsgProducts}
         customerName={customer?.name}
@@ -33,4 +33,4 @@ const { data: products, error: errMsgProducts } = await safeFetch(() =>
         products={products ?? []}
         client:load
     />
-</MainLayout>
+</DefaultLayout>
