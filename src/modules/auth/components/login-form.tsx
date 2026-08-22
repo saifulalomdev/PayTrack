@@ -1,4 +1,3 @@
-import { loginDefaultValue } from "../auth-default-values";
 import { FieldError } from "@/components/ui/field-error";
 import { useFormAction } from "@/hooks/use-form-action";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema } from "../auth-schema";
 import { actions } from "astro:actions";
+
+export const loginDefaultValue = {
+    phoneNumber: "",
+    password: "",
+}
 
 export function LoginForm() {
   const { form, onSubmit, isLoading } = useFormAction<LoginInput>({

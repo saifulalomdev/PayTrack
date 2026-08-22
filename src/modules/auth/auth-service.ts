@@ -1,3 +1,5 @@
+// src/modules/auth/auth-service.ts
+
 import { staffRepository } from "../staff/staff-repository";
 import { verifyPassword } from "@/utils/password";
 import type { LoginInput } from "./auth-types";
@@ -15,17 +17,17 @@ export const authService = {
      */
     login: async (db: D1Instance, input: LoginInput) => {
         const { phoneNumber, password } = input;
-
+        const normalizedPhoneNumber = phoneNumber.replace(/^(\+88|88)/, "");
         // 1. Fetch staff record by phone number
-const staff = await staffRepository.findByPhoneNumberWithPassword(db, phoneNumber);        if (!staff) {
-            // Keep error messages generic to prevent user enumeration attacks
+        const staff = await staffRepository.findByPhoneNumberWithPassword(db, normalizedPhoneNumber);
+        if (!staff) {
             throw new ActionError({
                 code: "UNAUTHORIZED",
                 message: "মোবাইল নম্বর অথবা পাসওয়ার্ড ভুল হয়েছে।",
             });
         }
 
-        // 2. Validate the provided password against the hashed password
+        // 2. Validate password
         const isValidPassword = await verifyPassword(password, staff.password);
         if (!isValidPassword) {
             throw new ActionError({
@@ -34,7 +36,8 @@ const staff = await staffRepository.findByPhoneNumberWithPassword(db, phoneNumbe
             });
         }
 
-        // 3. Return the authenticated staff record
-        return staff;
+        // 3. Exclude password before returning
+        const { password: _, ...safeStaff } = staff;
+        return safeStaff;
     }
 };
