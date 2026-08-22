@@ -1,13 +1,13 @@
 // src/env.d.ts
 /// <reference types="astro/client" />
-import { SelectStaff } from "./modules/staff/staff-types";
+import type { PublicStaff } from "./modules/staff/staff-types";
 import { Theme } from "./types/theme";
 
 
 declare global {
   namespace App {
     interface Locals {
-      staff: SelectStaff | null;
+      staff: PublicStaff | null;
       theme: Theme;
       runtime: {
         env: Env;

@@ -11,7 +11,7 @@ import { getDb } from '@/utils';
 import { env } from 'cloudflare:workers';
 
 export const createInstallment = defineAction({
-  accept: 'form',
+  accept: 'json',
   input: insertInstallmentSchema,
   handler: async (input, context) => {
     const user = requireAuth(context);

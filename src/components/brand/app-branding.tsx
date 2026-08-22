@@ -1,5 +1,5 @@
 // src/components/ui/brand/AppBranding.tsx
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/cn";
 
 export  function AppBranding({ border}: { border?: boolean }) {
     return (

@@ -16,7 +16,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import React, { useState } from 'react';
-import { cn } from '@/utils/utils';
+import { cn } from '@/utils/cn';
 import { useAction } from "@/hooks/use-action";
 import { actions } from "astro:actions";
 

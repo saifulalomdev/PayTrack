@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/cn";
 import { Eye, EyeClosed, KeyRound, Mail } from "lucide-react";
 
 // 1. Extend input attributes to include our state modifier flag

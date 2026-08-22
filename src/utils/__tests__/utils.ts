@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { cn } from "../utils";
+import { cn } from "../cn";
 
 describe("cn() Style Merger Utility", () => {
   it("should combine multiple static class name strings together", () => {

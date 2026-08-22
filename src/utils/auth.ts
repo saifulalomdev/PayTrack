@@ -2,7 +2,7 @@ import { getDb } from "@/utils";
 import { env } from "cloudflare:workers";
 import { staffRepository } from "@/modules/staff/staff-repository";
 import type { AstroCookies } from "astro";
-import type { SelectStaff } from "@/modules/staff/staff-types";
+import type { PublicStaff, SelectStaff } from "@/modules/staff/staff-types";
 
 export const SESSION_COOKIE_NAME = "staff_session";
 
@@ -15,7 +15,7 @@ export function buildSessionCookieValue(staff: Pick<SelectStaff, "id" | "tokenVe
   return `${staff.id}:${staff.tokenVersion}`;
 }
 
-export async function getAuthenticatedStaff(cookies: AstroCookies): Promise<SelectStaff | null> {
+export async function getAuthenticatedStaff(cookies: AstroCookies): Promise<PublicStaff | null> {
   const raw = cookies.get(SESSION_COOKIE_NAME)?.value;
   if (!raw) return null;
 

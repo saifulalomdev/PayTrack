@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Label as LabelPrimitive } from "radix-ui"
-import { cn } from "@/utils/utils"
+import { cn } from "@/utils/cn"
 
 interface LabelProps extends React.ComponentProps<typeof LabelPrimitive.Root> {
   error?: boolean; // Added state prop
