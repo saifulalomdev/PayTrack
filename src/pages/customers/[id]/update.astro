@@ -1,7 +1,7 @@
 ---
 // src/pages/customer/[id]/update.astro
 
-import { EditCustomer } from "@/modules/customer/components/customer-update";
+import { UpdateCustomer } from "@/modules/customer/components/customer-update";
 import { customerService } from "@/modules/customer/customer-service";
 import { safeFetch } from "@/utils/safe-fetch";
 import MainLayout from "@/layouts/main.astro";
@@ -33,7 +33,7 @@ const { data: customerData, error: errMsg } = await safeFetch(() =>
 ---
 
 <MainLayout>
-    <EditCustomer
+    <UpdateCustomer
         client:load
         customerData={customerData as any}
         errorMsg={errMsg}

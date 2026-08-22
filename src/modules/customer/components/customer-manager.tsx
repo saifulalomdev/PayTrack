@@ -1,3 +1,5 @@
+// src/modules/customer/components/customer-manager.tsx
+
 import { useEffect, useRef, useState } from 'react';
 import { PageHeader } from '@/components/ui/page-header';
 import ErrorAlert from '@/components/ui/error-alert';
@@ -7,7 +9,7 @@ import { useAction } from '@/hooks/use-action';
 import type { PublicCustomer } from '../customer-types';
 import { actions } from 'astro:actions';
 import { Plus, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-import CustomerTable from './customer-table';
+import { CustomerTable } from './customer-table';
 
 interface Pagination {
   page: number;
@@ -56,7 +58,7 @@ export function CustomerManager({
       setPagination(result.pagination);
       setFetchError(undefined);
     },
-    onError: (err) => setFetchError((err as any)?.message ?? 'গ্রাহক খুঁজে পাওয়া যায়নি।'),
+    onError: (err) => setFetchError((err as any)?.message ?? 'Failed to fetch customers.'),
   });
 
   const fetchPage = (nextSearch: string, nextPage: number) => {
@@ -79,14 +81,17 @@ export function CustomerManager({
     fetchPage(search, page);
   };
 
+  const startRecord = (pagination.page - 1) * pagination.pageSize + 1;
+  const endRecord = Math.min(pagination.page * pagination.pageSize, pagination.total);
+
   return (
     <div className='space-y-8'>
       <ErrorAlert errorMsg={fetchError} />
 
-      <PageHeader title='গ্রাহক ব্যবস্থাপনা'>
+      <PageHeader title='Customer Management'>
         <Button asChild className='uppercase w-full md:w-auto'>
           <a href="/customers/new">
-            <Plus className="w-4 h-4 mr-2" /> নতুন গ্রাহক যোগ করুন
+            <Plus className="w-4 h-4 mr-2" /> Add New Customer
           </a>
         </Button>
       </PageHeader>
@@ -96,7 +101,7 @@ export function CustomerManager({
         <Input
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
-          placeholder='সিরিয়াল নম্বর দিয়ে খুঁজুন...'
+          placeholder='Search by serial number...'
           className='pl-9'
         />
       </div>
@@ -107,7 +112,6 @@ export function CustomerManager({
           isAdmin={isAdmin}
           onDelete={(id) => executeDelete({ id })}
           onUpdate={(id) => {
-            // Navigate to update page OR open your update modal
             window.location.href = `/customers/${id}/update`;
           }}
         />
@@ -116,8 +120,7 @@ export function CustomerManager({
       {!fetchError && pagination.total > 0 && (
         <div className='flex items-center justify-between pt-2'>
           <p className='text-sm text-muted-foreground'>
-            মোট {pagination.total} জনের মধ্যে {(pagination.page - 1) * pagination.pageSize + 1}
-            –{Math.min(pagination.page * pagination.pageSize, pagination.total)} জন দেখানো হচ্ছে
+            Showing {startRecord}–{endRecord} of {pagination.total} customers
           </p>
           {pagination.totalPages > 1 && (
             <div className='flex items-center gap-2'>
