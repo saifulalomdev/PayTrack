@@ -27,14 +27,15 @@ interface FineTableProps {
 
 function formatBDT(amount?: number | null) {
   if (amount === undefined || amount === null) return '—';
-  return `৳${amount.toLocaleString('bn-BD')}`;
+  return `৳${amount.toLocaleString('en-US')}`;
 }
 
 function formatDate(unix?: number | null) {
   if (!unix) return '—';
-  return new Date(unix * 1000).toLocaleDateString('bn-BD', {
+  // Multiply by 1000 to convert seconds to milliseconds
+  return new Date(unix * 1000).toLocaleDateString('en-US', {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 }
@@ -53,11 +54,11 @@ export default function FineTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>পরিমাণ</TableHead>
-            <TableHead>নোট</TableHead>
-            <TableHead>যোগ করেছেন</TableHead>
-            <TableHead>তারিখ</TableHead>
-            {isAdmin && <TableHead className='text-right'>অ্যাকশন</TableHead>}
+            <TableHead>Amount</TableHead>
+            <TableHead>Note</TableHead>
+            <TableHead>Created By</TableHead>
+            <TableHead>Date</TableHead>
+            {isAdmin && <TableHead className='text-right'>Actions</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,7 +67,7 @@ export default function FineTable({
               <TableCell colSpan={isAdmin ? 5 : 4} className="h-48 text-center">
                 <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                   <ReceiptText className="w-8 h-8 opacity-60" />
-                  <p className="text-sm font-medium">কোনো জরিমানা পাওয়া যায়নি।</p>
+                  <p className="text-sm font-medium">No fines found.</p>
                 </div>
               </TableCell>
             </TableRow>
@@ -88,14 +89,14 @@ export default function FineTable({
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => onUpdate(fine.id)}>
                           <Pencil className="w-4 h-4 mr-2" />
-                          সম্পাদনা করুন
+                          Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => onDelete(fine.id)}
                           className="text-destructive focus:text-destructive"
                         >
                           <Trash2 className="w-4 h-4 mr-2" />
-                          মুছে ফেলুন
+                          Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

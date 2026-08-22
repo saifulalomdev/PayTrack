@@ -1,4 +1,4 @@
-// src/modules/fine/fine.service.ts
+// src/modules/fine/fine-service.ts
 import { ActionError } from "astro:actions";
 import type { D1Instance } from "@/utils";
 import { fineRepository } from "./fine-repository";

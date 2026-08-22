@@ -1,4 +1,4 @@
-// src/modules/fine/fine.repository.ts
+// src/modules/fine/fine-repository.ts
 import type { D1Instance } from "@/utils";
 import { desc, eq, sum } from "drizzle-orm";
 import type { InsertFine, NewFine, SelectFine } from "./fine-types";

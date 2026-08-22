@@ -1,4 +1,4 @@
-// src/modules/fine/fine.actions.ts
+// src/modules/fine/fine-actions.ts
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { getDb } from "@/utils";
@@ -54,15 +54,15 @@ export const listFinesByProduct = defineAction({
   },
 });
 
-// UPDATE / DELETE — admin only
 export const updateFine = defineAction({
   accept: "json",
   input: updateFineSchema,
   handler: async (input, context) => {
     requireAdmin(context);
-    if (!input.id) throw new ActionError({ code: "BAD_REQUEST", message: "আইডি প্রয়োজন।" });
+    const { id, ...data } = input;
+    if (!id) throw new ActionError({ code: "BAD_REQUEST", message: "আইডি প্রয়োজন।" });
     const db = getDb(env);
-    const row = await fineService.updateFine(db, input.id, input);
+    const row = await fineService.updateFine(db, id, data);
     return { success: true, message: "জরিমানা সফলভাবে আপডেট করা হয়েছে!", data: row };
   },
 });

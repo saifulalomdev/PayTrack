@@ -4,7 +4,7 @@ import { insertFineSchema, selectFineSchema, updateFineSchema } from "./fine-sch
 
 export type InsertFine = z.infer<typeof insertFineSchema>;
 export type SelectFine = z.infer<typeof selectFineSchema>;
-export type UpdateFine = z.infer<typeof updateFineSchema>;
+export type UpdateFine = Omit<z.infer<typeof updateFineSchema>, "id">;
 
 /**
  * PublicFine is the client-facing shape — identical to SelectFine since

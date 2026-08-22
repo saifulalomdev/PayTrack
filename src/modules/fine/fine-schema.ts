@@ -1,4 +1,4 @@
-// src/modules/fine/fine.schema.ts
+// src/modules/fine/fine-schema.ts
 import { createInsertSchema, createSelectSchema } from "drizzle-orm/zod";
 import { fineTable } from "./fine-table";
 import z from "zod";
